@@ -12,6 +12,9 @@ scripts/*
 *.dbg.json
 *.tsbuildinfo
 
+# Test files
+test/
+
 # Optional
 .env
 .env.local
