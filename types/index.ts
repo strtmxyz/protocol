@@ -82,10 +82,14 @@ export type { StETHGuard } from "./contracts/guards/asset/StETHGuard.sol/StETHGu
 export { StETHGuard__factory } from "./factories/contracts/guards/asset/StETHGuard.sol/StETHGuard__factory";
 export type { VertexAssetGuard } from "./contracts/guards/asset/VertexAssetGuard";
 export { VertexAssetGuard__factory } from "./factories/contracts/guards/asset/VertexAssetGuard__factory";
+export type { AmbientGuard } from "./contracts/guards/platform/AmbientGuard";
+export { AmbientGuard__factory } from "./factories/contracts/guards/platform/AmbientGuard__factory";
 export type { KyberswapGuard } from "./contracts/guards/platform/KyberswapGuard";
 export { KyberswapGuard__factory } from "./factories/contracts/guards/platform/KyberswapGuard__factory";
 export type { VertexPlatformGuard } from "./contracts/guards/platform/VertexPlatformGuard";
 export { VertexPlatformGuard__factory } from "./factories/contracts/guards/platform/VertexPlatformGuard__factory";
+export type { ICrocSwapDex } from "./contracts/interfaces/external/ambient/ICrocSwapDex";
+export { ICrocSwapDex__factory } from "./factories/contracts/interfaces/external/ambient/ICrocSwapDex__factory";
 export type { IMetaAggregationRouterV2 } from "./contracts/interfaces/external/kyberswap/IMetaAggregationRouterV2";
 export { IMetaAggregationRouterV2__factory } from "./factories/contracts/interfaces/external/kyberswap/IMetaAggregationRouterV2__factory";
 export type { Clearinghouse } from "./contracts/interfaces/external/vertexprotocol/Clearinghouse";

@@ -23,6 +23,18 @@ import type {
   TypedContractMethod,
 } from "../common";
 
+export declare namespace FeeLogic {
+  export type UserDepositStruct = {
+    amount: BigNumberish;
+    timestamp: BigNumberish;
+  };
+
+  export type UserDepositStructOutput = [amount: bigint, timestamp: bigint] & {
+    amount: bigint;
+    timestamp: bigint;
+  };
+}
+
 export interface VaultInterface extends Interface {
   getFunction(
     nameOrSignature:
@@ -42,8 +54,10 @@ export interface VaultInterface extends Interface {
       | "assetPosition"
       | "authorizedStrategies"
       | "balanceOf"
+      | "calculateTimedWithdrawalFee"
       | "callContract"
       | "canGoLive"
+      | "cleanupUserDeposits"
       | "convertAssetValueToUnderlying"
       | "convertToAssets"
       | "convertToShares"
@@ -65,6 +79,9 @@ export interface VaultInterface extends Interface {
       | "getEpochInfo"
       | "getSupportedAssets"
       | "getSupportedAssetsCount"
+      | "getTimedWithdrawalFees"
+      | "getUserAverageHoldingPeriod"
+      | "getUserDeposits"
       | "getVaultAssetBreakdown"
       | "getVaultInfo"
       | "goLive"
@@ -75,6 +92,7 @@ export interface VaultInterface extends Interface {
       | "lastAssetPrices"
       | "lastRealizationTime"
       | "liquidateAllPositionsForHarvest"
+      | "longTermWithdrawalFee"
       | "managementFee"
       | "manager"
       | "maxCapacity"
@@ -83,6 +101,7 @@ export interface VaultInterface extends Interface {
       | "maxPriceDeviationBps"
       | "maxRedeem"
       | "maxWithdraw"
+      | "mediumTermWithdrawalFee"
       | "minDepositAmount"
       | "minFundraisingAmount"
       | "mint"
@@ -94,7 +113,9 @@ export interface VaultInterface extends Interface {
       | "previewDeposit"
       | "previewMint"
       | "previewRedeem"
+      | "previewTimedWithdrawalFee"
       | "previewWithdraw"
+      | "previewWithdrawalAfterFees"
       | "previewWithdrawalImpact"
       | "protocolFee"
       | "protocolTreasury"
@@ -108,6 +129,8 @@ export interface VaultInterface extends Interface {
       | "setEmergencyOracleMode"
       | "setEmergencyPrice"
       | "setStrategyAuthorization"
+      | "setTimedWithdrawalFees"
+      | "shortTermWithdrawalFee"
       | "shouldManagerRealize"
       | "supportedAssets"
       | "supportedPlatforms"
@@ -124,6 +147,8 @@ export interface VaultInterface extends Interface {
       | "updateOracleProtection"
       | "updateProtocolTreasury"
       | "updateVaultSettings"
+      | "userDeposits"
+      | "userTotalDeposited"
       | "vaultState"
       | "version"
       | "withdraw"
@@ -134,6 +159,8 @@ export interface VaultInterface extends Interface {
     nameOrSignatureOrTopic:
       | "AllPositionsLiquidated"
       | "Approval"
+      | "AssetAdded"
+      | "AssetRemoved"
       | "AutoRealizationTriggered"
       | "ContractCalled"
       | "Deposit"
@@ -147,6 +174,7 @@ export interface VaultInterface extends Interface {
       | "OwnershipTransferred"
       | "Paused"
       | "StateChanged"
+      | "TimedWithdrawalFeesUpdated"
       | "Transfer"
       | "Unpaused"
       | "Withdraw"
@@ -213,10 +241,18 @@ export interface VaultInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "calculateTimedWithdrawalFee",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "callContract",
     values: [AddressLike, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "canGoLive", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "cleanupUserDeposits",
+    values: [AddressLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "convertAssetValueToUnderlying",
     values: [AddressLike, BigNumberish]
@@ -296,6 +332,18 @@ export interface VaultInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getTimedWithdrawalFees",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getUserAverageHoldingPeriod",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getUserDeposits",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getVaultAssetBreakdown",
     values?: undefined
   ): string;
@@ -341,6 +389,10 @@ export interface VaultInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "longTermWithdrawalFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "managementFee",
     values?: undefined
   ): string;
@@ -368,6 +420,10 @@ export interface VaultInterface extends Interface {
   encodeFunctionData(
     functionFragment: "maxWithdraw",
     values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mediumTermWithdrawalFee",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "minDepositAmount",
@@ -402,8 +458,16 @@ export interface VaultInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "previewTimedWithdrawalFee",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "previewWithdraw",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "previewWithdrawalAfterFees",
+    values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "previewWithdrawalImpact",
@@ -456,6 +520,14 @@ export interface VaultInterface extends Interface {
   encodeFunctionData(
     functionFragment: "setStrategyAuthorization",
     values: [AddressLike, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setTimedWithdrawalFees",
+    values: [BigNumberish, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "shortTermWithdrawalFee",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "shouldManagerRealize",
@@ -514,6 +586,14 @@ export interface VaultInterface extends Interface {
   encodeFunctionData(
     functionFragment: "updateVaultSettings",
     values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "userDeposits",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "userTotalDeposited",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "vaultState",
@@ -579,10 +659,18 @@ export interface VaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "calculateTimedWithdrawalFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "callContract",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "canGoLive", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "cleanupUserDeposits",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "convertAssetValueToUnderlying",
     data: BytesLike
@@ -659,6 +747,18 @@ export interface VaultInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getTimedWithdrawalFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getUserAverageHoldingPeriod",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getUserDeposits",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getVaultAssetBreakdown",
     data: BytesLike
   ): Result;
@@ -693,6 +793,10 @@ export interface VaultInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "longTermWithdrawalFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "managementFee",
     data: BytesLike
   ): Result;
@@ -710,6 +814,10 @@ export interface VaultInterface extends Interface {
   decodeFunctionResult(functionFragment: "maxRedeem", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "maxWithdraw",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "mediumTermWithdrawalFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -742,7 +850,15 @@ export interface VaultInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "previewTimedWithdrawalFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "previewWithdraw",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "previewWithdrawalAfterFees",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -792,6 +908,14 @@ export interface VaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setStrategyAuthorization",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setTimedWithdrawalFees",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "shortTermWithdrawalFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -846,6 +970,14 @@ export interface VaultInterface extends Interface {
     functionFragment: "updateVaultSettings",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "userDeposits",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "userTotalDeposited",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "vaultState", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -882,6 +1014,37 @@ export namespace ApprovalEvent {
     owner: string;
     spender: string;
     value: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace AssetAddedEvent {
+  export type InputTuple = [
+    vault: AddressLike,
+    asset: AddressLike,
+    position: BigNumberish
+  ];
+  export type OutputTuple = [vault: string, asset: string, position: bigint];
+  export interface OutputObject {
+    vault: string;
+    asset: string;
+    position: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace AssetRemovedEvent {
+  export type InputTuple = [vault: AddressLike, asset: AddressLike];
+  export type OutputTuple = [vault: string, asset: string];
+  export interface OutputObject {
+    vault: string;
+    asset: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -1164,6 +1327,28 @@ export namespace StateChangedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace TimedWithdrawalFeesUpdatedEvent {
+  export type InputTuple = [
+    shortTermFee: BigNumberish,
+    mediumTermFee: BigNumberish,
+    longTermFee: BigNumberish
+  ];
+  export type OutputTuple = [
+    shortTermFee: bigint,
+    mediumTermFee: bigint,
+    longTermFee: bigint
+  ];
+  export interface OutputObject {
+    shortTermFee: bigint;
+    mediumTermFee: bigint;
+    longTermFee: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace TransferEvent {
   export type InputTuple = [
     from: AddressLike,
@@ -1376,6 +1561,12 @@ export interface Vault extends BaseContract {
 
   balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
 
+  calculateTimedWithdrawalFee: TypedContractMethod<
+    [user: AddressLike, assets: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
   callContract: TypedContractMethod<
     [target: AddressLike, value: BigNumberish, data: BytesLike],
     [void],
@@ -1383,6 +1574,12 @@ export interface Vault extends BaseContract {
   >;
 
   canGoLive: TypedContractMethod<[], [boolean], "view">;
+
+  cleanupUserDeposits: TypedContractMethod<
+    [user: AddressLike],
+    [void],
+    "nonpayable"
+  >;
 
   convertAssetValueToUnderlying: TypedContractMethod<
     [assetAddress: AddressLike, amount: BigNumberish],
@@ -1481,6 +1678,30 @@ export interface Vault extends BaseContract {
 
   getSupportedAssetsCount: TypedContractMethod<[], [bigint], "view">;
 
+  getTimedWithdrawalFees: TypedContractMethod<
+    [],
+    [
+      [bigint, bigint, bigint] & {
+        shortTerm: bigint;
+        mediumTerm: bigint;
+        longTerm: bigint;
+      }
+    ],
+    "view"
+  >;
+
+  getUserAverageHoldingPeriod: TypedContractMethod<
+    [user: AddressLike],
+    [bigint],
+    "view"
+  >;
+
+  getUserDeposits: TypedContractMethod<
+    [user: AddressLike],
+    [FeeLogic.UserDepositStructOutput[]],
+    "view"
+  >;
+
   getVaultAssetBreakdown: TypedContractMethod<
     [],
     [
@@ -1544,6 +1765,8 @@ export interface Vault extends BaseContract {
     "nonpayable"
   >;
 
+  longTermWithdrawalFee: TypedContractMethod<[], [bigint], "view">;
+
   managementFee: TypedContractMethod<[], [bigint], "view">;
 
   manager: TypedContractMethod<[], [string], "view">;
@@ -1559,6 +1782,8 @@ export interface Vault extends BaseContract {
   maxRedeem: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
   maxWithdraw: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+
+  mediumTermWithdrawalFee: TypedContractMethod<[], [bigint], "view">;
 
   minDepositAmount: TypedContractMethod<[], [bigint], "view">;
 
@@ -1586,8 +1811,20 @@ export interface Vault extends BaseContract {
 
   previewRedeem: TypedContractMethod<[shares: BigNumberish], [bigint], "view">;
 
+  previewTimedWithdrawalFee: TypedContractMethod<
+    [user: AddressLike, assets: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
   previewWithdraw: TypedContractMethod<
     [assets: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  previewWithdrawalAfterFees: TypedContractMethod<
+    [user: AddressLike, assets: BigNumberish],
     [bigint],
     "view"
   >;
@@ -1650,6 +1887,18 @@ export interface Vault extends BaseContract {
     [void],
     "nonpayable"
   >;
+
+  setTimedWithdrawalFees: TypedContractMethod<
+    [
+      _shortTermFee: BigNumberish,
+      _mediumTermFee: BigNumberish,
+      _longTermFee: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
+
+  shortTermWithdrawalFee: TypedContractMethod<[], [bigint], "view">;
 
   shouldManagerRealize: TypedContractMethod<
     [],
@@ -1734,6 +1983,18 @@ export interface Vault extends BaseContract {
     "nonpayable"
   >;
 
+  userDeposits: TypedContractMethod<
+    [arg0: AddressLike, arg1: BigNumberish],
+    [[bigint, bigint] & { amount: bigint; timestamp: bigint }],
+    "view"
+  >;
+
+  userTotalDeposited: TypedContractMethod<
+    [arg0: AddressLike],
+    [bigint],
+    "view"
+  >;
+
   vaultState: TypedContractMethod<[], [bigint], "view">;
 
   version: TypedContractMethod<[], [string], "view">;
@@ -1807,6 +2068,13 @@ export interface Vault extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
   getFunction(
+    nameOrSignature: "calculateTimedWithdrawalFee"
+  ): TypedContractMethod<
+    [user: AddressLike, assets: BigNumberish],
+    [bigint],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "callContract"
   ): TypedContractMethod<
     [target: AddressLike, value: BigNumberish, data: BytesLike],
@@ -1816,6 +2084,9 @@ export interface Vault extends BaseContract {
   getFunction(
     nameOrSignature: "canGoLive"
   ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "cleanupUserDeposits"
+  ): TypedContractMethod<[user: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "convertAssetValueToUnderlying"
   ): TypedContractMethod<
@@ -1927,6 +2198,29 @@ export interface Vault extends BaseContract {
     nameOrSignature: "getSupportedAssetsCount"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "getTimedWithdrawalFees"
+  ): TypedContractMethod<
+    [],
+    [
+      [bigint, bigint, bigint] & {
+        shortTerm: bigint;
+        mediumTerm: bigint;
+        longTerm: bigint;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getUserAverageHoldingPeriod"
+  ): TypedContractMethod<[user: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getUserDeposits"
+  ): TypedContractMethod<
+    [user: AddressLike],
+    [FeeLogic.UserDepositStructOutput[]],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "getVaultAssetBreakdown"
   ): TypedContractMethod<
     [],
@@ -1992,6 +2286,9 @@ export interface Vault extends BaseContract {
     nameOrSignature: "liquidateAllPositionsForHarvest"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
+    nameOrSignature: "longTermWithdrawalFee"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "managementFee"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -2015,6 +2312,9 @@ export interface Vault extends BaseContract {
   getFunction(
     nameOrSignature: "maxWithdraw"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "mediumTermWithdrawalFee"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "minDepositAmount"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -2053,8 +2353,22 @@ export interface Vault extends BaseContract {
     nameOrSignature: "previewRedeem"
   ): TypedContractMethod<[shares: BigNumberish], [bigint], "view">;
   getFunction(
+    nameOrSignature: "previewTimedWithdrawalFee"
+  ): TypedContractMethod<
+    [user: AddressLike, assets: BigNumberish],
+    [bigint],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "previewWithdraw"
   ): TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "previewWithdrawalAfterFees"
+  ): TypedContractMethod<
+    [user: AddressLike, assets: BigNumberish],
+    [bigint],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "previewWithdrawalImpact"
   ): TypedContractMethod<
@@ -2115,6 +2429,20 @@ export interface Vault extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "setTimedWithdrawalFees"
+  ): TypedContractMethod<
+    [
+      _shortTermFee: BigNumberish,
+      _mediumTermFee: BigNumberish,
+      _longTermFee: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "shortTermWithdrawalFee"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "shouldManagerRealize"
   ): TypedContractMethod<
@@ -2203,6 +2531,16 @@ export interface Vault extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "userDeposits"
+  ): TypedContractMethod<
+    [arg0: AddressLike, arg1: BigNumberish],
+    [[bigint, bigint] & { amount: bigint; timestamp: bigint }],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "userTotalDeposited"
+  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  getFunction(
     nameOrSignature: "vaultState"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -2232,6 +2570,20 @@ export interface Vault extends BaseContract {
     ApprovalEvent.InputTuple,
     ApprovalEvent.OutputTuple,
     ApprovalEvent.OutputObject
+  >;
+  getEvent(
+    key: "AssetAdded"
+  ): TypedContractEvent<
+    AssetAddedEvent.InputTuple,
+    AssetAddedEvent.OutputTuple,
+    AssetAddedEvent.OutputObject
+  >;
+  getEvent(
+    key: "AssetRemoved"
+  ): TypedContractEvent<
+    AssetRemovedEvent.InputTuple,
+    AssetRemovedEvent.OutputTuple,
+    AssetRemovedEvent.OutputObject
   >;
   getEvent(
     key: "AutoRealizationTriggered"
@@ -2325,6 +2677,13 @@ export interface Vault extends BaseContract {
     StateChangedEvent.OutputObject
   >;
   getEvent(
+    key: "TimedWithdrawalFeesUpdated"
+  ): TypedContractEvent<
+    TimedWithdrawalFeesUpdatedEvent.InputTuple,
+    TimedWithdrawalFeesUpdatedEvent.OutputTuple,
+    TimedWithdrawalFeesUpdatedEvent.OutputObject
+  >;
+  getEvent(
     key: "Transfer"
   ): TypedContractEvent<
     TransferEvent.InputTuple,
@@ -2381,6 +2740,28 @@ export interface Vault extends BaseContract {
       ApprovalEvent.InputTuple,
       ApprovalEvent.OutputTuple,
       ApprovalEvent.OutputObject
+    >;
+
+    "AssetAdded(address,address,uint256)": TypedContractEvent<
+      AssetAddedEvent.InputTuple,
+      AssetAddedEvent.OutputTuple,
+      AssetAddedEvent.OutputObject
+    >;
+    AssetAdded: TypedContractEvent<
+      AssetAddedEvent.InputTuple,
+      AssetAddedEvent.OutputTuple,
+      AssetAddedEvent.OutputObject
+    >;
+
+    "AssetRemoved(address,address)": TypedContractEvent<
+      AssetRemovedEvent.InputTuple,
+      AssetRemovedEvent.OutputTuple,
+      AssetRemovedEvent.OutputObject
+    >;
+    AssetRemoved: TypedContractEvent<
+      AssetRemovedEvent.InputTuple,
+      AssetRemovedEvent.OutputTuple,
+      AssetRemovedEvent.OutputObject
     >;
 
     "AutoRealizationTriggered(address,uint256,uint256,uint256)": TypedContractEvent<
@@ -2524,6 +2905,17 @@ export interface Vault extends BaseContract {
       StateChangedEvent.InputTuple,
       StateChangedEvent.OutputTuple,
       StateChangedEvent.OutputObject
+    >;
+
+    "TimedWithdrawalFeesUpdated(uint16,uint16,uint16)": TypedContractEvent<
+      TimedWithdrawalFeesUpdatedEvent.InputTuple,
+      TimedWithdrawalFeesUpdatedEvent.OutputTuple,
+      TimedWithdrawalFeesUpdatedEvent.OutputObject
+    >;
+    TimedWithdrawalFeesUpdated: TypedContractEvent<
+      TimedWithdrawalFeesUpdatedEvent.InputTuple,
+      TimedWithdrawalFeesUpdatedEvent.OutputTuple,
+      TimedWithdrawalFeesUpdatedEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<

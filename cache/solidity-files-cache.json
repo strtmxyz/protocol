@@ -978,7 +978,7 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IVault.sol": {
-      "lastModificationDate": 1751625666530,
+      "lastModificationDate": 1751697824667,
       "contentHash": "090f819307c22a3e9973e6af68c6f55c",
       "sourceName": "contracts/interfaces/IVault.sol",
       "solcConfig": {
@@ -2005,8 +2005,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/Vault.sol": {
-      "lastModificationDate": 1751647743006,
-      "contentHash": "6cbbda501a210731af082ebfa7807f77",
+      "lastModificationDate": 1751865836075,
+      "contentHash": "4f202efef40de3ea13bc214a88056f68",
       "sourceName": "contracts/Vault.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2051,7 +2051,9 @@
         "./interfaces/guards/IGuard.sol",
         "./interfaces/guards/ITxTrackingGuard.sol",
         "./utils/VaultLogic.sol",
-        "./utils/FeeLogic.sol"
+        "./utils/AssetLogic.sol",
+        "./utils/FeeLogic.sol",
+        "./utils/AssetLogic.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -2184,8 +2186,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/FeeLogic.sol": {
-      "lastModificationDate": 1751631712960,
-      "contentHash": "c96abcdc639f2168d0f6d7da64ec0d60",
+      "lastModificationDate": 1751865325127,
+      "contentHash": "a24120ab4a490f2fb97374979f6c363d",
       "sourceName": "contracts/utils/FeeLogic.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2392,7 +2394,7 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/vertexprotocol/IEndpoint.sol": {
-      "lastModificationDate": 1751508348672,
+      "lastModificationDate": 1751718060258,
       "contentHash": "c3a79fbca552e2bd24e64bb5a6ffbd64",
       "sourceName": "contracts/interfaces/external/vertexprotocol/IEndpoint.sol",
       "solcConfig": {
@@ -3095,6 +3097,90 @@
       ],
       "artifacts": [
         "IHasDaoInfo"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/AmbientGuard.sol": {
+      "lastModificationDate": 1751864742840,
+      "contentHash": "a842638d9c7bad0a66484bf2df8392a6",
+      "sourceName": "contracts/guards/platform/AmbientGuard.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../../interfaces/guards/IPlatformGuard.sol",
+        "../../utils/TxDataUtils.sol",
+        "../../interfaces/IHasSupportedAsset.sol",
+        "../../interfaces/IVault.sol",
+        "../../interfaces/ITransactionTypes.sol",
+        "../../interfaces/external/ambient/ICrocSwapDex.sol",
+        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AmbientGuard"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/ambient/ICrocSwapDex.sol": {
+      "lastModificationDate": 1751862265837,
+      "contentHash": "95688442bebc02a8ad3d6b3e950c9cf4",
+      "sourceName": "contracts/interfaces/external/ambient/ICrocSwapDex.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ICrocSwapDex"
       ]
     }
   }

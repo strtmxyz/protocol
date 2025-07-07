@@ -50,6 +50,14 @@ const config: HardhatUserConfig = {
               process.env.OWNER_PRIVATE_KEY,
           ]:[],
     },
+    monadTestnet: {
+      url: 'https://testnet-rpc.monad.xyz',
+      chainId: 10143,
+      accounts: process.env.OWNER_PRIVATE_KEY
+        ?[
+          process.env.OWNER_PRIVATE_KEY,
+        ]:[],
+    },
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_V2_API_KEY || ""

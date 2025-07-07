@@ -17,7 +17,11 @@ import "./interfaces/guards/IAssetGuard.sol";
 import "./interfaces/guards/IGuard.sol";
 import "./interfaces/guards/ITxTrackingGuard.sol";
 import "./utils/VaultLogic.sol";
+import "./utils/AssetLogic.sol";
 import "./utils/FeeLogic.sol";
+
+// Import error definitions from libraries
+import {AssetNotSupported, PlatformNotSupported} from "./utils/AssetLogic.sol";
 
 /// @title Strtm (Str.) Vault
 /// @notice A vault contract for yield farming and asset management with epoch-based lifecycle
@@ -39,8 +43,7 @@ contract Vault is
     error InvalidVaultState();
     error InvalidAsset();
     error InvalidManager();
-    error ManagementFeeTooHigh();
-    error PerformanceFeeTooHigh();
+
     error InsufficientFundsRaised();
     error MustLiquidateAllPositions();
     error AssetGuardNotFound();
@@ -52,19 +55,12 @@ contract Vault is
     error InsufficientUnderlyingAssets();
     error InvalidTarget();
     error NoGuardFound();
-    error PlatformNotSupported();
-    error AssetNotSupported();
     error TransactionRejectedByGuard();
     error ContractCallFailed();
     error RealizationCooldownActive();
     error ManualLiquidationRequired();
     error InternalOnly();
     error CannotRemoveUnderlyingAsset();
-    error AssetAlreadySupported();
-    error InvalidPlatformName();
-    error PlatformAlreadySupported();
-    error CooldownTooLong();
-    error DeviationTooHigh();
     error OnlyInEmergencyMode();
     error InvalidPrice();
     error Unauthorized();
@@ -153,6 +149,12 @@ contract Vault is
         uint256 totalFeesExtracted,
         uint256 blockNumber
     );
+    
+    event TimedWithdrawalFeesUpdated(
+        uint16 shortTermFee,
+        uint16 mediumTermFee,
+        uint16 longTermFee
+    );
 
     /*//////////////////////////////////////////////////////////////
                             STATE VARIABLES
@@ -176,6 +178,16 @@ contract Vault is
     uint16 public performanceFee; // Performance fee (basis points) - max 65535 > max fee 2000
     uint16 public withdrawalFee; // Withdrawal fee (basis points) - max 65535 > max fee 2000
     uint16 public protocolFee; // Protocol fee taken from performance fee (basis points) - max 65535 > max fee 5000
+    
+    // Time-based withdrawal fee structure
+    uint16 public shortTermWithdrawalFee; // Fee for withdrawals < 30 days (basis points)
+    uint16 public mediumTermWithdrawalFee; // Fee for withdrawals 30 days - 6 months (basis points)
+    uint16 public longTermWithdrawalFee; // Fee for withdrawals > 6 months (basis points)
+    
+    // User deposit tracking for time-based fees
+    mapping(address => FeeLogic.UserDeposit[]) public userDeposits;
+    mapping(address => uint256) public userTotalDeposited;
+    
     uint256 public constant MAX_FEE = 65535;
     uint256 public constant MAX_PROTOCOL_FEE = 5000; // 50% max protocol fee share
     uint256 public constant FEE_DENOMINATOR = 10000;
@@ -316,6 +328,11 @@ contract Vault is
         performanceFee = uint16(_performanceFee);
         withdrawalFee = 50; // 0.5% default withdrawal fee
         protocolFee = 1000; // 10% of performance fee (default)
+        
+        // Initialize time-based withdrawal fees
+        shortTermWithdrawalFee = 50; // 0.5% for < 30 days
+        mediumTermWithdrawalFee = 25; // 0.25% for 30 days - 6 months
+        longTermWithdrawalFee = 10;   // 0.1% for > 6 months
     }
     
     /// @notice Set oracle protection defaults
@@ -536,32 +553,13 @@ contract Vault is
     /// @param assetAddr Asset address
     /// @return Validated price
     function _getValidatedPrice(address assetHandlerAddr, address assetAddr) internal view returns (uint256) {
-        if (emergencyOracleMode) {
-            // In emergency mode, use last known prices
-            uint256 emergencyPrice = lastAssetPrices[assetAddr];
-            if (emergencyPrice <= 0) revert NoEmergencyPriceAvailable();
-            return emergencyPrice;
-        }
-        
-        uint256 currentPrice = IAssetHandler(assetHandlerAddr).getUSDPrice(assetAddr);
-        uint256 lastPrice = lastAssetPrices[assetAddr];
-        
-        // For first time or when no last price exists, allow current price
-        if (lastPrice == 0) {
-            return currentPrice;
-        }
-        
-        // Check price deviation protection
-        uint256 priceChange = currentPrice > lastPrice ? 
-            ((currentPrice - lastPrice) * 10000) / lastPrice :
-            ((lastPrice - currentPrice) * 10000) / lastPrice;
-            
-        // If price change exceeds threshold, use last known price for safety
-        if (priceChange > maxPriceDeviationBps) {
-            return lastPrice; // Use last known safe price
-        }
-        
-        return currentPrice;
+        return VaultLogic.getValidatedPrice(
+            assetAddr,
+            assetHandlerAddr,
+            lastAssetPrices,
+            emergencyOracleMode,
+            maxPriceDeviationBps
+        );
     }
     
     /// @notice Get vault breakdown by asset
@@ -624,8 +622,9 @@ contract Vault is
 
     /// @notice Preview withdrawal with fees
     function previewWithdraw(uint256 assets) public view override returns (uint256) {
-        (uint256 assetsWithFee, ) = FeeLogic.previewWithdrawalFees(assets, withdrawalFee, FEE_DENOMINATOR);
-        return _convertToShares(assetsWithFee, Math.Rounding.Ceil);
+        // Fix: Calculate shares based on assets amount only, not assets + fee
+        // The fee will be deducted from the user's received amount, not from share calculation
+        return _convertToShares(assets, Math.Rounding.Ceil);
     }
 
     /// @notice Deposit assets and receive shares (only during fundraising)
@@ -736,7 +735,21 @@ contract Vault is
         IERC20(asset()).safeTransferFrom(caller, address(this), assets);
         _mint(receiver, shares);
         
+        // Track user deposit for time-based fees
+        _trackUserDeposit(receiver, assets);
+        
         emit Deposit(caller, receiver, assets, shares);
+    }
+    
+    /// @notice Track user deposit for time-based withdrawal fees
+    /// @param user User address
+    /// @param assets Amount of assets deposited
+    function _trackUserDeposit(address user, uint256 assets) internal {
+        userDeposits[user].push(FeeLogic.UserDeposit({
+            amount: assets,
+            timestamp: block.timestamp
+        }));
+        userTotalDeposited[user] += assets;
     }
 
     /// @notice Internal withdraw function
@@ -745,9 +758,12 @@ contract Vault is
             _spendAllowance(owner, caller, shares);
         }
         
-        // Calculate withdrawal fee
-        uint256 fee = (assets * withdrawalFee) / FEE_DENOMINATOR;
+        // Calculate time-based withdrawal fee
+        uint256 fee = calculateTimedWithdrawalFee(owner, assets);
         uint256 assetsAfterFee = assets - fee;
+        
+        // Update user deposits (FIFO basis)
+        _updateUserDepositsAfterWithdraw(owner, assets);
         
         _burn(owner, shares);
         
@@ -759,6 +775,18 @@ contract Vault is
         }
         
         emit Withdraw(caller, receiver, owner, assets, shares);
+    }
+    
+    /// @notice Update user deposits after withdrawal (FIFO basis)
+    /// @param user User address
+    /// @param assets Amount of assets withdrawn
+    function _updateUserDepositsAfterWithdraw(address user, uint256 assets) internal {
+        FeeLogic.UserDeposit[] storage deposits = userDeposits[user];
+        userTotalDeposited[user] = FeeLogic.updateUserDepositsAfterWithdraw(
+            deposits,
+            assets,
+            userTotalDeposited[user]
+        );
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -842,7 +870,7 @@ contract Vault is
             return;
         }
         
-        uint256 yield = _calculateAndLimitYield(currentTotalValue, expectedValue);
+        uint256 yield = VaultLogic.calculateAndLimitYield(currentTotalValue, expectedValue);
         (uint256 managementFeeAmount, uint256 managerPerformanceFee, uint256 protocolFeeAmount) = _calculateAllFees(yield, expectedValue);
         
         _extractFeesFromUnderlying(managementFeeAmount, managerPerformanceFee, protocolFeeAmount);
@@ -881,13 +909,7 @@ contract Vault is
         currentRealization.isRealized = false;
     }
     
-    /// @notice Calculate and limit yield to reasonable amount
-    /// @param currentTotalValue Current vault value
-    /// @param expectedValue Expected value without yield
-    /// @return Limited yield amount
-    function _calculateAndLimitYield(uint256 currentTotalValue, uint256 expectedValue) internal pure returns (uint256) {
-        return VaultLogic.calculateAndLimitYield(currentTotalValue, expectedValue);
-    }
+
     
     /// @notice Calculate all fee components
     /// @param yield Realized yield amount
@@ -1042,34 +1064,29 @@ contract Vault is
     /// @param _asset Asset to remove
     function removeSupportedAsset(address _asset) external onlyManager {
         if (_asset == asset()) revert CannotRemoveUnderlyingAsset();
-        if (!isAssetSupported[_asset]) revert AssetNotSupported();
         
-        // Remove from array
-        uint256 index = assetPosition[_asset];
-        address lastAsset = supportedAssets[supportedAssets.length - 1];
-        
-        supportedAssets[index] = lastAsset;
-        assetPosition[lastAsset] = index;
-        supportedAssets.pop();
-        
-        delete assetPosition[_asset];
-        isAssetSupported[_asset] = false;
+        AssetLogic.removeSupportedAsset(
+            _asset,
+            supportedAssets,
+            assetPosition,
+            isAssetSupported
+        );
     }
     
     /// @notice Internal function to add supported asset with factory whitelist validation
     /// @param _asset Asset to add
     function _addSupportedAsset(address _asset) internal {
-        if (_asset == address(0)) revert InvalidAsset();
-        if (isAssetSupported[_asset]) revert AssetAlreadySupported();
-        
         // 🛡️ SECURITY: Check factory whitelist before allowing asset
         if (!IVaultFactory(factory).isAssetWhitelisted(_asset)) {
             revert AssetNotSupported(); // Asset not whitelisted by factory
         }
         
-        supportedAssets.push(_asset);
-        assetPosition[_asset] = supportedAssets.length - 1;
-        isAssetSupported[_asset] = true;
+        AssetLogic.addSupportedAsset(
+            _asset,
+            supportedAssets,
+            assetPosition,
+            isAssetSupported
+        );
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -1079,29 +1096,21 @@ contract Vault is
     /// @notice Add a supported platform
     /// @param _platform Platform name to add
     function addSupportedPlatform(string memory _platform) external onlyManager {
-        if (bytes(_platform).length == 0) revert InvalidPlatformName();
-        if (isPlatformSupported[_platform]) revert PlatformAlreadySupported();
-        
-        supportedPlatforms.push(_platform);
-        isPlatformSupported[_platform] = true;
+        AssetLogic.addSupportedPlatform(
+            _platform,
+            supportedPlatforms,
+            isPlatformSupported
+        );
     }
     
     /// @notice Remove a supported platform
     /// @param _platform Platform name to remove
     function removeSupportedPlatform(string memory _platform) external onlyManager {
-        if (!isPlatformSupported[_platform]) revert PlatformNotSupported();
-        
-        // Find and remove from array
-        for (uint256 i = 0; i < supportedPlatforms.length; i++) {
-            if (keccak256(bytes(supportedPlatforms[i])) == keccak256(bytes(_platform))) {
-                // Move last element to this position
-                supportedPlatforms[i] = supportedPlatforms[supportedPlatforms.length - 1];
-                supportedPlatforms.pop();
-                break;
-            }
-        }
-        
-        isPlatformSupported[_platform] = false;
+        AssetLogic.removeSupportedPlatform(
+            _platform,
+            supportedPlatforms,
+            isPlatformSupported
+        );
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -1141,8 +1150,10 @@ contract Vault is
         uint256 _maxCapacity,
         uint256 _minDepositAmount
     ) external onlyManager {
-        maxCapacity = _maxCapacity;
-        minDepositAmount = _minDepositAmount;
+        (maxCapacity, minDepositAmount) = AssetLogic.updateVaultSettings(
+            _maxCapacity,
+            _minDepositAmount
+        );
     }
     
     /// @notice Update epoch settings
@@ -1152,8 +1163,10 @@ contract Vault is
         uint256 _fundraisingDuration,
         uint256 _minFundraisingAmount
     ) external onlyManager {
-        fundraisingDuration = _fundraisingDuration;
-        minFundraisingAmount = _minFundraisingAmount;
+        (fundraisingDuration, minFundraisingAmount) = AssetLogic.updateEpochSettings(
+            _fundraisingDuration,
+            _minFundraisingAmount
+        );
     }
     
     /// @notice Authorize a strategy
@@ -1181,11 +1194,13 @@ contract Vault is
         uint256 _realizationCooldown,
         uint256 _maxPriceDeviationBps
     ) external onlyManager {
-        if (_realizationCooldown > 24 hours) revert CooldownTooLong();
-        if (_maxPriceDeviationBps > MAX_PRICE_DEVIATION) revert DeviationTooHigh();
-        
-        realizationCooldown = _realizationCooldown;
-        maxPriceDeviationBps = uint16(_maxPriceDeviationBps);
+        (uint256 newCooldown, uint256 newDeviation) = AssetLogic.updateOracleProtection(
+            _realizationCooldown,
+            _maxPriceDeviationBps,
+            MAX_PRICE_DEVIATION
+        );
+        realizationCooldown = newCooldown;
+        maxPriceDeviationBps = uint16(newDeviation);
         
         emit OracleProtectionUpdated(_realizationCooldown, _maxPriceDeviationBps, emergencyOracleMode);
     }
@@ -1400,19 +1415,14 @@ contract Vault is
     /// @param _asset Asset address to check
     /// @return True if asset is supported by this vault
     function _isSupportedAsset(address _asset) internal view returns (bool) {
-        return isAssetSupported[_asset];
+        return AssetLogic.isSupportedAsset(_asset, isAssetSupported);
     }
     
     /// @notice Check if platform is supported
     /// @param _platform Platform name to check
     /// @return True if platform is supported
     function _isSupportedPlatform(string memory _platform) internal view returns (bool) {
-        for (uint256 i = 0; i < supportedPlatforms.length; i++) {
-            if (keccak256(bytes(supportedPlatforms[i])) == keccak256(bytes(_platform))) {
-                return true;
-            }
-        }
-        return false;
+        return AssetLogic.isSupportedPlatform(_platform, isPlatformSupported);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -1446,5 +1456,118 @@ contract Vault is
     /// @return Asset type as defined in factory (same source as guard resolution)
     function getAssetType(address asset) external view override returns (uint16) {
         return IVaultFactory(factory).getTokenType(asset);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            TIME-BASED WITHDRAWAL FEES
+    //////////////////////////////////////////////////////////////*/
+    
+    /// @notice Calculate time-based withdrawal fee for a user
+    /// @param user User address
+    /// @param assets Amount of assets to withdraw
+    /// @return fee Time-based withdrawal fee
+    function calculateTimedWithdrawalFee(address user, uint256 assets) public view returns (uint256 fee) {
+        FeeLogic.UserDeposit[] memory deposits = userDeposits[user];
+        
+        return FeeLogic.calculateTimedWithdrawalFee(
+            deposits,
+            assets,
+            shortTermWithdrawalFee,
+            mediumTermWithdrawalFee,
+            longTermWithdrawalFee,
+            withdrawalFee,
+            FEE_DENOMINATOR
+        );
+    }
+    
+
+    
+    /// @notice Get user's deposit history
+    /// @param user User address
+    /// @return deposits Array of user deposits
+    function getUserDeposits(address user) external view returns (FeeLogic.UserDeposit[] memory deposits) {
+        return userDeposits[user];
+    }
+    
+    /// @notice Get user's average holding period
+    /// @param user User address
+    /// @return avgHoldingPeriod Average holding period in seconds
+    function getUserAverageHoldingPeriod(address user) external view returns (uint256 avgHoldingPeriod) {
+        FeeLogic.UserDeposit[] memory deposits = userDeposits[user];
+        return FeeLogic.calculateUserAverageHoldingPeriod(deposits);
+    }
+    
+    /// @notice Preview time-based withdrawal fee
+    /// @param user User address
+    /// @param assets Amount of assets to withdraw
+    /// @return fee Estimated withdrawal fee
+    function previewTimedWithdrawalFee(address user, uint256 assets) external view returns (uint256 fee) {
+        return calculateTimedWithdrawalFee(user, assets);
+    }
+    
+    /// @notice Set time-based withdrawal fee structure (Manager only)
+    /// @param _shortTermFee Fee for < 30 days (basis points)
+    /// @param _mediumTermFee Fee for 30 days - 6 months (basis points)
+    /// @param _longTermFee Fee for > 6 months (basis points)
+    function setTimedWithdrawalFees(
+        uint16 _shortTermFee,
+        uint16 _mediumTermFee,
+        uint16 _longTermFee
+    ) external onlyManager {
+        FeeLogic.validateTimedWithdrawalFeeStructure(
+            _shortTermFee,
+            _mediumTermFee,
+            _longTermFee,
+            MAX_FEE
+        );
+        
+        shortTermWithdrawalFee = _shortTermFee;
+        mediumTermWithdrawalFee = _mediumTermFee;
+        longTermWithdrawalFee = _longTermFee;
+        
+        emit TimedWithdrawalFeesUpdated(_shortTermFee, _mediumTermFee, _longTermFee);
+    }
+    
+    /// @notice Get current time-based withdrawal fee structure
+    /// @return shortTerm Fee for < 30 days
+    /// @return mediumTerm Fee for 30 days - 6 months
+    /// @return longTerm Fee for > 6 months
+    function getTimedWithdrawalFees() external view returns (
+        uint16 shortTerm,
+        uint16 mediumTerm,
+        uint16 longTerm
+    ) {
+        return (shortTermWithdrawalFee, mediumTermWithdrawalFee, longTermWithdrawalFee);
+    }
+    
+    /// @notice Preview withdrawal amount after time-based fees
+    /// @param user User address
+    /// @param assets Amount of assets to withdraw
+    /// @return assetsAfterFee Amount user will receive after fees
+    function previewWithdrawalAfterFees(address user, uint256 assets) external view returns (uint256 assetsAfterFee) {
+        uint256 fee = calculateTimedWithdrawalFee(user, assets);
+        return assets - fee;
+    }
+    
+    /// @notice Clean up empty deposits for a user (gas optimization)
+    /// @param user User address
+    function cleanupUserDeposits(address user) external {
+        FeeLogic.UserDeposit[] storage deposits = userDeposits[user];
+        uint256 writeIndex = 0;
+        
+        // Compress array by removing empty deposits
+        for (uint256 i = 0; i < deposits.length; i++) {
+            if (deposits[i].amount > 0) {
+                if (writeIndex != i) {
+                    deposits[writeIndex] = deposits[i];
+                }
+                writeIndex++;
+            }
+        }
+        
+        // Resize array to remove empty slots
+        while (deposits.length > writeIndex) {
+            deposits.pop();
+        }
     }
 } 

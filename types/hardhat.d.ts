@@ -170,6 +170,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.VertexAssetGuard__factory>;
     getContractFactory(
+      name: "AmbientGuard",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AmbientGuard__factory>;
+    getContractFactory(
       name: "KyberswapGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.KyberswapGuard__factory>;
@@ -177,6 +181,10 @@ declare module "hardhat/types/runtime" {
       name: "VertexPlatformGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.VertexPlatformGuard__factory>;
+    getContractFactory(
+      name: "ICrocSwapDex",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ICrocSwapDex__factory>;
     getContractFactory(
       name: "IMetaAggregationRouterV2",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -482,6 +490,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.VertexAssetGuard>;
     getContractAt(
+      name: "AmbientGuard",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AmbientGuard>;
+    getContractAt(
       name: "KyberswapGuard",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -491,6 +504,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.VertexPlatformGuard>;
+    getContractAt(
+      name: "ICrocSwapDex",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ICrocSwapDex>;
     getContractAt(
       name: "IMetaAggregationRouterV2",
       address: string | ethers.Addressable,
@@ -784,6 +802,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.VertexAssetGuard>;
     deployContract(
+      name: "AmbientGuard",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AmbientGuard>;
+    deployContract(
       name: "KyberswapGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.KyberswapGuard>;
@@ -791,6 +813,10 @@ declare module "hardhat/types/runtime" {
       name: "VertexPlatformGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.VertexPlatformGuard>;
+    deployContract(
+      name: "ICrocSwapDex",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ICrocSwapDex>;
     deployContract(
       name: "IMetaAggregationRouterV2",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1096,6 +1122,11 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.VertexAssetGuard>;
     deployContract(
+      name: "AmbientGuard",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AmbientGuard>;
+    deployContract(
       name: "KyberswapGuard",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1105,6 +1136,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.VertexPlatformGuard>;
+    deployContract(
+      name: "ICrocSwapDex",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ICrocSwapDex>;
     deployContract(
       name: "IMetaAggregationRouterV2",
       args: any[],
