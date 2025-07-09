@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Volumes/Development/Workspace/stratum/protocol/contracts/Governance.sol": {
-      "lastModificationDate": 1751632217065,
+      "lastModificationDate": 1751932943105,
       "contentHash": "973dbf15aad42add7cd45b149fb62391",
       "sourceName": "contracts/Governance.sol",
       "solcConfig": {
@@ -27,6 +27,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -69,6 +73,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -106,6 +114,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -148,6 +160,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -188,6 +204,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -225,6 +245,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -270,6 +294,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -307,6 +335,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -348,6 +380,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -387,6 +423,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -431,6 +471,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -468,6 +512,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -509,6 +557,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -549,6 +601,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -594,6 +650,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -631,6 +691,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -672,6 +736,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -716,6 +784,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -754,6 +826,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -791,6 +867,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -832,6 +912,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -870,6 +954,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -907,6 +995,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -966,6 +1058,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1003,6 +1099,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1044,6 +1144,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1081,6 +1185,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1120,6 +1228,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1157,6 +1269,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1196,6 +1312,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1233,6 +1353,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1274,6 +1398,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1312,6 +1440,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1349,6 +1481,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1391,6 +1527,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1431,6 +1571,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1474,6 +1618,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1512,6 +1660,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1549,6 +1701,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1589,6 +1745,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1632,6 +1792,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1673,6 +1837,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1710,6 +1878,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1751,6 +1923,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1788,6 +1964,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1835,6 +2015,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1875,6 +2059,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1917,6 +2105,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -1954,6 +2146,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -1993,6 +2189,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2005,8 +2205,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/Vault.sol": {
-      "lastModificationDate": 1751865836075,
-      "contentHash": "4f202efef40de3ea13bc214a88056f68",
+      "lastModificationDate": 1752031728718,
+      "contentHash": "c73138ec77adaa1218f4c3106961638a",
       "sourceName": "contracts/Vault.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2031,6 +2231,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2053,7 +2257,8 @@
         "./utils/VaultLogic.sol",
         "./utils/AssetLogic.sol",
         "./utils/FeeLogic.sol",
-        "./utils/AssetLogic.sol"
+        "./utils/AssetLogic.sol",
+        "./utils/FeeLogic.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -2088,6 +2293,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2127,6 +2336,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2165,6 +2378,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2186,8 +2403,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/FeeLogic.sol": {
-      "lastModificationDate": 1751865325127,
-      "contentHash": "a24120ab4a490f2fb97374979f6c363d",
+      "lastModificationDate": 1752031549548,
+      "contentHash": "c96abcdc639f2168d0f6d7da64ec0d60",
       "sourceName": "contracts/utils/FeeLogic.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2211,6 +2428,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2253,6 +2474,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2267,8 +2492,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/VertexPlatformGuard.sol": {
-      "lastModificationDate": 1751632178947,
-      "contentHash": "4a1ebbf225c5abe81c8859e21ba4f056",
+      "lastModificationDate": 1751890808434,
+      "contentHash": "4de7af7d4f5431ff1464904e5d6ae3cf",
       "sourceName": "contracts/guards/platform/VertexPlatformGuard.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2292,6 +2517,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2340,6 +2569,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2379,6 +2612,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2420,6 +2657,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2457,6 +2698,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2496,6 +2741,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2508,7 +2757,7 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/KyberswapGuard.sol": {
-      "lastModificationDate": 1751631961649,
+      "lastModificationDate": 1751890796949,
       "contentHash": "c28c749d2c7b715c4a39a5ea54f75ce9",
       "sourceName": "contracts/guards/platform/KyberswapGuard.sol",
       "solcConfig": {
@@ -2533,6 +2782,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2581,6 +2834,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2618,6 +2875,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2658,6 +2919,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2709,6 +2974,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2746,6 +3015,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2789,6 +3062,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2841,6 +3118,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2879,6 +3160,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -2902,8 +3187,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/AssetLogic.sol": {
-      "lastModificationDate": 1751632111655,
-      "contentHash": "3947d15b727616c695175f27056b2049",
+      "lastModificationDate": 1751885475761,
+      "contentHash": "e7e9822999ed422a27b9394c3e31fdc3",
       "sourceName": "contracts/utils/AssetLogic.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2927,6 +3212,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -2967,6 +3256,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -3010,6 +3303,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -3050,6 +3347,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -3088,6 +3389,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -3100,7 +3405,7 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/AmbientGuard.sol": {
-      "lastModificationDate": 1751864742840,
+      "lastModificationDate": 1751890788494,
       "contentHash": "a842638d9c7bad0a66484bf2df8392a6",
       "sourceName": "contracts/guards/platform/AmbientGuard.sol",
       "solcConfig": {
@@ -3125,6 +3430,10 @@
           "optimizer": {
             "enabled": true,
             "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
           },
           "evmVersion": "paris"
         }
@@ -3172,6 +3481,10 @@
             "enabled": true,
             "runs": 1
           },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
           "evmVersion": "paris"
         }
       },
@@ -3181,6 +3494,328 @@
       ],
       "artifacts": [
         "ICrocSwapDex"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/pancakeswap/IUniversalRouter.sol": {
+      "lastModificationDate": 1751889920677,
+      "contentHash": "73bc85c31b0029faa67212a53cbf8fe7",
+      "sourceName": "contracts/interfaces/external/pancakeswap/IUniversalRouter.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IUniversalRouter"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/PancakeV3RouterGuard.sol": {
+      "lastModificationDate": 1751890762769,
+      "contentHash": "3aa8e6377c599e215c453358d5ded8cb",
+      "sourceName": "contracts/guards/platform/PancakeV3RouterGuard.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../../interfaces/guards/IPlatformGuard.sol",
+        "../../utils/TxDataUtils.sol",
+        "../../interfaces/IHasSupportedAsset.sol",
+        "../../interfaces/ITransactionTypes.sol",
+        "../../interfaces/external/pancakeswap/IUniversalRouter.sol",
+        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "PancakeV3RouterGuard"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/pancakeswap/IPancakeV2Pair.sol": {
+      "lastModificationDate": 1751889901746,
+      "contentHash": "acbd0dc63c1f587c71765fb280c90ca5",
+      "sourceName": "contracts/interfaces/external/pancakeswap/IPancakeV2Pair.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPancakeV2Pair"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/pancakeswap/IPancakeV2Router.sol": {
+      "lastModificationDate": 1751890005219,
+      "contentHash": "c00c6e6a0a60e3e5f0cb228bd772b542",
+      "sourceName": "contracts/interfaces/external/pancakeswap/IPancakeV2Router.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.6.2"
+      ],
+      "artifacts": [
+        "IPancakeV2Router"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/PancakeV2RouterGuard.sol": {
+      "lastModificationDate": 1751890755462,
+      "contentHash": "b26920ed46287e57b8c81ef2880e6d75",
+      "sourceName": "contracts/guards/platform/PancakeV2RouterGuard.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../../interfaces/guards/IPlatformGuard.sol",
+        "../../utils/TxDataUtils.sol",
+        "../../interfaces/IHasSupportedAsset.sol",
+        "../../interfaces/ITransactionTypes.sol",
+        "../../interfaces/external/pancakeswap/IPancakeV2Router.sol",
+        "../../interfaces/external/pancakeswap/IPancakeV2Factory.sol",
+        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "PancakeV2RouterGuard"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/pancakeswap/IPancakeV2Factory.sol": {
+      "lastModificationDate": 1751889911116,
+      "contentHash": "1c8ea636d51ac27164602c2b97d22100",
+      "sourceName": "contracts/interfaces/external/pancakeswap/IPancakeV2Factory.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPancakeV2Factory"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/ERC20PancakeLPGuard.sol": {
+      "lastModificationDate": 1751891462449,
+      "contentHash": "e29abf6ce653f56528175eba47f087c9",
+      "sourceName": "contracts/guards/asset/ERC20PancakeLPGuard.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "@openzeppelin/contracts/proxy/utils/Initializable.sol",
+        "../../utils/TxDataUtils.sol",
+        "../../interfaces/guards/IGuard.sol",
+        "../../interfaces/IVault.sol",
+        "../../interfaces/IHasSupportedAsset.sol",
+        "../../interfaces/IHasGuardInfo.sol",
+        "../../interfaces/guards/IAssetGuard.sol",
+        "../../interfaces/IHasAssetInfo.sol",
+        "../../interfaces/external/pancakeswap/IPancakeV2Pair.sol",
+        "./ERC20Guard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20PancakeLPGuard"
       ]
     }
   }

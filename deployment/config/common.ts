@@ -21,15 +21,15 @@ export const getCommonConfig = (networkName: string): CommonConfig => {
                 assetHandlerAddress: '0x0000000000000000000000000000000000000000', // Will be set after deployment
                 vaultFactoryAddress: '0x0000000000000000000000000000000000000000', // Will be set after deployment
             }
-        case "arbitrumSepolia":
+        case "monadTestnet":
             return {
-                USDC: '0xd32ea1c76ef1c296f131dd4c5b2a0aac3b22485a', // vertex usdc
-                wETH: '0x94B3173E0a23C28b2BA9a52464AC24c2B032791c', // vertex MockwETH
+                USDC: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea', // vertex usdc
+                wETH: '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701', // vertex MockwETH
                 ETH: '0x0000000000000000000000000000000000000000',
-                governanceAddress: '0xdCeD2CBC87A0d99e8F757182eb3a628F1e78B89B', // Fresh deployment
-                assetHandlerAddress: '0x5cd2C89a4ea3BbeC79F027e53CAB88Fb21680210', // Fresh deployment
-                vaultFactoryAddress: '0x65fA89C281F0762971bEb4F7031c07DBe04F7089',
-                vaultImplementationAddress: '0x0c942878e5EEb812Ebb77F257476E7C92B6909e2', // Deployed implementation
+                governanceAddress: '', // Fresh deployment
+                assetHandlerAddress: '', // Fresh deployment
+                vaultFactoryAddress: '',
+                vaultImplementationAddress: '', // Deployed implementation
             }
         case "sonicBlazeTestnet":
             return {

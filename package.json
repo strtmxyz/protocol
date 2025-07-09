@@ -10,25 +10,25 @@
     "clean": "hardhat clean",
     "test": "hardhat test",
     
-    "deploy:governance": "hardhat run deployment/governance/deploy.ts --network arbitrumSepolia",
-    "deploy:assethandler": "hardhat run deployment/oracles/deploy.ts --network arbitrumSepolia",
-    "deploy:vaultfactory": "hardhat run deployment/vault/deploy.ts --network arbitrumSepolia",
-    "deploy:implementation": "hardhat run deployment/vault/deployImplementation.ts --network arbitrumSepolia",
-    "deploy:all": "hardhat run deployment/deployAll.ts --network arbitrumSepolia",
+    "deploy:governance": "hardhat run deployment/governance/deploy.ts --network monadTestnet",
+    "deploy:assethandler": "hardhat run deployment/oracles/deploy.ts --network monadTestnet",
+    "deploy:vaultfactory": "hardhat run deployment/vault/deploy.ts --network monadTestnet",
+    "deploy:implementation": "hardhat run deployment/vault/deployImplementation.ts --network monadTestnet",
+    "deploy:all": "hardhat run deployment/deployAll.ts --network monadTestnet",
     
-    "deploy:guard:ERC20Guard": "hardhat run deployment/guards/ERC20Guard.ts --network arbitrumSepolia",
-    "deploy:guard:ETHGuard": "hardhat run deployment/guards/ETHGuard.ts --network arbitrumSepolia",
-    "deploy:guard:VertexAssetGuard": "hardhat run deployment/guards/VertexAssetGuard.ts --network arbitrumSepolia",
-    "deploy:guard:VertexPlatformGuard": "hardhat run deployment/guards/VertexPlatformGuard.ts --network arbitrumSepolia",
+    "deploy:guard:ERC20Guard": "hardhat run deployment/guards/ERC20Guard.ts --network monadTestnet",
+    "deploy:guard:ETHGuard": "hardhat run deployment/guards/ETHGuard.ts --network monadTestnet",
+    "deploy:guard:VertexAssetGuard": "hardhat run deployment/guards/VertexAssetGuard.ts --network monadTestnet",
+    "deploy:guard:VertexPlatformGuard": "hardhat run deployment/guards/VertexPlatformGuard.ts --network monadTestnet",
     
-    "config:assets": "hardhat run deployment/oracles/setting.ts --network arbitrumSepolia",
-    "config:vault": "hardhat run deployment/vault/setting.ts --network arbitrumSepolia",
-    "config:governance": "hardhat run deployment/governance/setting.ts --network arbitrumSepolia",
+    "config:assets": "hardhat run deployment/oracles/setting.ts --network monadTestnet",
+    "config:vault": "hardhat run deployment/vault/setting.ts --network monadTestnet",
+    "config:governance": "hardhat run deployment/governance/setting.ts --network monadTestnet",
     
     "deploy:localhost": "npm run deploy:all -- --network localhost",
-    "deploy:arbitrum": "npm run deploy:all -- --network arbitrumSepolia",
     "deploy:sonic-testnet": "npm run deploy:all -- --network sonicBlazeTestnet",
-    "deploy:sonic-mainnet": "npm run deploy:all -- --network sonicMainnet"
+    "deploy:sonic-mainnet": "npm run deploy:all -- --network sonicMainnet",
+    "deploy:monad-testnet": "npm run deploy:all -- --network monadTestnet"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",

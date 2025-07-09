@@ -59,8 +59,26 @@ const config: HardhatUserConfig = {
         ]:[],
     },
   },
+  sourcify: {
+    enabled: true,
+    apiUrl: "https://sourcify-api-monad.blockvision.org",
+    browserUrl: "https://testnet.monadexplorer.com",
+  },
+    // To avoid errors from Etherscan
   etherscan: {
-    apiKey: process.env.ETHERSCAN_V2_API_KEY || ""
+    customChains: [
+      {
+        network: "monadTestnet",
+        chainId: 10143,
+        urls: {
+          apiURL: "https://sourcify-api-monad.blockvision.org/",
+          browserURL: "https://explorer.monad.xyz",
+        },
+      },
+    ],
+    apiKey: {
+      monadTestnet: "SOURCIFY", // giá trị bắt buộc với Sourcify
+    },
   },
   solidity: {
     compilers: [
@@ -76,6 +94,10 @@ const config: HardhatUserConfig = {
           optimizer: {
             enabled: true,
             runs: 1,
+          },
+          metadata: {
+            bytecodeHash: "none", // disable ipfs
+            useLiteralContent: true, // use source code
           },
         },
       }
@@ -98,6 +120,10 @@ const config: HardhatUserConfig = {
       "ETHGuard",
       "VertexAssetGuard",
       "VertexPlatformGuard",
+      "PancakeV2RouterGuard",
+      "PancakeV3RouterGuard",
+      "AmbientGuard",
+      "ERC20PancakeLPGuard",
       "KyberswapGuard",
       "Governance",
       "VaultFactory",

@@ -3,4 +3,5 @@
 /* eslint-disable */
 export * as ambient from "./ambient";
 export * as kyberswap from "./kyberswap";
+export * as pancakeswap from "./pancakeswap";
 export * as vertexprotocol from "./vertexprotocol";

@@ -37,7 +37,7 @@ library AssetLogic {
     //////////////////////////////////////////////////////////////*/
     
     /// @notice Add a supported asset to the vault
-    /// @param asset Asset address to add
+    /// @param asset Asset address to add (address(0) allowed for native ETH if properly whitelisted)
     /// @param supportedAssets Array of supported assets
     /// @param assetPosition Mapping of asset positions
     /// @param isAssetSupported Mapping of asset support status
@@ -47,7 +47,7 @@ library AssetLogic {
         mapping(address => uint256) storage assetPosition,
         mapping(address => bool) storage isAssetSupported
     ) internal {
-        if (asset == address(0)) revert InvalidAssetAddress();
+        // Note: address(0) validation is handled by caller (Vault checks factory whitelist)
         if (isAssetSupported[asset]) revert AssetAlreadySupported();
         
         supportedAssets.push(asset);

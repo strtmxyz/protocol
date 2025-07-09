@@ -22,6 +22,7 @@ import "./utils/FeeLogic.sol";
 
 // Import error definitions from libraries
 import {AssetNotSupported, PlatformNotSupported} from "./utils/AssetLogic.sol";
+import {ManagementFeeTooHigh, PerformanceFeeTooHigh} from "./utils/FeeLogic.sol";
 
 /// @title Strtm (Str.) Vault
 /// @notice A vault contract for yield farming and asset management with epoch-based lifecycle
@@ -150,11 +151,7 @@ contract Vault is
         uint256 blockNumber
     );
     
-    event TimedWithdrawalFeesUpdated(
-        uint16 shortTermFee,
-        uint16 mediumTermFee,
-        uint16 longTermFee
-    );
+
 
     /*//////////////////////////////////////////////////////////////
                             STATE VARIABLES
@@ -178,15 +175,6 @@ contract Vault is
     uint16 public performanceFee; // Performance fee (basis points) - max 65535 > max fee 2000
     uint16 public withdrawalFee; // Withdrawal fee (basis points) - max 65535 > max fee 2000
     uint16 public protocolFee; // Protocol fee taken from performance fee (basis points) - max 65535 > max fee 5000
-    
-    // Time-based withdrawal fee structure
-    uint16 public shortTermWithdrawalFee; // Fee for withdrawals < 30 days (basis points)
-    uint16 public mediumTermWithdrawalFee; // Fee for withdrawals 30 days - 6 months (basis points)
-    uint16 public longTermWithdrawalFee; // Fee for withdrawals > 6 months (basis points)
-    
-    // User deposit tracking for time-based fees
-    mapping(address => FeeLogic.UserDeposit[]) public userDeposits;
-    mapping(address => uint256) public userTotalDeposited;
     
     uint256 public constant MAX_FEE = 65535;
     uint256 public constant MAX_PROTOCOL_FEE = 5000; // 50% max protocol fee share
@@ -328,11 +316,6 @@ contract Vault is
         performanceFee = uint16(_performanceFee);
         withdrawalFee = 50; // 0.5% default withdrawal fee
         protocolFee = 1000; // 10% of performance fee (default)
-        
-        // Initialize time-based withdrawal fees
-        shortTermWithdrawalFee = 50; // 0.5% for < 30 days
-        mediumTermWithdrawalFee = 25; // 0.25% for 30 days - 6 months
-        longTermWithdrawalFee = 10;   // 0.1% for > 6 months
     }
     
     /// @notice Set oracle protection defaults
@@ -735,22 +718,10 @@ contract Vault is
         IERC20(asset()).safeTransferFrom(caller, address(this), assets);
         _mint(receiver, shares);
         
-        // Track user deposit for time-based fees
-        _trackUserDeposit(receiver, assets);
-        
         emit Deposit(caller, receiver, assets, shares);
     }
     
-    /// @notice Track user deposit for time-based withdrawal fees
-    /// @param user User address
-    /// @param assets Amount of assets deposited
-    function _trackUserDeposit(address user, uint256 assets) internal {
-        userDeposits[user].push(FeeLogic.UserDeposit({
-            amount: assets,
-            timestamp: block.timestamp
-        }));
-        userTotalDeposited[user] += assets;
-    }
+
 
     /// @notice Internal withdraw function
     function _withdraw(address caller, address receiver, address owner, uint256 assets, uint256 shares) internal override {
@@ -758,12 +729,9 @@ contract Vault is
             _spendAllowance(owner, caller, shares);
         }
         
-        // Calculate time-based withdrawal fee
-        uint256 fee = calculateTimedWithdrawalFee(owner, assets);
+        // Calculate basic withdrawal fee
+        uint256 fee = FeeLogic.calculateWithdrawalFee(assets, withdrawalFee, FEE_DENOMINATOR);
         uint256 assetsAfterFee = assets - fee;
-        
-        // Update user deposits (FIFO basis)
-        _updateUserDepositsAfterWithdraw(owner, assets);
         
         _burn(owner, shares);
         
@@ -777,17 +745,7 @@ contract Vault is
         emit Withdraw(caller, receiver, owner, assets, shares);
     }
     
-    /// @notice Update user deposits after withdrawal (FIFO basis)
-    /// @param user User address
-    /// @param assets Amount of assets withdrawn
-    function _updateUserDepositsAfterWithdraw(address user, uint256 assets) internal {
-        FeeLogic.UserDeposit[] storage deposits = userDeposits[user];
-        userTotalDeposited[user] = FeeLogic.updateUserDepositsAfterWithdraw(
-            deposits,
-            assets,
-            userTotalDeposited[user]
-        );
-    }
+
 
     /*//////////////////////////////////////////////////////////////
                             STRATEGY FUNCTIONS
@@ -1431,7 +1389,7 @@ contract Vault is
     
     /// @notice Get implementation version
     function version() external pure returns (string memory) {
-        return "1.1.0";
+        return "1.0.0";
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -1459,115 +1417,14 @@ contract Vault is
     }
 
     /*//////////////////////////////////////////////////////////////
-                            TIME-BASED WITHDRAWAL FEES
+                           WITHDRAWAL FEE PREVIEW
     //////////////////////////////////////////////////////////////*/
     
-    /// @notice Calculate time-based withdrawal fee for a user
-    /// @param user User address
-    /// @param assets Amount of assets to withdraw
-    /// @return fee Time-based withdrawal fee
-    function calculateTimedWithdrawalFee(address user, uint256 assets) public view returns (uint256 fee) {
-        FeeLogic.UserDeposit[] memory deposits = userDeposits[user];
-        
-        return FeeLogic.calculateTimedWithdrawalFee(
-            deposits,
-            assets,
-            shortTermWithdrawalFee,
-            mediumTermWithdrawalFee,
-            longTermWithdrawalFee,
-            withdrawalFee,
-            FEE_DENOMINATOR
-        );
-    }
-    
-
-    
-    /// @notice Get user's deposit history
-    /// @param user User address
-    /// @return deposits Array of user deposits
-    function getUserDeposits(address user) external view returns (FeeLogic.UserDeposit[] memory deposits) {
-        return userDeposits[user];
-    }
-    
-    /// @notice Get user's average holding period
-    /// @param user User address
-    /// @return avgHoldingPeriod Average holding period in seconds
-    function getUserAverageHoldingPeriod(address user) external view returns (uint256 avgHoldingPeriod) {
-        FeeLogic.UserDeposit[] memory deposits = userDeposits[user];
-        return FeeLogic.calculateUserAverageHoldingPeriod(deposits);
-    }
-    
-    /// @notice Preview time-based withdrawal fee
-    /// @param user User address
-    /// @param assets Amount of assets to withdraw
-    /// @return fee Estimated withdrawal fee
-    function previewTimedWithdrawalFee(address user, uint256 assets) external view returns (uint256 fee) {
-        return calculateTimedWithdrawalFee(user, assets);
-    }
-    
-    /// @notice Set time-based withdrawal fee structure (Manager only)
-    /// @param _shortTermFee Fee for < 30 days (basis points)
-    /// @param _mediumTermFee Fee for 30 days - 6 months (basis points)
-    /// @param _longTermFee Fee for > 6 months (basis points)
-    function setTimedWithdrawalFees(
-        uint16 _shortTermFee,
-        uint16 _mediumTermFee,
-        uint16 _longTermFee
-    ) external onlyManager {
-        FeeLogic.validateTimedWithdrawalFeeStructure(
-            _shortTermFee,
-            _mediumTermFee,
-            _longTermFee,
-            MAX_FEE
-        );
-        
-        shortTermWithdrawalFee = _shortTermFee;
-        mediumTermWithdrawalFee = _mediumTermFee;
-        longTermWithdrawalFee = _longTermFee;
-        
-        emit TimedWithdrawalFeesUpdated(_shortTermFee, _mediumTermFee, _longTermFee);
-    }
-    
-    /// @notice Get current time-based withdrawal fee structure
-    /// @return shortTerm Fee for < 30 days
-    /// @return mediumTerm Fee for 30 days - 6 months
-    /// @return longTerm Fee for > 6 months
-    function getTimedWithdrawalFees() external view returns (
-        uint16 shortTerm,
-        uint16 mediumTerm,
-        uint16 longTerm
-    ) {
-        return (shortTermWithdrawalFee, mediumTermWithdrawalFee, longTermWithdrawalFee);
-    }
-    
-    /// @notice Preview withdrawal amount after time-based fees
-    /// @param user User address
+    /// @notice Preview withdrawal amount after fees
     /// @param assets Amount of assets to withdraw
     /// @return assetsAfterFee Amount user will receive after fees
-    function previewWithdrawalAfterFees(address user, uint256 assets) external view returns (uint256 assetsAfterFee) {
-        uint256 fee = calculateTimedWithdrawalFee(user, assets);
+    function previewWithdrawalAfterFees(uint256 assets) external view returns (uint256 assetsAfterFee) {
+        uint256 fee = FeeLogic.calculateWithdrawalFee(assets, withdrawalFee, FEE_DENOMINATOR);
         return assets - fee;
-    }
-    
-    /// @notice Clean up empty deposits for a user (gas optimization)
-    /// @param user User address
-    function cleanupUserDeposits(address user) external {
-        FeeLogic.UserDeposit[] storage deposits = userDeposits[user];
-        uint256 writeIndex = 0;
-        
-        // Compress array by removing empty deposits
-        for (uint256 i = 0; i < deposits.length; i++) {
-            if (deposits[i].amount > 0) {
-                if (writeIndex != i) {
-                    deposits[writeIndex] = deposits[i];
-                }
-                writeIndex++;
-            }
-        }
-        
-        // Resize array to remove empty slots
-        while (deposits.length > writeIndex) {
-            deposits.pop();
-        }
     }
 } 

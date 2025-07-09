@@ -20,8 +20,5 @@ interface ITransactionTypes {
     Claim, // 8
     WrapNativeToken, // 9
     UnwrapNativeToken, // 10
-    // Vertexprotocol
-    VertexDepositCollateral, // 11
-    VertexSubmitTransaction // 12
   }
 }

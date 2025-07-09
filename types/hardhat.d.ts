@@ -154,6 +154,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Guard__factory>;
     getContractFactory(
+      name: "ERC20PancakeLPGuard",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20PancakeLPGuard__factory>;
+    getContractFactory(
       name: "ETHGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ETHGuard__factory>;
@@ -178,6 +182,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.KyberswapGuard__factory>;
     getContractFactory(
+      name: "PancakeV2RouterGuard",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PancakeV2RouterGuard__factory>;
+    getContractFactory(
+      name: "PancakeV3RouterGuard",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PancakeV3RouterGuard__factory>;
+    getContractFactory(
       name: "VertexPlatformGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.VertexPlatformGuard__factory>;
@@ -189,6 +201,22 @@ declare module "hardhat/types/runtime" {
       name: "IMetaAggregationRouterV2",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IMetaAggregationRouterV2__factory>;
+    getContractFactory(
+      name: "IPancakeV2Factory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPancakeV2Factory__factory>;
+    getContractFactory(
+      name: "IPancakeV2Pair",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPancakeV2Pair__factory>;
+    getContractFactory(
+      name: "IPancakeV2Router",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPancakeV2Router__factory>;
+    getContractFactory(
+      name: "IUniversalRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IUniversalRouter__factory>;
     getContractFactory(
       name: "Clearinghouse",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -470,6 +498,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ERC20Guard>;
     getContractAt(
+      name: "ERC20PancakeLPGuard",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20PancakeLPGuard>;
+    getContractAt(
       name: "ETHGuard",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -500,6 +533,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.KyberswapGuard>;
     getContractAt(
+      name: "PancakeV2RouterGuard",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.PancakeV2RouterGuard>;
+    getContractAt(
+      name: "PancakeV3RouterGuard",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.PancakeV3RouterGuard>;
+    getContractAt(
       name: "VertexPlatformGuard",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -514,6 +557,26 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IMetaAggregationRouterV2>;
+    getContractAt(
+      name: "IPancakeV2Factory",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPancakeV2Factory>;
+    getContractAt(
+      name: "IPancakeV2Pair",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPancakeV2Pair>;
+    getContractAt(
+      name: "IPancakeV2Router",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPancakeV2Router>;
+    getContractAt(
+      name: "IUniversalRouter",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IUniversalRouter>;
     getContractAt(
       name: "Clearinghouse",
       address: string | ethers.Addressable,
@@ -786,6 +849,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Guard>;
     deployContract(
+      name: "ERC20PancakeLPGuard",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC20PancakeLPGuard>;
+    deployContract(
       name: "ETHGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ETHGuard>;
@@ -810,6 +877,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.KyberswapGuard>;
     deployContract(
+      name: "PancakeV2RouterGuard",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PancakeV2RouterGuard>;
+    deployContract(
+      name: "PancakeV3RouterGuard",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PancakeV3RouterGuard>;
+    deployContract(
       name: "VertexPlatformGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.VertexPlatformGuard>;
@@ -821,6 +896,22 @@ declare module "hardhat/types/runtime" {
       name: "IMetaAggregationRouterV2",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IMetaAggregationRouterV2>;
+    deployContract(
+      name: "IPancakeV2Factory",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IPancakeV2Factory>;
+    deployContract(
+      name: "IPancakeV2Pair",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IPancakeV2Pair>;
+    deployContract(
+      name: "IPancakeV2Router",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IPancakeV2Router>;
+    deployContract(
+      name: "IUniversalRouter",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IUniversalRouter>;
     deployContract(
       name: "Clearinghouse",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1102,6 +1193,11 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Guard>;
     deployContract(
+      name: "ERC20PancakeLPGuard",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC20PancakeLPGuard>;
+    deployContract(
       name: "ETHGuard",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1132,6 +1228,16 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.KyberswapGuard>;
     deployContract(
+      name: "PancakeV2RouterGuard",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PancakeV2RouterGuard>;
+    deployContract(
+      name: "PancakeV3RouterGuard",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PancakeV3RouterGuard>;
+    deployContract(
       name: "VertexPlatformGuard",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1146,6 +1252,26 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IMetaAggregationRouterV2>;
+    deployContract(
+      name: "IPancakeV2Factory",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IPancakeV2Factory>;
+    deployContract(
+      name: "IPancakeV2Pair",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IPancakeV2Pair>;
+    deployContract(
+      name: "IPancakeV2Router",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IPancakeV2Router>;
+    deployContract(
+      name: "IUniversalRouter",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IUniversalRouter>;
     deployContract(
       name: "Clearinghouse",
       args: any[],
