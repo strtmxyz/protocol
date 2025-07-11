@@ -20,7 +20,7 @@ import "./ERC20Guard.sol";
 /// @dev Calculates LP token value based on underlying reserves
 contract ERC20PancakeLPGuard is ERC20Guard {
   
-  function initialize(address _WETH) public initializer {
+  function initialize(address _WETH) public override initializer {
     super.initialize(_WETH);
   }
 
