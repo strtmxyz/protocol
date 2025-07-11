@@ -241,11 +241,6 @@
   },
   {
     "inputs": [],
-    "name": "InsufficientUnderlyingBalanceForFees",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InternalOnly",
     "type": "error"
   },
@@ -311,11 +306,6 @@
   },
   {
     "inputs": [],
-    "name": "NoEmergencyPriceAvailable",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "NoGuardFound",
     "type": "error"
   },
@@ -358,22 +348,12 @@
   },
   {
     "inputs": [],
-    "name": "PerformanceFeeTooHigh",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "PlatformAlreadySupported",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "PlatformNotSupported",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ProtocolFeeTooHigh",
     "type": "error"
   },
   {
@@ -676,49 +656,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "vault",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "manager",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "protocolTreasury",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "managementFee",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "managerPerformanceFee",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "protocolFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "FeesExtracted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "string",
         "name": "reason",
@@ -815,19 +752,62 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "manager",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "protocolTreasury",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "managerShares",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "protocolShares",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalFeeValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "SharesMintedForFees",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "uint256",
         "name": "epoch",
         "type": "uint256"
       },
       {
         "indexed": true,
-        "internalType": "enum Vault.VaultState",
+        "internalType": "enum IVault.VaultState",
         "name": "oldState",
         "type": "uint8"
       },
       {
         "indexed": true,
-        "internalType": "enum Vault.VaultState",
+        "internalType": "enum IVault.VaultState",
         "name": "newState",
         "type": "uint8"
       },
@@ -839,31 +819,6 @@
       }
     ],
     "name": "StateChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "shortTermFee",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "mediumTermFee",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "longTermFee",
-        "type": "uint16"
-      }
-    ],
-    "name": "TimedWithdrawalFeesUpdated",
     "type": "event"
   },
   {
@@ -1036,7 +991,20 @@
   },
   {
     "inputs": [],
-    "name": "MAX_FEE",
+    "name": "MANAGER_PERFORMANCE_FEE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MAX_MANAGER_FEE",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1062,7 +1030,33 @@
   },
   {
     "inputs": [],
-    "name": "MAX_PROTOCOL_FEE",
+    "name": "MAX_WITHDRAWAL_FEE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PROTOCOL_MANAGEMENT_FEE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PROTOCOL_PERFORMANCE_FEE",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1267,30 +1261,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "assets",
-        "type": "uint256"
-      }
-    ],
-    "name": "calculateTimedWithdrawalFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "target",
         "type": "address"
       },
@@ -1321,19 +1291,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "cleanupUserDeposits",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1666,7 +1623,7 @@
         "type": "uint256"
       },
       {
-        "internalType": "enum Vault.VaultState",
+        "internalType": "enum IVault.VaultState",
         "name": "state",
         "type": "uint8"
       },
@@ -1710,79 +1667,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTimedWithdrawalFees",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "shortTerm",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "mediumTerm",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "longTerm",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "getUserAverageHoldingPeriod",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "avgHoldingPeriod",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "getUserDeposits",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct FeeLogic.UserDeposit[]",
-        "name": "deposits",
-        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -1885,12 +1769,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_managementFee",
+        "name": "_managerFee",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_performanceFee",
+        "name": "_withdrawalFee",
         "type": "uint256"
       }
     ],
@@ -1997,38 +1881,25 @@
   },
   {
     "inputs": [],
-    "name": "longTermWithdrawalFee",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "managementFee",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "manager",
     "outputs": [
       {
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "managerFee",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -2138,19 +2009,6 @@
   },
   {
     "inputs": [],
-    "name": "mediumTermWithdrawalFee",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "minDepositAmount",
     "outputs": [
       {
@@ -2173,6 +2031,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "shares",
+        "type": "uint256"
+      }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -2246,19 +2122,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "performanceFee",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -2318,30 +2181,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "assets",
-        "type": "uint256"
-      }
-    ],
-    "name": "previewTimedWithdrawalFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "assets",
         "type": "uint256"
@@ -2360,11 +2199,6 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
       {
         "internalType": "uint256",
         "name": "assets",
@@ -2401,19 +2235,6 @@
         "internalType": "uint256",
         "name": "estimatedFeesToPay",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "protocolFee",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -2568,42 +2389,6 @@
     "name": "setStrategyAuthorization",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_shortTermFee",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_mediumTermFee",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_longTermFee",
-        "type": "uint16"
-      }
-    ],
-    "name": "setTimedWithdrawalFees",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "shortTermWithdrawalFee",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -2814,22 +2599,12 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_managementFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_performanceFee",
+        "name": "_managerFee",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "_withdrawalFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_protocolFee",
         "type": "uint256"
       }
     ],
@@ -2888,59 +2663,11 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "userDeposits",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "userTotalDeposited",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "vaultState",
     "outputs": [
       {
-        "internalType": "enum Vault.VaultState",
+        "internalType": "enum IVault.VaultState",
         "name": "",
         "type": "uint8"
       }

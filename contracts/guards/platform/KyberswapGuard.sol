@@ -27,7 +27,7 @@ contract KyberswapGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initi
 
   string public override platformName;
   function initialize() public initializer {
-    platformName = "kyberswap";
+    platformName = "KyberswapGuard";
   }
 
   function txGuard(address _vault, address _to, bytes memory _data)

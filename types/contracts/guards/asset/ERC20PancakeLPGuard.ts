@@ -38,8 +38,7 @@ export interface ERC20PancakeLPGuardInterface extends Interface {
       | "getInput"
       | "getMethod"
       | "getParams"
-      | "initialize()"
-      | "initialize(address)"
+      | "initialize"
       | "read32"
       | "read4left"
       | "txGuard(address,address,bytes)"
@@ -101,11 +100,7 @@ export interface ERC20PancakeLPGuardInterface extends Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "initialize()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize(address)",
+    functionFragment: "initialize",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
@@ -152,14 +147,7 @@ export interface ERC20PancakeLPGuardInterface extends Interface {
   decodeFunctionResult(functionFragment: "getInput", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getMethod", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getParams", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "initialize()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "initialize(address)",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "read32", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "read4left", data: BytesLike): Result;
   decodeFunctionResult(
@@ -365,13 +353,7 @@ export interface ERC20PancakeLPGuard extends BaseContract {
 
   getParams: TypedContractMethod<[data: BytesLike], [string], "view">;
 
-  "initialize()": TypedContractMethod<[], [void], "nonpayable">;
-
-  "initialize(address)": TypedContractMethod<
-    [_WETH: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  initialize: TypedContractMethod<[_WETH: AddressLike], [void], "nonpayable">;
 
   read32: TypedContractMethod<
     [data: BytesLike, offset: BigNumberish, length: BigNumberish],
@@ -471,10 +453,7 @@ export interface ERC20PancakeLPGuard extends BaseContract {
     nameOrSignature: "getParams"
   ): TypedContractMethod<[data: BytesLike], [string], "view">;
   getFunction(
-    nameOrSignature: "initialize()"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "initialize(address)"
+    nameOrSignature: "initialize"
   ): TypedContractMethod<[_WETH: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "read32"

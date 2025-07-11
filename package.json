@@ -9,6 +9,9 @@
     "start": "hardhat node",
     "clean": "hardhat clean",
     "test": "hardhat test",
+    "test:assethandler": "hardhat run scripts/testAssetHandler.ts --network monadTestnet",
+    "test:guards": "hardhat run scripts/testGuardsIntegration.ts --network monadTestnet",
+    "test:system": "hardhat run scripts/testSystem.ts --network monadTestnet",
     
     "deploy:governance": "hardhat run deployment/governance/deploy.ts --network monadTestnet",
     "deploy:assethandler": "hardhat run deployment/oracles/deploy.ts --network monadTestnet",

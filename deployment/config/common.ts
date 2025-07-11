@@ -23,13 +23,13 @@ export const getCommonConfig = (networkName: string): CommonConfig => {
             }
         case "monadTestnet":
             return {
-                USDC: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea', // vertex usdc
-                wETH: '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701', // vertex MockwETH
+                USDC: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea', // usdc
+                wETH: '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701', // wMON
                 ETH: '0x0000000000000000000000000000000000000000',
-                governanceAddress: '', // Fresh deployment
-                assetHandlerAddress: '', // Fresh deployment
-                vaultFactoryAddress: '',
-                vaultImplementationAddress: '', // Deployed implementation
+                governanceAddress: '0xA77449604aF0b34d93C834dA7c2A95b21BDB5fbC', // Fresh deployment
+                assetHandlerAddress: '0x91280743D277472bf3AE09254D13d4a72cA2cA98', // Fresh deployment
+                vaultFactoryAddress: '0x187eBab83F01BC32975a051adb69171b23dEEeca',
+                vaultImplementationAddress: '0xb2c41d947179eed98a1d05adecd3c9fb933cf4c3', // Deployed implementation
             }
         case "sonicBlazeTestnet":
             return {

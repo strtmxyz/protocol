@@ -148,16 +148,6 @@
   },
   {
     "inputs": [],
-    "name": "PerformanceFeeExceedsMax",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ProtocolFeeExceedsMax",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "TooManyDecimals",
     "type": "error"
   },
@@ -634,12 +624,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_managementFee",
+        "name": "_managerFee",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_performanceFee",
+        "name": "_withdrawalFee",
         "type": "uint256"
       }
     ],
@@ -1664,22 +1654,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_managementFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_performanceFee",
+        "name": "_managerFee",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "_withdrawalFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_protocolFee",
         "type": "uint256"
       }
     ],
