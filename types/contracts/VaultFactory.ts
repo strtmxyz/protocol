@@ -391,13 +391,7 @@ export interface VaultFactoryInterface extends Interface {
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "updateVaultFees",
-    values: [
-      AddressLike,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
+    values: [AddressLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "updateVaultImplementation",
@@ -1026,8 +1020,8 @@ export interface VaultFactory extends BaseContract {
       _underlyingAsset: AddressLike,
       _manager: AddressLike,
       _maxCapacity: BigNumberish,
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish
+      _managerFee: BigNumberish,
+      _withdrawalFee: BigNumberish
     ],
     [string],
     "payable"
@@ -1292,10 +1286,8 @@ export interface VaultFactory extends BaseContract {
   updateVaultFees: TypedContractMethod<
     [
       _vault: AddressLike,
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish,
-      _withdrawalFee: BigNumberish,
-      _protocolFee: BigNumberish
+      _managerFee: BigNumberish,
+      _withdrawalFee: BigNumberish
     ],
     [void],
     "nonpayable"
@@ -1384,8 +1376,8 @@ export interface VaultFactory extends BaseContract {
       _underlyingAsset: AddressLike,
       _manager: AddressLike,
       _maxCapacity: BigNumberish,
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish
+      _managerFee: BigNumberish,
+      _withdrawalFee: BigNumberish
     ],
     [string],
     "payable"
@@ -1654,10 +1646,8 @@ export interface VaultFactory extends BaseContract {
   ): TypedContractMethod<
     [
       _vault: AddressLike,
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish,
-      _withdrawalFee: BigNumberish,
-      _protocolFee: BigNumberish
+      _managerFee: BigNumberish,
+      _withdrawalFee: BigNumberish
     ],
     [void],
     "nonpayable"

@@ -59,6 +59,37 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
+        name: "triggeredBy",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "preRealizationValue",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalFeesExtracted",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "blockNumber",
+        type: "uint256",
+      },
+    ],
+    name: "AutoRealizationTriggered",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
         name: "vault",
         type: "address",
       },
@@ -150,6 +181,12 @@ const _abi = [
       },
     ],
     name: "Deposited",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [],
+    name: "EmergencyOracleModeActivated",
     type: "event",
   },
   {
@@ -504,25 +541,6 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "authorizedStrategies",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "account",
         type: "address",
       },
@@ -663,85 +681,10 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "deposit",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "shares",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "emergencyLiquidateAll",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "emergencyRecovery",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "epochEndAssets",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "epochStartAssets",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -934,50 +877,18 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "_managementFee",
+        name: "_managerFee",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "_performanceFee",
+        name: "_withdrawalFee",
         type: "uint256",
       },
     ],
     name: "initialize",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "isAssetSupported",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lastHarvestTime",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -989,12 +900,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "managementFee",
+    name: "manager",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "address",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -1002,12 +913,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "manager",
+    name: "managerFee",
     outputs: [
       {
-        internalType: "address",
+        internalType: "uint16",
         name: "",
-        type: "address",
+        type: "uint16",
       },
     ],
     stateMutability: "view",
@@ -1173,32 +1084,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "paused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "performanceFee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -1268,19 +1153,6 @@ const _abi = [
       {
         internalType: "uint256",
         name: "shares",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "protocolFee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
         type: "uint256",
       },
     ],
@@ -1508,12 +1380,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_managementFee",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_performanceFee",
+        name: "_managerFee",
         type: "uint256",
       },
       {
@@ -1521,26 +1388,8 @@ const _abi = [
         name: "_withdrawalFee",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "_protocolFee",
-        type: "uint256",
-      },
     ],
     name: "updateFees",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_newManager",
-        type: "address",
-      },
-    ],
-    name: "updateManager",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1590,38 +1439,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "version",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "pure",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_shares",
-        type: "uint256",
-      },
-    ],
-    name: "withdraw",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -1655,9 +1472,9 @@ const _abi = [
     name: "withdrawalFee",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     stateMutability: "view",

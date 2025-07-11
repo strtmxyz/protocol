@@ -176,8 +176,8 @@ contract VaultFactory is
     /// @param _underlyingAsset Underlying asset address
     /// @param _manager Manager address
     /// @param _maxCapacity Maximum capacity of the vault
-    /// @param _managementFee Annual management fee (basis points)
-    /// @param _performanceFee Performance fee (basis points)
+    /// @param _managerFee Manager management fee (basis points, 0-200 for 0-2%)
+    /// @param _withdrawalFee Withdrawal fee (basis points, 0-100 for 0-1%)
     /// @return vault Address of the created vault
     function createVault(
         string memory _name,
@@ -185,8 +185,8 @@ contract VaultFactory is
         address _underlyingAsset,
         address _manager,
         uint256 _maxCapacity,
-        uint256 _managementFee,
-        uint256 _performanceFee
+        uint256 _managerFee,
+        uint256 _withdrawalFee
     ) external payable whenNotPaused returns (address vault) {
     
         if (msg.value < creationFee) revert InsufficientCreationFee();
@@ -195,9 +195,9 @@ contract VaultFactory is
         if (_maxCapacity < minCapacityLimit) revert BelowMinCapacity();
         if (_maxCapacity > maxCapacityLimit) revert AboveMaxCapacity();
         
-
-        if (_managementFee > 65535) revert ManagementFeeExceedsMax();
-        if (_performanceFee > 65535) revert PerformanceFeeExceedsMax();
+        // Validate fees using new structure
+        if (_managerFee > 200) revert ManagementFeeExceedsMax();
+        if (_withdrawalFee > 100) revert WithdrawalFeeExceedsMax();
         
         // Validate asset decimals
         uint8 decimals = IERC20Metadata(_underlyingAsset).decimals();
@@ -217,8 +217,8 @@ contract VaultFactory is
             _underlyingAsset,
             _manager,
             _maxCapacity,
-            _managementFee,
-            _performanceFee
+            _managerFee,
+            _withdrawalFee
         );
         
         vault = address(new TransparentUpgradeableProxy(
@@ -338,32 +338,20 @@ contract VaultFactory is
 
     /// @notice Update vault fees (factory owner only)
     /// @param _vault Vault address
-    /// @param _managementFee New management fee (basis points, max 65535)
-    /// @param _performanceFee New performance fee (basis points, max 65535)
-    /// @param _withdrawalFee New withdrawal fee (basis points, max 65535)
-    /// @param _protocolFee New protocol fee share (basis points, max 65535)
+    /// @param _managerFee New manager management fee (basis points, 0-200)
+    /// @param _withdrawalFee New withdrawal fee (basis points, 0-100)
     function updateVaultFees(
         address _vault,
-        uint256 _managementFee,
-        uint256 _performanceFee,
-        uint256 _withdrawalFee,
-        uint256 _protocolFee
+        uint256 _managerFee,
+        uint256 _withdrawalFee
     ) external onlyOwner {
         if (!isVault[_vault]) revert NotAVault();
         
-  
-        if (_managementFee > 65535) revert ManagementFeeExceedsMax();
-        if (_performanceFee > 65535) revert PerformanceFeeExceedsMax();
-        if (_withdrawalFee > 65535) revert WithdrawalFeeExceedsMax();
-        if (_protocolFee > 65535) revert ProtocolFeeExceedsMax();
+        // Validate fees using new structure
+        if (_managerFee > 200) revert ManagementFeeExceedsMax();
+        if (_withdrawalFee > 100) revert WithdrawalFeeExceedsMax();
         
-
-        IVault(_vault).updateFees(
-            uint16(_managementFee),
-            uint16(_performanceFee),
-            uint16(_withdrawalFee),
-            uint16(_protocolFee)
-        );
+        IVault(_vault).updateFees(_managerFee, _withdrawalFee);
     }
 
     /// @notice Return the address of the asset handler
@@ -746,7 +734,7 @@ contract VaultFactory is
         totalAssets = vault.totalAssets();
         totalSupply = vault.totalSupply();
         maxCapacity = vault.maxCapacity();
-        isPaused = vault.paused();
+        isPaused = PausableUpgradeable(address(vault)).paused();
         
         sharePrice = totalSupply > 0 ? (totalAssets * 1e18) / totalSupply : 1e18;
     }

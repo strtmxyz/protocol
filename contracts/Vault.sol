@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
+import "./interfaces/IVault.sol";
 import "./interfaces/IVaultFactory.sol";
 import "./interfaces/IAssetHandler.sol";
 import "./interfaces/IHasGuardInfo.sol";
@@ -22,7 +23,7 @@ import "./utils/FeeLogic.sol";
 
 // Import error definitions from libraries
 import {AssetNotSupported, PlatformNotSupported} from "./utils/AssetLogic.sol";
-import {ManagementFeeTooHigh, PerformanceFeeTooHigh} from "./utils/FeeLogic.sol";
+import {ManagementFeeTooHigh, PerformanceFeeTooHigh, IVaultMinter} from "./utils/FeeLogic.sol";
 
 /// @title Strtm (Str.) Vault
 /// @notice A vault contract for yield farming and asset management with epoch-based lifecycle
@@ -31,7 +32,9 @@ contract Vault is
     OwnableUpgradeable,
     PausableUpgradeable,
     ReentrancyGuardUpgradeable,
-    IHasSupportedAsset
+    IVault,
+    IHasSupportedAsset,
+    IVaultMinter
 {
     using SafeERC20 for IERC20;
 
@@ -49,7 +52,6 @@ contract Vault is
     error MustLiquidateAllPositions();
     error AssetGuardNotFound();
     error InvalidUnderlyingPriceFeed();
-    error NoEmergencyPriceAvailable();
     error DepositsOnlyDuringFundraising();
     error BelowMinimumDeposit();
     error ExceedsCapacity();
@@ -66,92 +68,6 @@ contract Vault is
     error InvalidPrice();
     error Unauthorized();
     error InvalidTreasury();
-
-    /*//////////////////////////////////////////////////////////////
-                            ENUMS & STRUCTS
-    //////////////////////////////////////////////////////////////*/
-    
-    enum VaultState {
-        FUNDRAISING,    // Accepting deposits, no strategy execution
-        LIVE           // Strategy execution allowed, limited deposits
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            EVENTS
-    //////////////////////////////////////////////////////////////*/
-    event Deposited(
-        address indexed vault,
-        address indexed user,
-        address indexed asset,
-        uint256 amount,
-        uint256 shares
-    );
-    
-    event Withdrawn(
-        address indexed vault,
-        address indexed user,
-        address indexed asset,
-        uint256 amount,
-        uint256 shares
-    );
-    
-    event YieldHarvested(
-        address indexed vault,
-        address indexed asset,
-        uint256 amount,
-        uint256 managementFee,
-        uint256 performanceFee,
-        uint256 protocolFee
-    );
-    
-    event ContractCalled(
-        address indexed vault,
-        address indexed target,
-        bytes data,
-        uint256 value
-    );
-    
-    event StateChanged(
-        uint256 indexed epoch,
-        VaultState indexed oldState,
-        VaultState indexed newState,
-        uint256 timestamp
-    );
-    
-    event EpochAdvanced(
-        uint256 indexed oldEpoch,
-        uint256 indexed newEpoch,
-        uint256 totalAssetsReturned,
-        uint256 timestamp
-    );
-    
-    event EmergencyOracleModeActivated();
-    
-    event OracleProtectionUpdated(
-        uint256 harvestCooldown,
-        uint256 maxPriceDeviationBps,
-        bool emergencyMode
-    );
-    
-    event HarvestBlocked(
-        string reason,
-        uint256 remainingAssets,
-        address[] assetsToLiquidate
-    );
-    
-    event AllPositionsLiquidated(
-        uint256 totalConvertedValue,
-        uint256 timestamp
-    );
-    
-    event AutoRealizationTriggered(
-        address indexed triggeredBy,
-        uint256 preRealizationValue,
-        uint256 totalFeesExtracted,
-        uint256 blockNumber
-    );
-    
-
 
     /*//////////////////////////////////////////////////////////////
                             STATE VARIABLES
@@ -171,13 +87,18 @@ contract Vault is
     uint256 public minFundraisingAmount; // Minimum amount needed to go live
     
 
-    uint16 public managementFee; // Annual management fee (basis points) - max 65535 > max fee 2000
-    uint16 public performanceFee; // Performance fee (basis points) - max 65535 > max fee 2000
-    uint16 public withdrawalFee; // Withdrawal fee (basis points) - max 65535 > max fee 2000
-    uint16 public protocolFee; // Protocol fee taken from performance fee (basis points) - max 65535 > max fee 5000
+    // New fee structure: Management fee split between protocol (0.5%) and manager (0-2%)
+    uint16 public managerFee; // Manager management fee (basis points, 0-200 for 0-2%)
+    uint16 public withdrawalFee; // Withdrawal fee (basis points, 0-100 for 0-1%)
     
-    uint256 public constant MAX_FEE = 65535;
-    uint256 public constant MAX_PROTOCOL_FEE = 5000; // 50% max protocol fee share
+    // Protocol gets fixed 0.5% management fee (50 basis points)
+    uint256 public constant PROTOCOL_MANAGEMENT_FEE = 50; // 0.5%
+    // Performance fees: 10% manager + 2.5% protocol = 12.5% total
+    uint256 public constant MANAGER_PERFORMANCE_FEE = 1000; // 10%
+    uint256 public constant PROTOCOL_PERFORMANCE_FEE = 250; // 2.5%
+    
+    uint256 public constant MAX_MANAGER_FEE = 200; // 2% max manager fee
+    uint256 public constant MAX_WITHDRAWAL_FEE = 100; // 1% max withdrawal fee
     uint256 public constant FEE_DENOMINATOR = 10000;
     
     // Vault metrics
@@ -253,22 +174,22 @@ contract Vault is
     /// @param _underlyingAsset Main asset of the vault
     /// @param _manager Manager address
     /// @param _maxCapacity Maximum capacity of the vault
-    /// @param _managementFee Annual management fee (basis points)
-    /// @param _performanceFee Performance fee (basis points)
+    /// @param _managerFee Manager management fee (basis points, 0-200)
+    /// @param _withdrawalFee Withdrawal fee (basis points, 0-100)
     function initialize(
         string memory _name,
         string memory _symbol,
         address _underlyingAsset,
         address _manager,
         uint256 _maxCapacity,
-        uint256 _managementFee,
-        uint256 _performanceFee
+        uint256 _managerFee,
+        uint256 _withdrawalFee
     ) public initializer {
         _initializeContracts(_name, _symbol, _underlyingAsset);
-        _validateInitParams(_underlyingAsset, _manager, _managementFee, _performanceFee);
+        _validateInitParams(_underlyingAsset, _manager, _managerFee, _withdrawalFee);
         _setBasicParams(_underlyingAsset, _manager, _maxCapacity);
         _initializeEpochAndState();
-        _setCustomFees(_managementFee, _performanceFee);
+        _setCustomFees(_managerFee, _withdrawalFee);
         _setOracleProtectionDefaults();
         _setDefaultAmounts(_underlyingAsset);
         _initializeRealizationState();
@@ -286,11 +207,10 @@ contract Vault is
     }
     
     /// @notice Validate initialization parameters
-    function _validateInitParams(address _underlyingAsset, address _manager, uint256 _managementFee, uint256 _performanceFee) internal pure {
+    function _validateInitParams(address _underlyingAsset, address _manager, uint256 _managerFee, uint256 _withdrawalFee) internal pure {
         if (_underlyingAsset == address(0)) revert InvalidAsset();
         if (_manager == address(0)) revert InvalidManager();
-        if (_managementFee > MAX_FEE) revert ManagementFeeTooHigh();
-        if (_performanceFee > MAX_FEE) revert PerformanceFeeTooHigh();
+        FeeLogic.validateFeeRates(_managerFee, _withdrawalFee);
     }
     
     /// @notice Set basic vault parameters
@@ -310,12 +230,10 @@ contract Vault is
         fundraisingDuration = 30 days;
     }
     
-    /// @notice Set custom fee structure
-    function _setCustomFees(uint256 _managementFee, uint256 _performanceFee) internal {
-        managementFee = uint16(_managementFee);
-        performanceFee = uint16(_performanceFee);
-        withdrawalFee = 50; // 0.5% default withdrawal fee
-        protocolFee = 1000; // 10% of performance fee (default)
+    /// @notice Set custom fee structure for new system
+    function _setCustomFees(uint256 _managerFee, uint256 _withdrawalFee) internal {
+        managerFee = uint16(_managerFee);
+        withdrawalFee = uint16(_withdrawalFee);
     }
     
     /// @notice Set oracle protection defaults
@@ -363,6 +281,11 @@ contract Vault is
     function returnToFundraising() external onlyManager onlyInState(VaultState.LIVE) {
         // Ensure all assets are back to underlying asset
         if (!_areAllAssetsInUnderlying()) revert MustLiquidateAllPositions();
+        
+        // Auto-realize profits before returning to fundraising to protect fees
+        if (_hasUnrealizedProfits()) {
+            _performSingleRealization();
+        }
         
         VaultState oldState = vaultState;
         vaultState = VaultState.FUNDRAISING;
@@ -422,7 +345,7 @@ contract Vault is
     //////////////////////////////////////////////////////////////*/
     
     /// @notice Total amount of underlying assets held by the vault
-    function totalAssets() public view override returns (uint256) {
+    function totalAssets() public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
         return _calculateTotalValue();
     }
     
@@ -566,7 +489,7 @@ contract Vault is
     }
 
     /// @notice Maximum deposit limit
-    function maxDeposit(address) public view override returns (uint256) {
+    function maxDeposit(address) public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
         if (paused()) return 0;
         
         // No deposits allowed in LIVE state except for yield/rewards
@@ -577,7 +500,7 @@ contract Vault is
     }
 
     /// @notice Maximum withdrawal limit
-    function maxWithdraw(address owner) public view override returns (uint256) {
+    function maxWithdraw(address owner) public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
         if (paused()) return 0;
         
         // Limited withdrawals in LIVE state
@@ -597,21 +520,21 @@ contract Vault is
     }
 
     /// @notice Preview deposit with fees
-    function previewDeposit(uint256 assets) public view override returns (uint256) {
+    function previewDeposit(uint256 assets) public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
         if (vaultState != VaultState.FUNDRAISING) revert DepositsOnlyDuringFundraising();
         if (assets < minDepositAmount) revert BelowMinimumDeposit();
         return _convertToShares(assets, Math.Rounding.Floor);
     }
 
     /// @notice Preview withdrawal with fees
-    function previewWithdraw(uint256 assets) public view override returns (uint256) {
+    function previewWithdraw(uint256 assets) public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
         // Fix: Calculate shares based on assets amount only, not assets + fee
         // The fee will be deducted from the user's received amount, not from share calculation
         return _convertToShares(assets, Math.Rounding.Ceil);
     }
 
     /// @notice Deposit assets and receive shares (only during fundraising)
-    function deposit(uint256 assets, address receiver) public override whenNotPaused onlyInState(VaultState.FUNDRAISING) returns (uint256) {
+    function deposit(uint256 assets, address receiver) public override(ERC4626Upgradeable, IERC4626) whenNotPaused onlyInState(VaultState.FUNDRAISING) returns (uint256) {
         if (assets < minDepositAmount) revert BelowMinimumDeposit();
         if (totalAssets() + assets > maxCapacity) revert ExceedsCapacity();
         
@@ -664,7 +587,7 @@ contract Vault is
         return currentTotalValue > expectedValue;
     }
     
-    /// @notice Perform single profit realization (internal)
+    /// @notice Perform single profit realization (internal) with mint shares
     function _performSingleRealization() internal {
         // Skip oracle and cooldown checks for auto-realization
         uint256 currentTotalValue = totalAssets();
@@ -680,25 +603,22 @@ contract Vault is
             yield = maxReasonableProfit;
         }
         
-        // Calculate fees
-        uint256 timeElapsed = block.timestamp - lastRealizationTime;
-        uint256 managementFeeAmount = (expectedValue * managementFee * timeElapsed) / 
-                                     (365 days * FEE_DENOMINATOR);
-        uint256 performanceFeeAmount = (yield * performanceFee) / FEE_DENOMINATOR;
-        uint256 protocolFeeAmount = (performanceFeeAmount * protocolFee) / FEE_DENOMINATOR;
-        uint256 managerPerformanceFee = performanceFeeAmount - protocolFeeAmount;
+        // Calculate fees using new structure
+        (uint256 protocolManagementFee, uint256 managerManagementFee, uint256 managerPerformanceFee, uint256 protocolPerformanceFee) = _calculateAllFees(yield, expectedValue);
         
-        // Extract fees
-        _extractFeesFromUnderlying(managementFeeAmount, managerPerformanceFee, protocolFeeAmount);
+        // Mint shares for fees instead of extracting underlying
+        _mintSharesForFees(protocolManagementFee, managerManagementFee, managerPerformanceFee, protocolPerformanceFee);
         
         // Update timestamp
         lastRealizationTime = block.timestamp;
         
-        emit YieldHarvested(address(this), asset(), yield, managementFeeAmount, performanceFeeAmount, protocolFeeAmount);
+        uint256 totalManagementFee = protocolManagementFee + managerManagementFee;
+        uint256 totalPerformanceFee = managerPerformanceFee + protocolPerformanceFee;
+        emit YieldHarvested(address(this), asset(), yield, totalManagementFee, totalPerformanceFee, protocolPerformanceFee);
     }
 
     /// @notice Withdraw assets by burning shares
-    function withdraw(uint256 assets, address receiver, address owner) public override whenNotPaused onlyInStates(VaultState.FUNDRAISING, VaultState.LIVE) returns (uint256) {
+    function withdraw(uint256 assets, address receiver, address owner) public override(ERC4626Upgradeable, IERC4626) whenNotPaused onlyInStates(VaultState.FUNDRAISING, VaultState.LIVE) returns (uint256) {
         // Smart auto-realize profits before withdrawal in LIVE state
         if (vaultState == VaultState.LIVE) {
             _smartAutoRealize();
@@ -829,12 +749,14 @@ contract Vault is
         }
         
         uint256 yield = VaultLogic.calculateAndLimitYield(currentTotalValue, expectedValue);
-        (uint256 managementFeeAmount, uint256 managerPerformanceFee, uint256 protocolFeeAmount) = _calculateAllFees(yield, expectedValue);
+        (uint256 protocolManagementFee, uint256 managerManagementFee, uint256 managerPerformanceFee, uint256 protocolPerformanceFee) = _calculateAllFees(yield, expectedValue);
         
-        _extractFeesFromUnderlying(managementFeeAmount, managerPerformanceFee, protocolFeeAmount);
+        _mintSharesForFees(protocolManagementFee, managerManagementFee, managerPerformanceFee, protocolPerformanceFee);
         _finalizeRealization();
         
-        emit YieldHarvested(address(this), asset(), yield, managementFeeAmount, managementFeeAmount + managerPerformanceFee, protocolFeeAmount);
+        uint256 totalManagementFee = protocolManagementFee + managerManagementFee;
+        uint256 totalPerformanceFee = managerPerformanceFee + protocolPerformanceFee;
+        emit YieldHarvested(address(this), asset(), yield, totalManagementFee, totalPerformanceFee, protocolPerformanceFee);
     }
     
     /// @notice Check if recent auto-realization prevents new realization
@@ -869,24 +791,26 @@ contract Vault is
     
 
     
-    /// @notice Calculate all fee components
+    /// @notice Calculate all fee components for new structure
     /// @param yield Realized yield amount
     /// @param expectedValue Expected vault value
-    /// @return managementFeeAmount Management fee
-    /// @return managerPerformanceFee Manager's share of performance fee
-    /// @return protocolFeeAmount Protocol's share of performance fee
+    /// @return protocolManagementFee Protocol's management fee
+    /// @return managerManagementFee Manager's management fee
+    /// @return managerPerformanceFee Manager's performance fee
+    /// @return protocolPerformanceFee Protocol's performance fee
     function _calculateAllFees(uint256 yield, uint256 expectedValue) internal view returns (
-        uint256 managementFeeAmount,
+        uint256 protocolManagementFee,
+        uint256 managerManagementFee,
         uint256 managerPerformanceFee, 
-        uint256 protocolFeeAmount
+        uint256 protocolPerformanceFee
     ) {
         uint256 timeElapsed = block.timestamp - lastRealizationTime;
-        managementFeeAmount = FeeLogic.calculateManagementFee(
-            expectedValue, managementFee, timeElapsed, FEE_DENOMINATOR
+        (protocolManagementFee, managerManagementFee) = FeeLogic.calculateManagementFees(
+            expectedValue, PROTOCOL_MANAGEMENT_FEE, managerFee, timeElapsed, FEE_DENOMINATOR
         );
         
-        (managerPerformanceFee, protocolFeeAmount) = FeeLogic.calculatePerformanceFees(
-            yield, performanceFee, protocolFee, FEE_DENOMINATOR
+        (managerPerformanceFee, protocolPerformanceFee) = FeeLogic.calculatePerformanceFees(
+            yield, MANAGER_PERFORMANCE_FEE, PROTOCOL_PERFORMANCE_FEE, FEE_DENOMINATOR
         );
     }
     
@@ -958,7 +882,50 @@ contract Vault is
         return epochStartValue;
     }
     
-    /// @notice Extract fees from underlying asset (used after harvest when all assets are underlying)
+    /// @notice Mint shares for fees (implements IVaultMinter interface)
+    /// @param to Address to mint shares to
+    /// @param shares Number of shares to mint
+    function mint(address to, uint256 shares) external override {
+        // Allow calls from within _mintSharesForFees context
+        // This is safe because _mintSharesForFees is only called from internal fee logic
+        _mint(to, shares);
+    }
+    
+    /// @notice Get current share price (implements IVaultMinter interface)
+    /// @param assets Assets amount
+    /// @return shares Equivalent shares
+    function convertToShares(uint256 assets) public view override(ERC4626Upgradeable, IERC4626, IVaultMinter) returns (uint256) {
+        return _convertToShares(assets, Math.Rounding.Floor);
+    }
+    
+    /// @notice Mint shares for management and performance fees (new method)
+    /// @param protocolManagementFee Protocol's management fee value
+    /// @param managerManagementFee Manager's management fee value
+    /// @param managerPerformanceFee Manager's performance fee value
+    /// @param protocolPerformanceFee Protocol's performance fee value
+    function _mintSharesForFees(
+        uint256 protocolManagementFee,
+        uint256 managerManagementFee,
+        uint256 managerPerformanceFee,
+        uint256 protocolPerformanceFee
+    ) internal {
+        uint256 currentSharePrice = totalSupply() > 0 ? (totalAssets() * 1e18) / totalSupply() : 1e18;
+        
+        uint256 totalManagerFeeValue = managerManagementFee + managerPerformanceFee;
+        uint256 totalProtocolFeeValue = protocolManagementFee + protocolPerformanceFee;
+        
+        // Use delegatecall to FeeLogic.mintSharesForFees
+        FeeLogic.mintSharesForFees(
+            address(this),
+            manager,
+            protocolTreasury,
+            totalManagerFeeValue,
+            totalProtocolFeeValue,
+            currentSharePrice
+        );
+    }
+    
+    /// @notice Extract fees from underlying asset (legacy method - kept for compatibility)
     /// @dev All assets should already be in underlying asset due to business logic protection
     function _extractFeesFromUnderlying(uint256 managementFeeAmount, uint256 managerPerformanceFee, uint256 protocolFeeAmount) internal {
         FeeLogic.extractFeesFromUnderlying(
@@ -1076,29 +1043,16 @@ contract Vault is
     //////////////////////////////////////////////////////////////*/
     
     /// @notice Update fees (only callable by vault factory/owner)
-    /// @param _managementFee New management fee
-    /// @param _performanceFee New performance fee
-    /// @param _withdrawalFee New withdrawal fee
-    /// @param _protocolFee New protocol fee share
+    /// @param _managerFee New manager management fee (0-200 basis points)
+    /// @param _withdrawalFee New withdrawal fee (0-100 basis points)
     function updateFees(
-        uint256 _managementFee,
-        uint256 _performanceFee,
-        uint256 _withdrawalFee,
-        uint256 _protocolFee
+        uint256 _managerFee,
+        uint256 _withdrawalFee
     ) external onlyOwner {
-        FeeLogic.validateFeeRates(
-            _managementFee,
-            _performanceFee,
-            _withdrawalFee,
-            _protocolFee,
-            MAX_FEE,
-            MAX_PROTOCOL_FEE
-        );
+        FeeLogic.validateFeeRates(_managerFee, _withdrawalFee);
         
-        managementFee = uint16(_managementFee);
-        performanceFee = uint16(_performanceFee);
+        managerFee = uint16(_managerFee);
         withdrawalFee = uint16(_withdrawalFee);
-        protocolFee = uint16(_protocolFee);
     }
     
     /// @notice Update vault settings
@@ -1317,13 +1271,10 @@ contract Vault is
             if (currentTotalValue > expectedValue) {
                 uint256 yield = currentTotalValue - expectedValue;
                 
-                // Calculate estimated fees
-                uint256 timeElapsed = block.timestamp - lastRealizationTime;
-                uint256 managementFeeAmount = (expectedValue * managementFee * timeElapsed) / 
-                                             (365 days * FEE_DENOMINATOR);
-                uint256 performanceFeeAmount = (yield * performanceFee) / FEE_DENOMINATOR;
+                // Calculate estimated fees using new structure
+                (uint256 protocolManagementFee, uint256 managerManagementFee, uint256 managerPerformanceFee, uint256 protocolPerformanceFee) = _calculateAllFees(yield, expectedValue);
                 
-                estimatedFeesToPay = managementFeeAmount + performanceFeeAmount;
+                estimatedFeesToPay = protocolManagementFee + managerManagementFee + managerPerformanceFee + protocolPerformanceFee;
             }
         }
     }

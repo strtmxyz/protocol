@@ -27,9 +27,12 @@ export interface VaultInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "FEE_DENOMINATOR"
-      | "MAX_FEE"
+      | "MANAGER_PERFORMANCE_FEE"
+      | "MAX_MANAGER_FEE"
       | "MAX_PRICE_DEVIATION"
-      | "MAX_PROTOCOL_FEE"
+      | "MAX_WITHDRAWAL_FEE"
+      | "PROTOCOL_MANAGEMENT_FEE"
+      | "PROTOCOL_PERFORMANCE_FEE"
       | "_updateAssetPricesExternal"
       | "addSupportedAsset"
       | "addSupportedPlatform"
@@ -75,8 +78,8 @@ export interface VaultInterface extends Interface {
       | "lastAssetPrices"
       | "lastRealizationTime"
       | "liquidateAllPositionsForHarvest"
-      | "managementFee"
       | "manager"
+      | "managerFee"
       | "maxCapacity"
       | "maxDeposit"
       | "maxMint"
@@ -85,19 +88,18 @@ export interface VaultInterface extends Interface {
       | "maxWithdraw"
       | "minDepositAmount"
       | "minFundraisingAmount"
-      | "mint"
+      | "mint(address,uint256)"
+      | "mint(uint256,address)"
       | "name"
       | "owner"
       | "pause"
       | "paused"
-      | "performanceFee"
       | "previewDeposit"
       | "previewMint"
       | "previewRedeem"
       | "previewWithdraw"
       | "previewWithdrawalAfterFees"
       | "previewWithdrawalImpact"
-      | "protocolFee"
       | "protocolTreasury"
       | "realizationCooldown"
       | "realizeByManager"
@@ -143,12 +145,12 @@ export interface VaultInterface extends Interface {
       | "Deposited"
       | "EmergencyOracleModeActivated"
       | "EpochAdvanced"
-      | "FeesExtracted"
       | "HarvestBlocked"
       | "Initialized"
       | "OracleProtectionUpdated"
       | "OwnershipTransferred"
       | "Paused"
+      | "SharesMintedForFees"
       | "StateChanged"
       | "Transfer"
       | "Unpaused"
@@ -161,13 +163,28 @@ export interface VaultInterface extends Interface {
     functionFragment: "FEE_DENOMINATOR",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "MAX_FEE", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "MANAGER_PERFORMANCE_FEE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MAX_MANAGER_FEE",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "MAX_PRICE_DEVIATION",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "MAX_PROTOCOL_FEE",
+    functionFragment: "MAX_WITHDRAWAL_FEE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "PROTOCOL_MANAGEMENT_FEE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "PROTOCOL_PERFORMANCE_FEE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -343,11 +360,11 @@ export interface VaultInterface extends Interface {
     functionFragment: "liquidateAllPositionsForHarvest",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "manager", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "managementFee",
+    functionFragment: "managerFee",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "manager", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "maxCapacity",
     values?: undefined
@@ -381,17 +398,17 @@ export interface VaultInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "mint",
+    functionFragment: "mint(address,uint256)",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mint(uint256,address)",
     values: [BigNumberish, AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "performanceFee",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "previewDeposit",
     values: [BigNumberish]
@@ -415,10 +432,6 @@ export interface VaultInterface extends Interface {
   encodeFunctionData(
     functionFragment: "previewWithdrawalImpact",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "protocolFee",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "protocolTreasury",
@@ -508,7 +521,7 @@ export interface VaultInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "updateFees",
-    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "updateOracleProtection",
@@ -540,13 +553,28 @@ export interface VaultInterface extends Interface {
     functionFragment: "FEE_DENOMINATOR",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "MAX_FEE", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "MANAGER_PERFORMANCE_FEE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "MAX_MANAGER_FEE",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "MAX_PRICE_DEVIATION",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "MAX_PROTOCOL_FEE",
+    functionFragment: "MAX_WITHDRAWAL_FEE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "PROTOCOL_MANAGEMENT_FEE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "PROTOCOL_PERFORMANCE_FEE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -699,11 +727,8 @@ export interface VaultInterface extends Interface {
     functionFragment: "liquidateAllPositionsForHarvest",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "managementFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "manager", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "managerFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "maxCapacity",
     data: BytesLike
@@ -727,15 +752,18 @@ export interface VaultInterface extends Interface {
     functionFragment: "minFundraisingAmount",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "mint(address,uint256)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "mint(uint256,address)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "performanceFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "previewDeposit",
     data: BytesLike
@@ -758,10 +786,6 @@ export interface VaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "previewWithdrawalImpact",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "protocolFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -1069,37 +1093,6 @@ export namespace EpochAdvancedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace FeesExtractedEvent {
-  export type InputTuple = [
-    vault: AddressLike,
-    manager: AddressLike,
-    protocolTreasury: AddressLike,
-    managementFee: BigNumberish,
-    managerPerformanceFee: BigNumberish,
-    protocolFee: BigNumberish
-  ];
-  export type OutputTuple = [
-    vault: string,
-    manager: string,
-    protocolTreasury: string,
-    managementFee: bigint,
-    managerPerformanceFee: bigint,
-    protocolFee: bigint
-  ];
-  export interface OutputObject {
-    vault: string;
-    manager: string;
-    protocolTreasury: string;
-    managementFee: bigint;
-    managerPerformanceFee: bigint;
-    protocolFee: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
 export namespace HarvestBlockedEvent {
   export type InputTuple = [
     reason: string,
@@ -1174,6 +1167,37 @@ export namespace PausedEvent {
   export type OutputTuple = [account: string];
   export interface OutputObject {
     account: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace SharesMintedForFeesEvent {
+  export type InputTuple = [
+    vault: AddressLike,
+    manager: AddressLike,
+    protocolTreasury: AddressLike,
+    managerShares: BigNumberish,
+    protocolShares: BigNumberish,
+    totalFeeValue: BigNumberish
+  ];
+  export type OutputTuple = [
+    vault: string,
+    manager: string,
+    protocolTreasury: string,
+    managerShares: bigint,
+    protocolShares: bigint,
+    totalFeeValue: bigint
+  ];
+  export interface OutputObject {
+    vault: string;
+    manager: string;
+    protocolTreasury: string;
+    managerShares: bigint;
+    protocolShares: bigint;
+    totalFeeValue: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -1368,11 +1392,17 @@ export interface Vault extends BaseContract {
 
   FEE_DENOMINATOR: TypedContractMethod<[], [bigint], "view">;
 
-  MAX_FEE: TypedContractMethod<[], [bigint], "view">;
+  MANAGER_PERFORMANCE_FEE: TypedContractMethod<[], [bigint], "view">;
+
+  MAX_MANAGER_FEE: TypedContractMethod<[], [bigint], "view">;
 
   MAX_PRICE_DEVIATION: TypedContractMethod<[], [bigint], "view">;
 
-  MAX_PROTOCOL_FEE: TypedContractMethod<[], [bigint], "view">;
+  MAX_WITHDRAWAL_FEE: TypedContractMethod<[], [bigint], "view">;
+
+  PROTOCOL_MANAGEMENT_FEE: TypedContractMethod<[], [bigint], "view">;
+
+  PROTOCOL_PERFORMANCE_FEE: TypedContractMethod<[], [bigint], "view">;
 
   _updateAssetPricesExternal: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -1559,8 +1589,8 @@ export interface Vault extends BaseContract {
       _underlyingAsset: AddressLike,
       _manager: AddressLike,
       _maxCapacity: BigNumberish,
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish
+      _managerFee: BigNumberish,
+      _withdrawalFee: BigNumberish
     ],
     [void],
     "nonpayable"
@@ -1586,9 +1616,9 @@ export interface Vault extends BaseContract {
     "nonpayable"
   >;
 
-  managementFee: TypedContractMethod<[], [bigint], "view">;
-
   manager: TypedContractMethod<[], [string], "view">;
+
+  managerFee: TypedContractMethod<[], [bigint], "view">;
 
   maxCapacity: TypedContractMethod<[], [bigint], "view">;
 
@@ -1606,7 +1636,13 @@ export interface Vault extends BaseContract {
 
   minFundraisingAmount: TypedContractMethod<[], [bigint], "view">;
 
-  mint: TypedContractMethod<
+  "mint(address,uint256)": TypedContractMethod<
+    [to: AddressLike, shares: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  "mint(uint256,address)": TypedContractMethod<
     [shares: BigNumberish, receiver: AddressLike],
     [bigint],
     "nonpayable"
@@ -1619,8 +1655,6 @@ export interface Vault extends BaseContract {
   pause: TypedContractMethod<[], [void], "nonpayable">;
 
   paused: TypedContractMethod<[], [boolean], "view">;
-
-  performanceFee: TypedContractMethod<[], [bigint], "view">;
 
   previewDeposit: TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
 
@@ -1650,8 +1684,6 @@ export interface Vault extends BaseContract {
     ],
     "view"
   >;
-
-  protocolFee: TypedContractMethod<[], [bigint], "view">;
 
   protocolTreasury: TypedContractMethod<[], [string], "view">;
 
@@ -1754,12 +1786,7 @@ export interface Vault extends BaseContract {
   >;
 
   updateFees: TypedContractMethod<
-    [
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish,
-      _withdrawalFee: BigNumberish,
-      _protocolFee: BigNumberish
-    ],
+    [_managerFee: BigNumberish, _withdrawalFee: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -1802,13 +1829,22 @@ export interface Vault extends BaseContract {
     nameOrSignature: "FEE_DENOMINATOR"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "MAX_FEE"
+    nameOrSignature: "MANAGER_PERFORMANCE_FEE"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "MAX_MANAGER_FEE"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "MAX_PRICE_DEVIATION"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "MAX_PROTOCOL_FEE"
+    nameOrSignature: "MAX_WITHDRAWAL_FEE"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "PROTOCOL_MANAGEMENT_FEE"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "PROTOCOL_PERFORMANCE_FEE"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "_updateAssetPricesExternal"
@@ -2015,8 +2051,8 @@ export interface Vault extends BaseContract {
       _underlyingAsset: AddressLike,
       _manager: AddressLike,
       _maxCapacity: BigNumberish,
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish
+      _managerFee: BigNumberish,
+      _withdrawalFee: BigNumberish
     ],
     [void],
     "nonpayable"
@@ -2040,11 +2076,11 @@ export interface Vault extends BaseContract {
     nameOrSignature: "liquidateAllPositionsForHarvest"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "managementFee"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "manager"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "managerFee"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "maxCapacity"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -2070,7 +2106,14 @@ export interface Vault extends BaseContract {
     nameOrSignature: "minFundraisingAmount"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "mint"
+    nameOrSignature: "mint(address,uint256)"
+  ): TypedContractMethod<
+    [to: AddressLike, shares: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "mint(uint256,address)"
   ): TypedContractMethod<
     [shares: BigNumberish, receiver: AddressLike],
     [bigint],
@@ -2088,9 +2131,6 @@ export interface Vault extends BaseContract {
   getFunction(
     nameOrSignature: "paused"
   ): TypedContractMethod<[], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "performanceFee"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "previewDeposit"
   ): TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
@@ -2118,9 +2158,6 @@ export interface Vault extends BaseContract {
     ],
     "view"
   >;
-  getFunction(
-    nameOrSignature: "protocolFee"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "protocolTreasury"
   ): TypedContractMethod<[], [string], "view">;
@@ -2227,12 +2264,7 @@ export interface Vault extends BaseContract {
   getFunction(
     nameOrSignature: "updateFees"
   ): TypedContractMethod<
-    [
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish,
-      _withdrawalFee: BigNumberish,
-      _protocolFee: BigNumberish
-    ],
+    [_managerFee: BigNumberish, _withdrawalFee: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -2341,13 +2373,6 @@ export interface Vault extends BaseContract {
     EpochAdvancedEvent.OutputObject
   >;
   getEvent(
-    key: "FeesExtracted"
-  ): TypedContractEvent<
-    FeesExtractedEvent.InputTuple,
-    FeesExtractedEvent.OutputTuple,
-    FeesExtractedEvent.OutputObject
-  >;
-  getEvent(
     key: "HarvestBlocked"
   ): TypedContractEvent<
     HarvestBlockedEvent.InputTuple,
@@ -2381,6 +2406,13 @@ export interface Vault extends BaseContract {
     PausedEvent.InputTuple,
     PausedEvent.OutputTuple,
     PausedEvent.OutputObject
+  >;
+  getEvent(
+    key: "SharesMintedForFees"
+  ): TypedContractEvent<
+    SharesMintedForFeesEvent.InputTuple,
+    SharesMintedForFeesEvent.OutputTuple,
+    SharesMintedForFeesEvent.OutputObject
   >;
   getEvent(
     key: "StateChanged"
@@ -2536,17 +2568,6 @@ export interface Vault extends BaseContract {
       EpochAdvancedEvent.OutputObject
     >;
 
-    "FeesExtracted(address,address,address,uint256,uint256,uint256)": TypedContractEvent<
-      FeesExtractedEvent.InputTuple,
-      FeesExtractedEvent.OutputTuple,
-      FeesExtractedEvent.OutputObject
-    >;
-    FeesExtracted: TypedContractEvent<
-      FeesExtractedEvent.InputTuple,
-      FeesExtractedEvent.OutputTuple,
-      FeesExtractedEvent.OutputObject
-    >;
-
     "HarvestBlocked(string,uint256,address[])": TypedContractEvent<
       HarvestBlockedEvent.InputTuple,
       HarvestBlockedEvent.OutputTuple,
@@ -2600,6 +2621,17 @@ export interface Vault extends BaseContract {
       PausedEvent.InputTuple,
       PausedEvent.OutputTuple,
       PausedEvent.OutputObject
+    >;
+
+    "SharesMintedForFees(address,address,address,uint256,uint256,uint256)": TypedContractEvent<
+      SharesMintedForFeesEvent.InputTuple,
+      SharesMintedForFeesEvent.OutputTuple,
+      SharesMintedForFeesEvent.OutputObject
+    >;
+    SharesMintedForFees: TypedContractEvent<
+      SharesMintedForFeesEvent.InputTuple,
+      SharesMintedForFeesEvent.OutputTuple,
+      SharesMintedForFeesEvent.OutputObject
     >;
 
     "StateChanged(uint256,uint8,uint8,uint256)": TypedContractEvent<

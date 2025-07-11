@@ -19,6 +19,6 @@ interface ITransactionTypes {
     Unstake, // 7
     Claim, // 8
     WrapNativeToken, // 9
-    UnwrapNativeToken, // 10
+    UnwrapNativeToken // 10
   }
 }

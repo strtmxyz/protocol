@@ -32,7 +32,6 @@ export interface IVaultInterface extends Interface {
       | "approve"
       | "areAllPositionsLiquidated"
       | "asset"
-      | "authorizedStrategies"
       | "balanceOf"
       | "callContract"
       | "canGoLive"
@@ -40,12 +39,8 @@ export interface IVaultInterface extends Interface {
       | "convertToShares"
       | "currentEpoch"
       | "decimals"
-      | "deposit(uint256,address)"
-      | "deposit(uint256)"
+      | "deposit"
       | "emergencyLiquidateAll"
-      | "emergencyRecovery"
-      | "epochEndAssets"
-      | "epochStartAssets"
       | "epochStartTime"
       | "factory"
       | "fundraisingDuration"
@@ -56,11 +51,9 @@ export interface IVaultInterface extends Interface {
       | "getVaultInfo"
       | "goLive"
       | "initialize"
-      | "isAssetSupported"
-      | "lastHarvestTime"
       | "liquidateAllPositionsForHarvest"
-      | "managementFee"
       | "manager"
+      | "managerFee"
       | "maxCapacity"
       | "maxDeposit"
       | "maxMint"
@@ -71,13 +64,10 @@ export interface IVaultInterface extends Interface {
       | "mint"
       | "name"
       | "pause"
-      | "paused"
-      | "performanceFee"
       | "previewDeposit"
       | "previewMint"
       | "previewRedeem"
       | "previewWithdraw"
-      | "protocolFee"
       | "protocolTreasury"
       | "realizeByManager"
       | "redeem"
@@ -93,13 +83,10 @@ export interface IVaultInterface extends Interface {
       | "unpause"
       | "updateEpochSettings"
       | "updateFees"
-      | "updateManager"
       | "updateProtocolTreasury"
       | "updateVaultSettings"
       | "vaultState"
-      | "version"
-      | "withdraw(uint256)"
-      | "withdraw(uint256,address,address)"
+      | "withdraw"
       | "withdrawalFee"
   ): FunctionFragment;
 
@@ -107,9 +94,11 @@ export interface IVaultInterface extends Interface {
     nameOrSignatureOrTopic:
       | "AllPositionsLiquidated"
       | "Approval"
+      | "AutoRealizationTriggered"
       | "ContractCalled"
       | "Deposit"
       | "Deposited"
+      | "EmergencyOracleModeActivated"
       | "EpochAdvanced"
       | "HarvestBlocked"
       | "OracleProtectionUpdated"
@@ -142,10 +131,6 @@ export interface IVaultInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "asset", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "authorizedStrategies",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "balanceOf",
     values: [AddressLike]
   ): string;
@@ -168,28 +153,12 @@ export interface IVaultInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "deposit(uint256,address)",
+    functionFragment: "deposit",
     values: [BigNumberish, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "deposit(uint256)",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "emergencyLiquidateAll",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "emergencyRecovery",
-    values: [AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "epochEndAssets",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "epochStartAssets",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "epochStartTime",
@@ -234,22 +203,14 @@ export interface IVaultInterface extends Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "isAssetSupported",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastHarvestTime",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "liquidateAllPositionsForHarvest",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "manager", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "managementFee",
+    functionFragment: "managerFee",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "manager", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "maxCapacity",
     values?: undefined
@@ -284,11 +245,6 @@ export interface IVaultInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "performanceFee",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "previewDeposit",
     values: [BigNumberish]
@@ -304,10 +260,6 @@ export interface IVaultInterface extends Interface {
   encodeFunctionData(
     functionFragment: "previewWithdraw",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "protocolFee",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "protocolTreasury",
@@ -361,11 +313,7 @@ export interface IVaultInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "updateFees",
-    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateManager",
-    values: [AddressLike]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "updateProtocolTreasury",
@@ -379,13 +327,8 @@ export interface IVaultInterface extends Interface {
     functionFragment: "vaultState",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "version", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "withdraw(uint256)",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdraw(uint256,address,address)",
+    functionFragment: "withdraw",
     values: [BigNumberish, AddressLike, AddressLike]
   ): string;
   encodeFunctionData(
@@ -408,10 +351,6 @@ export interface IVaultInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "asset", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "authorizedStrategies",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "callContract",
@@ -431,28 +370,9 @@ export interface IVaultInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "deposit(uint256,address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "deposit(uint256)",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "emergencyLiquidateAll",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "emergencyRecovery",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "epochEndAssets",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "epochStartAssets",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -487,22 +407,11 @@ export interface IVaultInterface extends Interface {
   decodeFunctionResult(functionFragment: "goLive", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "isAssetSupported",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastHarvestTime",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "liquidateAllPositionsForHarvest",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "managementFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "manager", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "managerFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "maxCapacity",
     data: BytesLike
@@ -525,11 +434,6 @@ export interface IVaultInterface extends Interface {
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "performanceFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "previewDeposit",
     data: BytesLike
@@ -544,10 +448,6 @@ export interface IVaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "previewWithdraw",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "protocolFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -596,10 +496,6 @@ export interface IVaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "updateFees", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "updateManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "updateProtocolTreasury",
     data: BytesLike
   ): Result;
@@ -608,15 +504,7 @@ export interface IVaultInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "vaultState", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "withdraw(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdraw(uint256,address,address)",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawalFee",
     data: BytesLike
@@ -650,6 +538,31 @@ export namespace ApprovalEvent {
     owner: string;
     spender: string;
     value: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace AutoRealizationTriggeredEvent {
+  export type InputTuple = [
+    triggeredBy: AddressLike,
+    preRealizationValue: BigNumberish,
+    totalFeesExtracted: BigNumberish,
+    blockNumber: BigNumberish
+  ];
+  export type OutputTuple = [
+    triggeredBy: string,
+    preRealizationValue: bigint,
+    totalFeesExtracted: bigint,
+    blockNumber: bigint
+  ];
+  export interface OutputObject {
+    triggeredBy: string;
+    preRealizationValue: bigint;
+    totalFeesExtracted: bigint;
+    blockNumber: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -729,6 +642,16 @@ export namespace DepositedEvent {
     amount: bigint;
     shares: bigint;
   }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace EmergencyOracleModeActivatedEvent {
+  export type InputTuple = [];
+  export type OutputTuple = [];
+  export interface OutputObject {}
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
   export type Log = TypedEventLog<Event>;
@@ -1001,12 +924,6 @@ export interface IVault extends BaseContract {
 
   asset: TypedContractMethod<[], [string], "view">;
 
-  authorizedStrategies: TypedContractMethod<
-    [arg0: AddressLike],
-    [boolean],
-    "view"
-  >;
-
   balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
 
   callContract: TypedContractMethod<
@@ -1033,29 +950,13 @@ export interface IVault extends BaseContract {
 
   decimals: TypedContractMethod<[], [bigint], "view">;
 
-  "deposit(uint256,address)": TypedContractMethod<
+  deposit: TypedContractMethod<
     [assets: BigNumberish, receiver: AddressLike],
     [bigint],
     "nonpayable"
   >;
 
-  "deposit(uint256)": TypedContractMethod<
-    [_amount: BigNumberish],
-    [bigint],
-    "nonpayable"
-  >;
-
   emergencyLiquidateAll: TypedContractMethod<[], [void], "nonpayable">;
-
-  emergencyRecovery: TypedContractMethod<
-    [_asset: AddressLike, _amount: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-
-  epochEndAssets: TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
-
-  epochStartAssets: TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
 
   epochStartTime: TypedContractMethod<[], [bigint], "view">;
 
@@ -1111,16 +1012,12 @@ export interface IVault extends BaseContract {
       _underlyingAsset: AddressLike,
       _manager: AddressLike,
       _maxCapacity: BigNumberish,
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish
+      _managerFee: BigNumberish,
+      _withdrawalFee: BigNumberish
     ],
     [void],
     "nonpayable"
   >;
-
-  isAssetSupported: TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
-
-  lastHarvestTime: TypedContractMethod<[], [bigint], "view">;
 
   liquidateAllPositionsForHarvest: TypedContractMethod<
     [],
@@ -1128,9 +1025,9 @@ export interface IVault extends BaseContract {
     "nonpayable"
   >;
 
-  managementFee: TypedContractMethod<[], [bigint], "view">;
-
   manager: TypedContractMethod<[], [string], "view">;
+
+  managerFee: TypedContractMethod<[], [bigint], "view">;
 
   maxCapacity: TypedContractMethod<[], [bigint], "view">;
 
@@ -1156,10 +1053,6 @@ export interface IVault extends BaseContract {
 
   pause: TypedContractMethod<[], [void], "nonpayable">;
 
-  paused: TypedContractMethod<[], [boolean], "view">;
-
-  performanceFee: TypedContractMethod<[], [bigint], "view">;
-
   previewDeposit: TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
 
   previewMint: TypedContractMethod<[shares: BigNumberish], [bigint], "view">;
@@ -1171,8 +1064,6 @@ export interface IVault extends BaseContract {
     [bigint],
     "view"
   >;
-
-  protocolFee: TypedContractMethod<[], [bigint], "view">;
 
   protocolTreasury: TypedContractMethod<[], [string], "view">;
 
@@ -1227,18 +1118,7 @@ export interface IVault extends BaseContract {
   >;
 
   updateFees: TypedContractMethod<
-    [
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish,
-      _withdrawalFee: BigNumberish,
-      _protocolFee: BigNumberish
-    ],
-    [void],
-    "nonpayable"
-  >;
-
-  updateManager: TypedContractMethod<
-    [_newManager: AddressLike],
+    [_managerFee: BigNumberish, _withdrawalFee: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -1257,15 +1137,7 @@ export interface IVault extends BaseContract {
 
   vaultState: TypedContractMethod<[], [bigint], "view">;
 
-  version: TypedContractMethod<[], [string], "view">;
-
-  "withdraw(uint256)": TypedContractMethod<
-    [_shares: BigNumberish],
-    [bigint],
-    "nonpayable"
-  >;
-
-  "withdraw(uint256,address,address)": TypedContractMethod<
+  withdraw: TypedContractMethod<
     [assets: BigNumberish, receiver: AddressLike, owner: AddressLike],
     [bigint],
     "nonpayable"
@@ -1304,9 +1176,6 @@ export interface IVault extends BaseContract {
     nameOrSignature: "asset"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "authorizedStrategies"
-  ): TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
-  getFunction(
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
   getFunction(
@@ -1332,31 +1201,15 @@ export interface IVault extends BaseContract {
     nameOrSignature: "decimals"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "deposit(uint256,address)"
+    nameOrSignature: "deposit"
   ): TypedContractMethod<
     [assets: BigNumberish, receiver: AddressLike],
     [bigint],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "deposit(uint256)"
-  ): TypedContractMethod<[_amount: BigNumberish], [bigint], "nonpayable">;
-  getFunction(
     nameOrSignature: "emergencyLiquidateAll"
   ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "emergencyRecovery"
-  ): TypedContractMethod<
-    [_asset: AddressLike, _amount: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "epochEndAssets"
-  ): TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "epochStartAssets"
-  ): TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "epochStartTime"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -1422,27 +1275,21 @@ export interface IVault extends BaseContract {
       _underlyingAsset: AddressLike,
       _manager: AddressLike,
       _maxCapacity: BigNumberish,
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish
+      _managerFee: BigNumberish,
+      _withdrawalFee: BigNumberish
     ],
     [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "isAssetSupported"
-  ): TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "lastHarvestTime"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "liquidateAllPositionsForHarvest"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "managementFee"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "manager"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "managerFee"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "maxCapacity"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -1478,12 +1325,6 @@ export interface IVault extends BaseContract {
     nameOrSignature: "pause"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "paused"
-  ): TypedContractMethod<[], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "performanceFee"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "previewDeposit"
   ): TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
   getFunction(
@@ -1495,9 +1336,6 @@ export interface IVault extends BaseContract {
   getFunction(
     nameOrSignature: "previewWithdraw"
   ): TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "protocolFee"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "protocolTreasury"
   ): TypedContractMethod<[], [string], "view">;
@@ -1563,18 +1401,10 @@ export interface IVault extends BaseContract {
   getFunction(
     nameOrSignature: "updateFees"
   ): TypedContractMethod<
-    [
-      _managementFee: BigNumberish,
-      _performanceFee: BigNumberish,
-      _withdrawalFee: BigNumberish,
-      _protocolFee: BigNumberish
-    ],
+    [_managerFee: BigNumberish, _withdrawalFee: BigNumberish],
     [void],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "updateManager"
-  ): TypedContractMethod<[_newManager: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "updateProtocolTreasury"
   ): TypedContractMethod<[_newTreasury: AddressLike], [void], "nonpayable">;
@@ -1589,13 +1419,7 @@ export interface IVault extends BaseContract {
     nameOrSignature: "vaultState"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "version"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "withdraw(uint256)"
-  ): TypedContractMethod<[_shares: BigNumberish], [bigint], "nonpayable">;
-  getFunction(
-    nameOrSignature: "withdraw(uint256,address,address)"
+    nameOrSignature: "withdraw"
   ): TypedContractMethod<
     [assets: BigNumberish, receiver: AddressLike, owner: AddressLike],
     [bigint],
@@ -1620,6 +1444,13 @@ export interface IVault extends BaseContract {
     ApprovalEvent.OutputObject
   >;
   getEvent(
+    key: "AutoRealizationTriggered"
+  ): TypedContractEvent<
+    AutoRealizationTriggeredEvent.InputTuple,
+    AutoRealizationTriggeredEvent.OutputTuple,
+    AutoRealizationTriggeredEvent.OutputObject
+  >;
+  getEvent(
     key: "ContractCalled"
   ): TypedContractEvent<
     ContractCalledEvent.InputTuple,
@@ -1639,6 +1470,13 @@ export interface IVault extends BaseContract {
     DepositedEvent.InputTuple,
     DepositedEvent.OutputTuple,
     DepositedEvent.OutputObject
+  >;
+  getEvent(
+    key: "EmergencyOracleModeActivated"
+  ): TypedContractEvent<
+    EmergencyOracleModeActivatedEvent.InputTuple,
+    EmergencyOracleModeActivatedEvent.OutputTuple,
+    EmergencyOracleModeActivatedEvent.OutputObject
   >;
   getEvent(
     key: "EpochAdvanced"
@@ -1720,6 +1558,17 @@ export interface IVault extends BaseContract {
       ApprovalEvent.OutputObject
     >;
 
+    "AutoRealizationTriggered(address,uint256,uint256,uint256)": TypedContractEvent<
+      AutoRealizationTriggeredEvent.InputTuple,
+      AutoRealizationTriggeredEvent.OutputTuple,
+      AutoRealizationTriggeredEvent.OutputObject
+    >;
+    AutoRealizationTriggered: TypedContractEvent<
+      AutoRealizationTriggeredEvent.InputTuple,
+      AutoRealizationTriggeredEvent.OutputTuple,
+      AutoRealizationTriggeredEvent.OutputObject
+    >;
+
     "ContractCalled(address,address,bytes,uint256)": TypedContractEvent<
       ContractCalledEvent.InputTuple,
       ContractCalledEvent.OutputTuple,
@@ -1751,6 +1600,17 @@ export interface IVault extends BaseContract {
       DepositedEvent.InputTuple,
       DepositedEvent.OutputTuple,
       DepositedEvent.OutputObject
+    >;
+
+    "EmergencyOracleModeActivated()": TypedContractEvent<
+      EmergencyOracleModeActivatedEvent.InputTuple,
+      EmergencyOracleModeActivatedEvent.OutputTuple,
+      EmergencyOracleModeActivatedEvent.OutputObject
+    >;
+    EmergencyOracleModeActivated: TypedContractEvent<
+      EmergencyOracleModeActivatedEvent.InputTuple,
+      EmergencyOracleModeActivatedEvent.OutputTuple,
+      EmergencyOracleModeActivatedEvent.OutputObject
     >;
 
     "EpochAdvanced(uint256,uint256,uint256,uint256)": TypedContractEvent<

@@ -970,8 +970,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/VaultFactory.sol": {
-      "lastModificationDate": 1751647822475,
-      "contentHash": "49b10d30c12de833f0f6a5a04fbef2bb",
+      "lastModificationDate": 1752216628366,
+      "contentHash": "82a899110af9faad57c5ce5866ba96ec",
       "sourceName": "contracts/VaultFactory.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -1074,8 +1074,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IVault.sol": {
-      "lastModificationDate": 1751697824667,
-      "contentHash": "090f819307c22a3e9973e6af68c6f55c",
+      "lastModificationDate": 1752216563507,
+      "contentHash": "40e2661efd8bda096ab83a9b8db3927e",
       "sourceName": "contracts/interfaces/IVault.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2205,8 +2205,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/Vault.sol": {
-      "lastModificationDate": 1752031728718,
-      "contentHash": "c73138ec77adaa1218f4c3106961638a",
+      "lastModificationDate": 1752216842228,
+      "contentHash": "de85c31e6053e8eac606f6c249354526",
       "sourceName": "contracts/Vault.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2247,6 +2247,7 @@
         "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol",
         "@openzeppelin/contracts/utils/math/Math.sol",
+        "./interfaces/IVault.sol",
         "./interfaces/IVaultFactory.sol",
         "./interfaces/IAssetHandler.sol",
         "./interfaces/IHasGuardInfo.sol",
@@ -2403,8 +2404,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/FeeLogic.sol": {
-      "lastModificationDate": 1752031549548,
-      "contentHash": "c96abcdc639f2168d0f6d7da64ec0d60",
+      "lastModificationDate": 1752198370793,
+      "contentHash": "76446cc68df8d0878c1de6eeb7f66450",
       "sourceName": "contracts/utils/FeeLogic.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2444,7 +2445,8 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "FeeLogic"
+        "FeeLogic",
+        "IVaultMinter"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol": {
@@ -2489,57 +2491,6 @@
       ],
       "artifacts": [
         "ReentrancyGuardUpgradeable"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/VertexPlatformGuard.sol": {
-      "lastModificationDate": 1751890808434,
-      "contentHash": "4de7af7d4f5431ff1464904e5d6ae3cf",
-      "sourceName": "contracts/guards/platform/VertexPlatformGuard.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [
-        "../../interfaces/guards/IPlatformGuard.sol",
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/IVault.sol",
-        "../../interfaces/ITransactionTypes.sol",
-        "../../interfaces/external/vertexprotocol/IEndpoint.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "VertexPlatformGuard"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/TxDataUtils.sol": {
@@ -2587,8 +2538,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/ITransactionTypes.sol": {
-      "lastModificationDate": 1751508348672,
-      "contentHash": "362fcc5da80a495bb5651f53c5df93fc",
+      "lastModificationDate": 1752197654244,
+      "contentHash": "e82ab6c2620503cfc3ca1da644d7b7c3",
       "sourceName": "contracts/interfaces/ITransactionTypes.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2628,48 +2579,6 @@
       ],
       "artifacts": [
         "ITransactionTypes"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/vertexprotocol/IEndpoint.sol": {
-      "lastModificationDate": 1751718060258,
-      "contentHash": "c3a79fbca552e2bd24e64bb5a6ffbd64",
-      "sourceName": "contracts/interfaces/external/vertexprotocol/IEndpoint.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IEndpoint"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol": {
@@ -2891,102 +2800,6 @@
       ],
       "artifacts": [
         "Path"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/VertexAssetGuard.sol": {
-      "lastModificationDate": 1751508348668,
-      "contentHash": "d3e7d61aa7cb0ed392ae797d07c17804",
-      "sourceName": "contracts/guards/asset/VertexAssetGuard.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol",
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/guards/IGuard.sol",
-        "../../interfaces/IVault.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/IHasGuardInfo.sol",
-        "../../interfaces/guards/IAssetGuard.sol",
-        "../../interfaces/IHasAssetInfo.sol",
-        "../../interfaces/external/vertexprotocol/Clearinghouse.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "VertexAssetGuard"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/vertexprotocol/Clearinghouse.sol": {
-      "lastModificationDate": 1751508348673,
-      "contentHash": "07f29e57b363ca5292a5fa9410ce4f57",
-      "sourceName": "contracts/interfaces/external/vertexprotocol/Clearinghouse.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Clearinghouse"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/StETHGuard.sol": {

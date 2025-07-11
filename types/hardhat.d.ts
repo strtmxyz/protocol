@@ -170,10 +170,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.StETHGuard__factory>;
     getContractFactory(
-      name: "VertexAssetGuard",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.VertexAssetGuard__factory>;
-    getContractFactory(
       name: "AmbientGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AmbientGuard__factory>;
@@ -189,10 +185,6 @@ declare module "hardhat/types/runtime" {
       name: "PancakeV3RouterGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.PancakeV3RouterGuard__factory>;
-    getContractFactory(
-      name: "VertexPlatformGuard",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.VertexPlatformGuard__factory>;
     getContractFactory(
       name: "ICrocSwapDex",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -217,14 +209,6 @@ declare module "hardhat/types/runtime" {
       name: "IUniversalRouter",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IUniversalRouter__factory>;
-    getContractFactory(
-      name: "Clearinghouse",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Clearinghouse__factory>;
-    getContractFactory(
-      name: "IEndpoint",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IEndpoint__factory>;
     getContractFactory(
       name: "IAssetGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -309,6 +293,10 @@ declare module "hardhat/types/runtime" {
       name: "FeeLogic",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.FeeLogic__factory>;
+    getContractFactory(
+      name: "IVaultMinter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IVaultMinter__factory>;
     getContractFactory(
       name: "TxDataUtils",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -518,11 +506,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.StETHGuard>;
     getContractAt(
-      name: "VertexAssetGuard",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.VertexAssetGuard>;
-    getContractAt(
       name: "AmbientGuard",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -542,11 +525,6 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.PancakeV3RouterGuard>;
-    getContractAt(
-      name: "VertexPlatformGuard",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.VertexPlatformGuard>;
     getContractAt(
       name: "ICrocSwapDex",
       address: string | ethers.Addressable,
@@ -577,16 +555,6 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IUniversalRouter>;
-    getContractAt(
-      name: "Clearinghouse",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Clearinghouse>;
-    getContractAt(
-      name: "IEndpoint",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IEndpoint>;
     getContractAt(
       name: "IAssetGuard",
       address: string | ethers.Addressable,
@@ -692,6 +660,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.FeeLogic>;
+    getContractAt(
+      name: "IVaultMinter",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IVaultMinter>;
     getContractAt(
       name: "TxDataUtils",
       address: string | ethers.Addressable,
@@ -865,10 +838,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.StETHGuard>;
     deployContract(
-      name: "VertexAssetGuard",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.VertexAssetGuard>;
-    deployContract(
       name: "AmbientGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AmbientGuard>;
@@ -884,10 +853,6 @@ declare module "hardhat/types/runtime" {
       name: "PancakeV3RouterGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.PancakeV3RouterGuard>;
-    deployContract(
-      name: "VertexPlatformGuard",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.VertexPlatformGuard>;
     deployContract(
       name: "ICrocSwapDex",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -912,14 +877,6 @@ declare module "hardhat/types/runtime" {
       name: "IUniversalRouter",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IUniversalRouter>;
-    deployContract(
-      name: "Clearinghouse",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Clearinghouse>;
-    deployContract(
-      name: "IEndpoint",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IEndpoint>;
     deployContract(
       name: "IAssetGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1004,6 +961,10 @@ declare module "hardhat/types/runtime" {
       name: "FeeLogic",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.FeeLogic>;
+    deployContract(
+      name: "IVaultMinter",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IVaultMinter>;
     deployContract(
       name: "TxDataUtils",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1213,11 +1174,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.StETHGuard>;
     deployContract(
-      name: "VertexAssetGuard",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.VertexAssetGuard>;
-    deployContract(
       name: "AmbientGuard",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1237,11 +1193,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.PancakeV3RouterGuard>;
-    deployContract(
-      name: "VertexPlatformGuard",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.VertexPlatformGuard>;
     deployContract(
       name: "ICrocSwapDex",
       args: any[],
@@ -1272,16 +1223,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IUniversalRouter>;
-    deployContract(
-      name: "Clearinghouse",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Clearinghouse>;
-    deployContract(
-      name: "IEndpoint",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IEndpoint>;
     deployContract(
       name: "IAssetGuard",
       args: any[],
@@ -1387,6 +1328,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.FeeLogic>;
+    deployContract(
+      name: "IVaultMinter",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IVaultMinter>;
     deployContract(
       name: "TxDataUtils",
       args: any[],

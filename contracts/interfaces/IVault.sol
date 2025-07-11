@@ -82,6 +82,15 @@ interface IVault is IERC4626 {
         uint256 timestamp
     );
 
+    event EmergencyOracleModeActivated();
+    
+    event AutoRealizationTriggered(
+        address indexed triggeredBy,
+        uint256 preRealizationValue,
+        uint256 totalFeesExtracted,
+        uint256 blockNumber
+    );
+
     /*//////////////////////////////////////////////////////////////
                             CORE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -93,19 +102,11 @@ interface IVault is IERC4626 {
         address _underlyingAsset,
         address _manager,
         uint256 _maxCapacity,
-        uint256 _managementFee,
-        uint256 _performanceFee
+        uint256 _managerFee,
+        uint256 _withdrawalFee
     ) external;
 
-    /// @notice Deposit assets to the vault (only during fundraising)
-    /// @param _amount Amount to deposit
-    /// @return shares Number of shares minted
-    function deposit(uint256 _amount) external returns (uint256 shares);
-    
-    /// @notice Withdraw assets from the vault
-    /// @param _shares Number of shares to burn
-    /// @return amount Amount of assets withdrawn
-    function withdraw(uint256 _shares) external returns (uint256 amount);
+    // deposit/withdraw functions are handled by ERC4626 interface
 
     /// @notice Call external contract (only in LIVE state)
     /// @param target Target contract address
@@ -156,15 +157,11 @@ interface IVault is IERC4626 {
     //////////////////////////////////////////////////////////////*/
     
     /// @notice Update fees
-    /// @param _managementFee New management fee
-    /// @param _performanceFee New performance fee
+    /// @param _managerFee New manager management fee
     /// @param _withdrawalFee New withdrawal fee
-    /// @param _protocolFee New protocol fee share
     function updateFees(
-        uint256 _managementFee,
-        uint256 _performanceFee,
-        uint256 _withdrawalFee,
-        uint256 _protocolFee
+        uint256 _managerFee,
+        uint256 _withdrawalFee
     ) external;
     
     /// @notice Update vault settings
@@ -188,9 +185,7 @@ interface IVault is IERC4626 {
     /// @param _authorized Authorization status
     function setStrategyAuthorization(address _strategy, bool _authorized) external;
     
-    /// @notice Update manager
-    /// @param _newManager New manager address
-    function updateManager(address _newManager) external;
+    // Manager is immutable after vault creation for security
     
     /// @notice Update protocol treasury
     /// @param _newTreasury New protocol treasury address
@@ -206,10 +201,7 @@ interface IVault is IERC4626 {
     /// @notice Unpause
     function unpause() external;
     
-    /// @notice Emergency asset recovery
-    /// @param _asset Asset to recover
-    /// @param _amount Amount to recover
-    function emergencyRecovery(address _asset, uint256 _amount) external;
+    // Emergency functions handled by OpenZeppelin contracts
 
     /*//////////////////////////////////////////////////////////////
                             VIEW FUNCTIONS
@@ -264,17 +256,9 @@ interface IVault is IERC4626 {
     function epochStartTime() external view returns (uint256);
     function fundraisingDuration() external view returns (uint256);
     function minFundraisingAmount() external view returns (uint256);
-    function managementFee() external view returns (uint256);
-    function performanceFee() external view returns (uint256);
-    function withdrawalFee() external view returns (uint256);
-    function protocolFee() external view returns (uint256);
-    function lastHarvestTime() external view returns (uint256);
+    function managerFee() external view returns (uint16);
+    function withdrawalFee() external view returns (uint16);
     function maxCapacity() external view returns (uint256);
     function minDepositAmount() external view returns (uint256);
-    function authorizedStrategies(address) external view returns (bool);
-    function isAssetSupported(address) external view returns (bool);
-    function epochStartAssets(uint256) external view returns (uint256);
-    function epochEndAssets(uint256) external view returns (uint256);
-    function version() external pure returns (string memory);
-    function paused() external view returns (bool);
+    // State variables accessible via public getters
 } 
