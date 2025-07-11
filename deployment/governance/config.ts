@@ -1,4 +1,4 @@
-import { ERC20AssetType, NativeTokenType, LiquidityAssetType, VertexProtocolAssetType} from "../config/tokens"
+import { ERC20AssetType, NativeTokenType, LiquidityAssetType, PancakeLPAssetType} from "../config/tokens"
 
 export interface GovernanceConfig {
     assetGuards: {
@@ -29,27 +29,26 @@ export const getGovernanceConfig = (networkName: string): GovernanceConfig => {
                 ],
                 contractGuards: [],
             }
-        case "arbitrumSepolia":
+        case "monadTestnet":
             return {
                 assetGuards: [
                     {
                         assetType: ERC20AssetType,
-                        guardAddress: '0xfEEcCfb90EBc7a2dab4aE30790a880D4EAD08A81'
+                        guardAddress: ''
                     },
                     {
                         assetType: NativeTokenType,
-                        guardAddress: '0xb13A03a30fbC567BA2959D7ef60447e0DAb07C9A'
+                        guardAddress: ''
                     },
                     {
-                        assetType: VertexProtocolAssetType,
-                        guardAddress: '0xE22DE744aB5428AAef72BC6448D6f27341BBb1D1'
+                        assetType: PancakeLPAssetType,
+                        guardAddress: ''
                     }
                 ],
                 contractGuards: [
-                    // VertexProtocol
                     {
-                        externalAddress: '0xaDeFDE1A14B6ba4DA3e82414209408a49930E8DC',
-                        guardAddress: '0xE800a81cacdFF3FA0Bc0cf3Ff0433c0C8b9699dc'
+                        externalAddress: '',
+                        guardAddress: ''
                     },
                 ],
             }

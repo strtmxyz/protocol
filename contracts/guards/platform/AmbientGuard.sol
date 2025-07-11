@@ -34,7 +34,7 @@ contract AmbientGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initial
     uint16 public constant SWAP_PROXY_IDX = 1;
 
     function initialize() public initializer {
-        platformName = "ambient";
+        platformName = "AmbientGuard";
     }
 
     /// @notice Validates userCmd calls to Ambient protocol

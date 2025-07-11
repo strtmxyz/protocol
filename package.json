@@ -18,8 +18,11 @@
     
     "deploy:guard:ERC20Guard": "hardhat run deployment/guards/ERC20Guard.ts --network monadTestnet",
     "deploy:guard:ETHGuard": "hardhat run deployment/guards/ETHGuard.ts --network monadTestnet",
-    "deploy:guard:VertexAssetGuard": "hardhat run deployment/guards/VertexAssetGuard.ts --network monadTestnet",
-    "deploy:guard:VertexPlatformGuard": "hardhat run deployment/guards/VertexPlatformGuard.ts --network monadTestnet",
+    "deploy:guard:ERC20PancakeLPGuard": "hardhat run deployment/guards/ERC20PancakeLPGuard.ts --network monadTestnet",
+    "deploy:guard:PancakeV2RouterGuard": "hardhat run deployment/guards/PancakeV2RouterGuard.ts --network monadTestnet",
+    "deploy:guard:PancakeV3RouterGuard": "hardhat run deployment/guards/PancakeV3RouterGuard.ts --network monadTestnet",
+    "deploy:guard:KyberswapGuard": "hardhat run deployment/guards/KyberswapGuard.ts --network monadTestnet",
+    "deploy:guard:AmbientGuard": "hardhat run deployment/guards/AmbientGuard.ts --network monadTestnet",
     
     "config:assets": "hardhat run deployment/oracles/setting.ts --network monadTestnet",
     "config:vault": "hardhat run deployment/vault/setting.ts --network monadTestnet",

@@ -118,8 +118,6 @@ const config: HardhatUserConfig = {
       "IPlatformGuard",
       "ERC20Guard",
       "ETHGuard",
-      "VertexAssetGuard",
-      "VertexPlatformGuard",
       "PancakeV2RouterGuard",
       "PancakeV3RouterGuard",
       "AmbientGuard",

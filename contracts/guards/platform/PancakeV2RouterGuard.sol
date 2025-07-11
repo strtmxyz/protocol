@@ -33,7 +33,7 @@ contract PancakeV2RouterGuard is TxDataUtils, IPlatformGuard, ITransactionTypes,
     
     /// @notice Initialize the guard with platform name
     function initialize() public initializer {
-        platformName = "pancakeswap-v2";
+        platformName = "PancakeV2RouterGuard";
     }
 
     /// @notice Guard for non-payable transactions

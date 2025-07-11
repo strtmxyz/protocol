@@ -20,7 +20,7 @@ contract PancakeV3RouterGuard is TxDataUtils, IPlatformGuard, ITransactionTypes,
     string public override platformName;
     
     function initialize() public initializer {
-        platformName = "pancakeswap-v3";
+        platformName = "PancakeV3RouterGuard";
     }
 
     function txGuard(address _vault, address _to, bytes memory _data)
