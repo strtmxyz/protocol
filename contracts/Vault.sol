@@ -42,32 +42,52 @@ contract Vault is
                               CUSTOM ERRORS
     //////////////////////////////////////////////////////////////*/
     
-    error OnlyManager();
-    error UnauthorizedStrategy();
-    error InvalidVaultState();
-    error InvalidAsset();
-    error InvalidManager();
-
-    error InsufficientFundsRaised();
-    error MustLiquidateAllPositions();
-    error AssetGuardNotFound();
-    error InvalidUnderlyingPriceFeed();
-    error DepositsOnlyDuringFundraising();
-    error BelowMinimumDeposit();
-    error ExceedsCapacity();
-    error InsufficientUnderlyingAssets();
-    error InvalidTarget();
-    error NoGuardFound();
-    error TransactionRejectedByGuard();
-    error ContractCallFailed();
-    error RealizationCooldownActive();
-    error ManualLiquidationRequired();
-    error InternalOnly();
-    error CannotRemoveUnderlyingAsset();
-    error OnlyInEmergencyMode();
-    error InvalidPrice();
-    error Unauthorized();
-    error InvalidTreasury();
+    // Access Control Errors
+    error OnlyManager(address caller, address manager);
+    error UnauthorizedStrategy(address caller, address manager);
+    error Unauthorized(address caller, address required);
+    
+    // State Management Errors
+    error InvalidVaultState(VaultState current, VaultState required);
+    error InvalidVaultStateMultiple(VaultState current, VaultState required1, VaultState required2);
+    
+    // Asset Management Errors
+    error InvalidAsset(address asset);
+    error InvalidManager(address manager);
+    error AssetNotSupportedWithContext(address asset, address factory);
+    error PlatformNotSupportedWithContext(string platform);
+    error CannotRemoveUnderlyingAsset(address asset);
+    
+    // Deposit/Withdrawal Errors
+    error InsufficientFundsRaised(uint256 currentAmount, uint256 minRequired);
+    error DepositsOnlyDuringFundraising(VaultState currentState);
+    error BelowMinimumDeposit(uint256 amount, uint256 minAmount);
+    error ExceedsCapacity(uint256 requestedTotal, uint256 maxCapacity);
+    error InsufficientUnderlyingAssets(uint256 requested, uint256 available);
+    
+    // Guard and Transaction Errors
+    error AssetGuardNotFound(address asset);
+    error NoGuardFound(address target);
+    error TransactionRejectedByGuard(address guard, address target);
+    error ContractCallFailed(address target, bytes data);
+    error InvalidTarget(address target);
+    
+    // Liquidation and Realization Errors
+    error MustLiquidateAllPositions(uint256 nonUnderlyingAssets);
+    error ManualLiquidationRequired(string reason, uint256 totalValue);
+    error RealizationCooldownActive(uint256 timeRemaining);
+    
+    // Oracle and Price Errors
+    error InvalidUnderlyingPriceFeed(address asset, address priceFeed);
+    error OnlyInEmergencyMode(bool currentMode);
+    error InvalidPrice(uint256 price);
+    
+    // Internal and Security Errors
+    error InternalOnly(address caller);
+    error InvalidTreasury(address treasury);
+    
+    // Fee and Capacity Errors (for better context)
+    error InsufficientBalance(uint256 requested, uint256 available);
 
     /*//////////////////////////////////////////////////////////////
                             STATE VARIABLES
@@ -145,22 +165,22 @@ contract Vault is
     //////////////////////////////////////////////////////////////*/
     
     modifier onlyManager() {
-        if (msg.sender != manager) revert OnlyManager();
+        if (msg.sender != manager) revert OnlyManager(msg.sender, manager);
         _;
     }
     
     modifier onlyAuthorizedStrategy() {
-        if (!authorizedStrategies[msg.sender] && msg.sender != manager) revert UnauthorizedStrategy();
+        if (!authorizedStrategies[msg.sender] && msg.sender != manager) revert UnauthorizedStrategy(msg.sender, manager);
         _;
     }
     
     modifier onlyInState(VaultState _state) {
-        if (vaultState != _state) revert InvalidVaultState();
+        if (vaultState != _state) revert InvalidVaultState(vaultState, _state);
         _;
     }
     
     modifier onlyInStates(VaultState _state1, VaultState _state2) {
-        if (vaultState != _state1 && vaultState != _state2) revert InvalidVaultState();
+        if (vaultState != _state1 && vaultState != _state2) revert InvalidVaultStateMultiple(vaultState, _state1, _state2);
         _;
     }
 
@@ -208,8 +228,8 @@ contract Vault is
     
     /// @notice Validate initialization parameters
     function _validateInitParams(address _underlyingAsset, address _manager, uint256 _managerFee, uint256 _withdrawalFee) internal pure {
-        if (_underlyingAsset == address(0)) revert InvalidAsset();
-        if (_manager == address(0)) revert InvalidManager();
+        if (_underlyingAsset == address(0)) revert InvalidAsset(_underlyingAsset);
+        if (_manager == address(0)) revert InvalidManager(_manager);
         FeeLogic.validateFeeRates(_managerFee, _withdrawalFee);
     }
     
@@ -268,7 +288,7 @@ contract Vault is
     
     /// @notice Transition from FUNDRAISING to LIVE state
     function goLive() external onlyManager onlyInState(VaultState.FUNDRAISING) {
-        if (totalAssets() < minFundraisingAmount) revert InsufficientFundsRaised();
+        if (totalAssets() < minFundraisingAmount) revert InsufficientFundsRaised(totalAssets(), minFundraisingAmount);
         
         VaultState oldState = vaultState;
         vaultState = VaultState.LIVE;
@@ -280,7 +300,7 @@ contract Vault is
     /// @notice Return to FUNDRAISING state (must liquidate all positions first)
     function returnToFundraising() external onlyManager onlyInState(VaultState.LIVE) {
         // Ensure all assets are back to underlying asset
-        if (!_areAllAssetsInUnderlying()) revert MustLiquidateAllPositions();
+        if (!_areAllAssetsInUnderlying()) revert MustLiquidateAllPositions(supportedAssets.length - 1); // Subtract 1 for underlying
         
         // Auto-realize profits before returning to fundraising to protect fees
         if (_hasUnrealizedProfits()) {
@@ -296,7 +316,7 @@ contract Vault is
     /// @notice Advance to next epoch (must return to underlying asset first)
     function advanceEpoch() external onlyManager onlyInState(VaultState.FUNDRAISING) {
         // Ensure all assets are in underlying asset
-        if (!_areAllAssetsInUnderlying()) revert MustLiquidateAllPositions();
+        if (!_areAllAssetsInUnderlying()) revert MustLiquidateAllPositions(supportedAssets.length - 1); // Subtract 1 for underlying
         
         uint256 oldEpoch = currentEpoch;
         uint256 currentTotalAssets = totalAssets();
@@ -309,10 +329,7 @@ contract Vault is
         emit EpochAdvanced(oldEpoch, currentEpoch, currentTotalAssets, block.timestamp);
     }
     
-    /// @notice Check if all vault assets are in underlying asset
-    function _areAllAssetsInUnderlying() internal view returns (bool) {
-        return VaultLogic.areAllAssetsInUnderlying(address(this), factory, asset(), supportedAssets);
-    }
+
     
     /// @notice Force liquidation of all positions (emergency only)
     function emergencyLiquidateAll() external onlyOwner {
@@ -330,14 +347,230 @@ contract Vault is
     /// @param asset Asset address
     /// @return Balance of the asset (handles external contracts via guards)
     function assetBalance(address asset) public view returns (uint256) {
-        return _assetBalance(asset);
+        return VaultLogic.getAssetBalance(address(this), asset, factory);
     }
 
-    /// @notice Internal function to get balance of an asset via guards
-    /// @param asset Asset address
-    /// @return Balance of the asset
-    function _assetBalance(address asset) internal view returns (uint256) {
-        return VaultLogic.getAssetBalance(address(this), asset, factory);
+    /*//////////////////////////////////////////////////////////////
+                          OPTIMIZED WRAPPER FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Cached wrapper for checking if all assets are in underlying
+    /// @dev Optimized version with parameter caching to avoid repeated calls
+    /// @return True if all assets are in underlying asset
+    function _areAllAssetsInUnderlying() internal view returns (bool) {
+        return VaultLogic.areAllAssetsInUnderlying(
+            address(this),
+            factory,
+            asset(),
+            supportedAssets
+        );
+    }
+
+    /// @notice Cached wrapper for getting assets to liquidate
+    /// @dev Optimized version with parameter caching for frequent calls
+    /// @return assetsToLiquidate Array of assets to liquidate
+    /// @return totalValue Total value of assets to liquidate
+    function _getAssetsToLiquidate() internal view returns (address[] memory assetsToLiquidate, uint256 totalValue) {
+        return VaultLogic.getAssetsToLiquidate(
+            address(this),
+            factory,
+            asset(),
+            supportedAssets,
+            lastAssetPrices,
+            emergencyOracleMode,
+            maxPriceDeviationBps
+        );
+    }
+
+    /// @notice Optimized wrapper for asset balance with validation
+    /// @param assetAddress Asset to check balance for
+    /// @return balance Asset balance
+    function _getAssetBalance(address assetAddress) internal view returns (uint256) {
+        return VaultLogic.getAssetBalance(address(this), assetAddress, factory);
+    }
+
+    /// @notice Optimized wrapper for minting shares for fees
+    /// @param managerFeeValue Manager fee value
+    /// @param protocolFeeValue Protocol fee value
+    /// @param sharePrice Current share price
+    function _mintSharesForFees(
+        uint256 managerFeeValue,
+        uint256 protocolFeeValue,
+        uint256 sharePrice
+    ) internal {
+        // Validation before minting
+        if (managerFeeValue == 0 && protocolFeeValue == 0) return;
+        
+        FeeLogic.mintSharesForFees(
+            address(this),
+            manager,
+            protocolTreasury,
+            managerFeeValue,
+            protocolFeeValue,
+            sharePrice
+        );
+    }
+
+    /// @notice Optimized wrapper for asset value conversion with caching
+    /// @param assetAddress Asset to convert
+    /// @param amount Amount to convert
+    /// @return Value in underlying asset terms
+    function _convertAssetToUnderlying(address assetAddress, uint256 amount) internal view returns (uint256) {
+        return VaultLogic.convertAssetToUnderlying(
+            address(this),
+            factory,
+            assetAddress,
+            amount,
+            asset(),
+            lastAssetPrices,
+            emergencyOracleMode,
+            maxPriceDeviationBps
+        );
+    }
+
+    /// @notice Batch wrapper for checking supported assets and platforms
+    /// @param target Target address
+    /// @param platform Platform name
+    /// @return assetSupported Whether asset is supported
+    /// @return platformSupported Whether platform is supported
+    function _checkSupportedAssetAndPlatform(
+        address target,
+        string memory platform
+    ) internal view returns (bool assetSupported, bool platformSupported) {
+        assetSupported = AssetLogic.isSupportedAsset(target, isAssetSupported);
+        platformSupported = AssetLogic.isSupportedPlatform(platform, isPlatformSupported);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                          PARAMETER CACHING HELPERS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Get cached vault parameters for repeated operations
+    /// @return vaultAddress This vault's address
+    /// @return factoryAddress Factory address
+    /// @return underlyingAssetAddress Underlying asset address
+    /// @return assetsArray Supported assets array
+    function _getCachedVaultParams() internal view returns (
+        address vaultAddress,
+        address factoryAddress,
+        address underlyingAssetAddress,
+        address[] memory assetsArray
+    ) {
+        vaultAddress = address(this);
+        factoryAddress = factory;
+        underlyingAssetAddress = asset();
+        assetsArray = supportedAssets;
+    }
+
+    /// @notice Get cached oracle parameters for price operations
+    /// @return prices Last asset prices mapping
+    /// @return emergencyMode Emergency oracle mode flag
+    /// @return maxDeviation Maximum price deviation
+    function _getCachedOracleParams() internal view returns (
+        mapping(address => uint256) storage prices,
+        bool emergencyMode,
+        uint256 maxDeviation
+    ) {
+        prices = lastAssetPrices;
+        emergencyMode = emergencyOracleMode;
+        maxDeviation = maxPriceDeviationBps;
+    }
+
+    /// @notice Get cached fee parameters for fee calculations
+    /// @return managerFeeRate Manager fee rate
+    /// @return withdrawalFeeRate Withdrawal fee rate
+    /// @return protocolMgmtFee Protocol management fee constant
+    /// @return managerPerfFee Manager performance fee constant
+    /// @return protocolPerfFee Protocol performance fee constant
+    /// @return feeDenominator Fee denominator constant
+    function _getCachedFeeParams() internal view returns (
+        uint256 managerFeeRate,
+        uint256 withdrawalFeeRate,
+        uint256 protocolMgmtFee,
+        uint256 managerPerfFee,
+        uint256 protocolPerfFee,
+        uint256 feeDenominator
+    ) {
+        managerFeeRate = managerFee;
+        withdrawalFeeRate = withdrawalFee;
+        protocolMgmtFee = PROTOCOL_MANAGEMENT_FEE;
+        managerPerfFee = MANAGER_PERFORMANCE_FEE;
+        protocolPerfFee = PROTOCOL_PERFORMANCE_FEE;
+        feeDenominator = FEE_DENOMINATOR;
+    }
+
+    /// @notice Optimized batch operation for checking vault state
+    /// @return allInUnderlying Whether all assets are in underlying
+    /// @return hasUnrealizedProfits Whether there are unrealized profits
+    /// @return inLiveState Whether vault is in LIVE state
+    function _getVaultStatusBatch() internal view returns (
+        bool allInUnderlying,
+        bool hasUnrealizedProfits,
+        bool inLiveState
+    ) {
+        allInUnderlying = _areAllAssetsInUnderlying();
+        hasUnrealizedProfits = _hasUnrealizedProfits();
+        inLiveState = (vaultState == VaultState.LIVE);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                        ERROR HANDLING HELPERS
+    //////////////////////////////////////////////////////////////*/
+
+
+
+    /// @notice Safe wrapper for guard calls with better error context
+    /// @param guard Guard address
+    /// @param target Target contract
+    /// @param data Transaction data
+    /// @param value ETH value
+    /// @return txType Transaction type returned by guard
+    function _callGuardWithContext(address guard, address target, bytes calldata data, uint256 value) internal returns (uint16 txType) {
+        try IGuard(guard).txGuard(address(this), target, data, value) returns (uint16 returnedTxType) {
+            return returnedTxType;
+        } catch Error(string memory reason) {
+            revert(string(abi.encodePacked("Guard validation failed: ", reason)));
+        } catch (bytes memory lowLevelData) {
+            // Handle custom errors or provide context
+            revert TransactionRejectedByGuard(guard, target);
+        }
+    }
+
+    /// @notice Safe wrapper for external contract calls with better error context
+    /// @param target Target contract
+    /// @param data Call data
+    /// @param value ETH value
+    /// @return success Whether call succeeded
+    /// @return returnData Return data from call
+    function _callExternalWithContext(address target, bytes calldata data, uint256 value) internal returns (bool success, bytes memory returnData) {
+        (success, returnData) = target.call{value: value}(data);
+        if (!success) {
+            // Try to decode revert reason
+            if (returnData.length > 0) {
+                // Try to decode string revert reason
+                try this.decodeRevertReason(returnData) returns (string memory reason) {
+                    revert(string(abi.encodePacked("External call failed: ", reason)));
+                } catch {
+                    // If decode fails, use generic error with context
+                    revert ContractCallFailed(target, data);
+                }
+            } else {
+                // No return data, use generic error
+                revert ContractCallFailed(target, data);
+            }
+        }
+    }
+
+    /// @notice Decode revert reason from return data
+    /// @param returnData Return data from failed call
+    /// @return reason Decoded revert reason
+    function decodeRevertReason(bytes calldata returnData) external pure returns (string memory reason) {
+        // Check if it's a string revert (Error(string))
+        if (returnData.length >= 68 && bytes4(returnData[:4]) == 0x08c379a0) {
+            // Decode the string from the Error(string) selector
+            return abi.decode(returnData[4:], (string));
+        }
+        return "Unknown error";
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -364,7 +597,7 @@ contract Vault is
 
         address cachedFactory = factory;
         address assetHandlerAddr = IVaultFactory(cachedFactory).getAssetHandler();
-        uint256 underlyingPriceUSD = _getValidatedPrice(assetHandlerAddr, cachedUnderlyingAsset);
+        uint256 underlyingPriceUSD = VaultLogic.getValidatedPrice(cachedUnderlyingAsset, assetHandlerAddr, lastAssetPrices, emergencyOracleMode, maxPriceDeviationBps);
         uint8 underlyingDecimals = IERC20Metadata(cachedUnderlyingAsset).decimals();
         
         // Early return if invalid underlying price
@@ -376,7 +609,7 @@ contract Vault is
             
             // Skip underlying asset (already counted)
             if (currentAsset != cachedUnderlyingAsset) {
-                uint256 balance = _assetBalance(currentAsset);
+                uint256 balance = _getAssetBalance(currentAsset);
                 
     
                 if (balance > 0) {
@@ -427,66 +660,11 @@ contract Vault is
         }
     }
 
-    /// @notice Convert asset amount to underlying asset value using guards (original version for single calls)
-    /// @param assetAddress The asset to convert
-    /// @param amount Amount of the asset
-    /// @return Value in underlying asset terms
-    function _convertAssetToUnderlying(address assetAddress, uint256 amount) internal view returns (uint256) {
-        if (assetAddress == asset()) return amount;
-        
-        // All supported assets must have guards - no fallback needed
-        // This is enforced by the vault's asset management system
-        (address guard, ) = IHasGuardInfo(factory).getGuard(assetAddress);
-        if (guard == address(0)) revert AssetGuardNotFound();
-        
-        // Use guard to calculate the accurate value
-        // Guard knows the true value of the asset (whether representative token or simple token)
-        uint256 trueValueUSD = IAssetGuard(guard).calcValue(address(this), assetAddress, amount);
-        
-        // Convert the USD value to underlying asset terms
-        address assetHandlerAddr = IVaultFactory(factory).getAssetHandler();
-        uint256 underlyingPriceUSD = _getValidatedPrice(assetHandlerAddr, asset());
-        if (underlyingPriceUSD <= 0) revert InvalidUnderlyingPriceFeed();
-        
-        uint8 underlyingDecimals = IERC20Metadata(asset()).decimals();
-        uint256 valueInUnderlying = (trueValueUSD * (10 ** underlyingDecimals)) / underlyingPriceUSD;
-        
-        return valueInUnderlying;
-    }
+
     
-    /// @notice Get validated price with protection against manipulation
-    /// @param assetHandlerAddr AssetHandler address
-    /// @param assetAddr Asset address
-    /// @return Validated price
-    function _getValidatedPrice(address assetHandlerAddr, address assetAddr) internal view returns (uint256) {
-        return VaultLogic.getValidatedPrice(
-            assetAddr,
-            assetHandlerAddr,
-            lastAssetPrices,
-            emergencyOracleMode,
-            maxPriceDeviationBps
-        );
-    }
+
     
-    /// @notice Get vault breakdown by asset
-    /// @return assetAddresses Array of asset addresses
-    /// @return assetBalances Array of asset balances  
-    /// @return assetValues Array of values in underlying asset terms
-    function getVaultAssetBreakdown() external view returns (
-        address[] memory assetAddresses,
-        uint256[] memory assetBalances,
-        uint256[] memory assetValues
-    ) {
-        return VaultLogic.getVaultAssetBreakdown(
-            address(this),
-            factory,
-            asset(),
-            supportedAssets,
-            lastAssetPrices,
-            emergencyOracleMode,
-            maxPriceDeviationBps
-        );
-    }
+
 
     /// @notice Maximum deposit limit
     function maxDeposit(address) public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
@@ -521,8 +699,8 @@ contract Vault is
 
     /// @notice Preview deposit with fees
     function previewDeposit(uint256 assets) public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
-        if (vaultState != VaultState.FUNDRAISING) revert DepositsOnlyDuringFundraising();
-        if (assets < minDepositAmount) revert BelowMinimumDeposit();
+        if (vaultState != VaultState.FUNDRAISING) revert DepositsOnlyDuringFundraising(vaultState);
+        if (assets < minDepositAmount) revert BelowMinimumDeposit(assets, minDepositAmount);
         return _convertToShares(assets, Math.Rounding.Floor);
     }
 
@@ -535,8 +713,8 @@ contract Vault is
 
     /// @notice Deposit assets and receive shares (only during fundraising)
     function deposit(uint256 assets, address receiver) public override(ERC4626Upgradeable, IERC4626) whenNotPaused onlyInState(VaultState.FUNDRAISING) returns (uint256) {
-        if (assets < minDepositAmount) revert BelowMinimumDeposit();
-        if (totalAssets() + assets > maxCapacity) revert ExceedsCapacity();
+        if (assets < minDepositAmount) revert BelowMinimumDeposit(assets, minDepositAmount);
+        if (totalAssets() + assets > maxCapacity) revert ExceedsCapacity(totalAssets() + assets, maxCapacity);
         
         uint256 shares = previewDeposit(assets);
         _deposit(_msgSender(), receiver, assets, shares);
@@ -607,7 +785,15 @@ contract Vault is
         (uint256 protocolManagementFee, uint256 managerManagementFee, uint256 managerPerformanceFee, uint256 protocolPerformanceFee) = _calculateAllFees(yield, expectedValue);
         
         // Mint shares for fees instead of extracting underlying
-        _mintSharesForFees(protocolManagementFee, managerManagementFee, managerPerformanceFee, protocolPerformanceFee);
+        uint256 currentSharePrice = totalSupply() > 0 ? (totalAssets() * 1e18) / totalSupply() : 1e18;
+        uint256 totalManagerFeeValue = managerManagementFee + managerPerformanceFee;
+        uint256 totalProtocolFeeValue = protocolManagementFee + protocolPerformanceFee;
+        
+        _mintSharesForFees(
+            totalManagerFeeValue,
+            totalProtocolFeeValue,
+            currentSharePrice
+        );
         
         // Update timestamp
         lastRealizationTime = block.timestamp;
@@ -624,7 +810,7 @@ contract Vault is
             _smartAutoRealize();
             
             uint256 maxWithdrawable = maxWithdraw(owner);
-            if (assets > maxWithdrawable) revert InsufficientUnderlyingAssets();
+            if (assets > maxWithdrawable) revert InsufficientUnderlyingAssets(assets, maxWithdrawable);
         }
         
         uint256 shares = previewWithdraw(assets);
@@ -680,35 +866,34 @@ contract Vault is
         uint256 value,
         bytes calldata data
     ) external onlyAuthorizedStrategy onlyInState(VaultState.LIVE) whenNotPaused {
-        if (target == address(0)) revert InvalidTarget();
+        if (target == address(0)) revert InvalidTarget(target);
         
         // Get guard for this target contract
         (address guard, string memory platform) = IHasGuardInfo(factory).getGuard(target);
-        if (guard == address(0)) revert NoGuardFound();
+        if (guard == address(0)) revert NoGuardFound(target);
         
         // Determine if this is a platform or asset guard
         bool isPlatform = bytes(platform).length > 0;
         
         if (isPlatform) {
             // Platform guard - check if platform is supported
-            if (!_isSupportedPlatform(platform)) revert PlatformNotSupported();
+            if (!AssetLogic.isSupportedPlatform(platform, isPlatformSupported)) revert PlatformNotSupportedWithContext(platform);
         } else {
             // Asset guard - check if asset is supported
-            if (!_isSupportedAsset(target)) revert AssetNotSupported();
+            if (!AssetLogic.isSupportedAsset(target, isAssetSupported)) revert AssetNotSupportedWithContext(target, factory);
         }
         
         // Execute guard validation
         uint16 txType;
         if (value > 0) {
-            txType = IGuard(guard).txGuard(address(this), target, data, value);
+            txType = _callGuardWithContext(guard, target, data, value);
         } else {
-            txType = IGuard(guard).txGuard(address(this), target, data);
+            txType = _callGuardWithContext(guard, target, data, 0);
         }
-        if (txType == 0) revert TransactionRejectedByGuard();
+        if (txType == 0) revert TransactionRejectedByGuard(guard, target);
         
         // Execute the call
-        (bool success, bytes memory resultData) = target.call{value: value}(data);
-        if (!success) revert ContractCallFailed();
+        (bool success, bytes memory resultData) = _callExternalWithContext(target, data, value);
         
         // Check for post-transaction guard callback
         (bool hasFunction, bytes memory returnData) = guard.call(
@@ -751,7 +936,16 @@ contract Vault is
         uint256 yield = VaultLogic.calculateAndLimitYield(currentTotalValue, expectedValue);
         (uint256 protocolManagementFee, uint256 managerManagementFee, uint256 managerPerformanceFee, uint256 protocolPerformanceFee) = _calculateAllFees(yield, expectedValue);
         
-        _mintSharesForFees(protocolManagementFee, managerManagementFee, managerPerformanceFee, protocolPerformanceFee);
+        // Mint shares for fees
+        uint256 currentSharePrice = totalSupply() > 0 ? (totalAssets() * 1e18) / totalSupply() : 1e18;
+        uint256 totalManagerFeeValue = managerManagementFee + managerPerformanceFee;
+        uint256 totalProtocolFeeValue = protocolManagementFee + protocolPerformanceFee;
+        
+        _mintSharesForFees(
+            totalManagerFeeValue,
+            totalProtocolFeeValue,
+            currentSharePrice
+        );
         _finalizeRealization();
         
         uint256 totalManagementFee = protocolManagementFee + managerManagementFee;
@@ -772,7 +966,7 @@ contract Vault is
     
     /// @notice Validate timing requirements for realization
     function _validateRealizationTiming() internal view {
-        if (block.timestamp < lastRealizationTime + realizationCooldown) revert RealizationCooldownActive();
+        if (block.timestamp < lastRealizationTime + realizationCooldown) revert RealizationCooldownActive(lastRealizationTime + realizationCooldown - block.timestamp);
     }
     
     /// @notice Get current and expected vault valuations
@@ -788,7 +982,6 @@ contract Vault is
         lastRealizationTime = block.timestamp;
         currentRealization.isRealized = false;
     }
-    
 
     
     /// @notice Calculate all fee components for new structure
@@ -833,7 +1026,7 @@ contract Vault is
                 assetsToLiquidate
             );
             
-            revert ManualLiquidationRequired();
+            revert ManualLiquidationRequired("Must liquidate all non-underlying positions", totalNonUnderlyingValue);
         }
     }
     
@@ -845,27 +1038,14 @@ contract Vault is
         
         if (assetsToLiquidate.length > 0) {
             // Still have positions to liquidate - provide guidance
-            revert ManualLiquidationRequired();
+            revert ManualLiquidationRequired("Still have non-underlying positions to liquidate", totalValue);
         }
         
         // All positions are liquidated
         emit AllPositionsLiquidated(totalValue, block.timestamp);
     }
     
-    /// @notice Get assets that need to be liquidated for harvest
-    /// @return assetsToLiquidate Array of asset addresses with non-zero balances
-    /// @return totalValue Total value of non-underlying assets
-    function _getAssetsToLiquidate() internal view returns (address[] memory assetsToLiquidate, uint256 totalValue) {
-        return VaultLogic.getAssetsToLiquidate(
-            address(this),
-            factory,
-            asset(),
-            supportedAssets,
-            lastAssetPrices,
-            emergencyOracleMode,
-            maxPriceDeviationBps
-        );
-    }
+
     
     /// @notice Get expected vault value without yield (baseline)
     /// @dev Uses last recorded value plus any deposits since last harvest
@@ -897,50 +1077,6 @@ contract Vault is
     function convertToShares(uint256 assets) public view override(ERC4626Upgradeable, IERC4626, IVaultMinter) returns (uint256) {
         return _convertToShares(assets, Math.Rounding.Floor);
     }
-    
-    /// @notice Mint shares for management and performance fees (new method)
-    /// @param protocolManagementFee Protocol's management fee value
-    /// @param managerManagementFee Manager's management fee value
-    /// @param managerPerformanceFee Manager's performance fee value
-    /// @param protocolPerformanceFee Protocol's performance fee value
-    function _mintSharesForFees(
-        uint256 protocolManagementFee,
-        uint256 managerManagementFee,
-        uint256 managerPerformanceFee,
-        uint256 protocolPerformanceFee
-    ) internal {
-        uint256 currentSharePrice = totalSupply() > 0 ? (totalAssets() * 1e18) / totalSupply() : 1e18;
-        
-        uint256 totalManagerFeeValue = managerManagementFee + managerPerformanceFee;
-        uint256 totalProtocolFeeValue = protocolManagementFee + protocolPerformanceFee;
-        
-        // Use delegatecall to FeeLogic.mintSharesForFees
-        FeeLogic.mintSharesForFees(
-            address(this),
-            manager,
-            protocolTreasury,
-            totalManagerFeeValue,
-            totalProtocolFeeValue,
-            currentSharePrice
-        );
-    }
-    
-    /// @notice Extract fees from underlying asset (legacy method - kept for compatibility)
-    /// @dev All assets should already be in underlying asset due to business logic protection
-    function _extractFeesFromUnderlying(uint256 managementFeeAmount, uint256 managerPerformanceFee, uint256 protocolFeeAmount) internal {
-        FeeLogic.extractFeesFromUnderlying(
-            asset(),
-            address(this),
-            manager,
-            protocolTreasury,
-            managementFeeAmount,
-            managerPerformanceFee,
-            protocolFeeAmount
-        );
-    }
-    
-
-    
 
 
     /// @notice Update stored asset prices for oracle protection
@@ -958,7 +1094,7 @@ contract Vault is
     
     /// @notice External function for updating asset prices (for try-catch)
     function _updateAssetPricesExternal() external {
-        if (msg.sender != address(this)) revert InternalOnly();
+        if (msg.sender != address(this)) revert InternalOnly(msg.sender);
         
         address assetHandlerAddr = IVaultFactory(factory).getAssetHandler();
         
@@ -984,11 +1120,17 @@ contract Vault is
     function addSupportedAsset(address _asset) external onlyManager {
         _addSupportedAsset(_asset);
     }
+
+    /// @notice Add multiple supported assets in a single transaction (with factory whitelist validation)
+    /// @param _assets Array of assets to add
+    function batchAddSupportedAssets(address[] calldata _assets) external onlyManager {
+        _batchAddSupportedAssets(_assets);
+    }
     
     /// @notice Remove a supported asset
     /// @param _asset Asset to remove
     function removeSupportedAsset(address _asset) external onlyManager {
-        if (_asset == asset()) revert CannotRemoveUnderlyingAsset();
+        if (_asset == asset()) revert CannotRemoveUnderlyingAsset(asset());
         
         AssetLogic.removeSupportedAsset(
             _asset,
@@ -1003,7 +1145,7 @@ contract Vault is
     function _addSupportedAsset(address _asset) internal {
         // 🛡️ SECURITY: Check factory whitelist before allowing asset
         if (!IVaultFactory(factory).isAssetWhitelisted(_asset)) {
-            revert AssetNotSupported(); // Asset not whitelisted by factory
+            revert AssetNotSupportedWithContext(_asset, factory); // Asset not whitelisted by factory
         }
         
         AssetLogic.addSupportedAsset(
@@ -1012,6 +1154,49 @@ contract Vault is
             assetPosition,
             isAssetSupported
         );
+    }
+
+    /// @notice Internal function to batch add supported assets with factory whitelist validation
+    /// @param _assets Array of assets to add
+    function _batchAddSupportedAssets(address[] calldata _assets) internal {
+        // Pre-validate all assets against factory whitelist
+        uint256 assetsLength = _assets.length;
+        
+        // Create array for validated assets
+        address[] memory validatedAssets = new address[](assetsLength);
+        uint256 validatedCount = 0;
+        
+        // Validate each asset against factory whitelist
+        for (uint256 i = 0; i < assetsLength;) {
+            address asset = _assets[i];
+            
+            // 🛡️ SECURITY: Check factory whitelist before allowing asset
+            if (IVaultFactory(factory).isAssetWhitelisted(asset)) {
+                validatedAssets[validatedCount] = asset;
+                validatedCount++;
+            }
+            // Note: Silently skip non-whitelisted assets instead of reverting
+            // This allows partial success in batch operations
+            
+            unchecked { ++i; }
+        }
+        
+        // Create properly sized array with only validated assets
+        if (validatedCount > 0) {
+            address[] memory finalAssets = new address[](validatedCount);
+            for (uint256 j = 0; j < validatedCount;) {
+                finalAssets[j] = validatedAssets[j];
+                unchecked { ++j; }
+            }
+            
+            // Call AssetLogic batch function with validated assets
+            AssetLogic.batchAddSupportedAssets(
+                finalAssets,
+                supportedAssets,
+                assetPosition,
+                isAssetSupported
+            );
+        }
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -1094,8 +1279,8 @@ contract Vault is
     /// @notice Update protocol treasury (only callable by factory/owner)
     /// @param _newTreasury New protocol treasury address
     function updateProtocolTreasury(address _newTreasury) external {
-        if (msg.sender != owner() && msg.sender != factory) revert Unauthorized();
-        if (_newTreasury == address(0)) revert InvalidTreasury();
+        if (msg.sender != owner() && msg.sender != factory) revert Unauthorized(msg.sender, owner());
+        if (_newTreasury == address(0)) revert InvalidTreasury(_newTreasury);
         protocolTreasury = _newTreasury;
     }
     
@@ -1128,8 +1313,8 @@ contract Vault is
     /// @param _asset Asset address
     /// @param _price New price in USD (18 decimals)
     function setEmergencyPrice(address _asset, uint256 _price) external onlyOwner {
-        if (!emergencyOracleMode) revert OnlyInEmergencyMode();
-        if (_price == 0) revert InvalidPrice();
+        if (!emergencyOracleMode) revert OnlyInEmergencyMode(emergencyOracleMode);
+        if (_price == 0) revert InvalidPrice(_price);
         lastAssetPrices[_asset] = _price;
     }
 
@@ -1314,24 +1499,6 @@ contract Vault is
         }
         
         return (true, "Manual realization recommended", 0);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL HELPER FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    
-    /// @notice Check if asset is supported by this vault
-    /// @param _asset Asset address to check
-    /// @return True if asset is supported by this vault
-    function _isSupportedAsset(address _asset) internal view returns (bool) {
-        return AssetLogic.isSupportedAsset(_asset, isAssetSupported);
-    }
-    
-    /// @notice Check if platform is supported
-    /// @param _platform Platform name to check
-    /// @return True if platform is supported
-    function _isSupportedPlatform(string memory _platform) internal view returns (bool) {
-        return AssetLogic.isSupportedPlatform(_platform, isPlatformSupported);
     }
 
     /*//////////////////////////////////////////////////////////////

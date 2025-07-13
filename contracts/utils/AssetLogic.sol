@@ -8,18 +8,22 @@ import "../interfaces/IAssetHandler.sol";
 //////////////////////////////////////////////////////////////*/
 
 // Asset validation errors
-error InvalidAssetAddress();
-error AssetAlreadySupported();
-error AssetNotSupported();
+error InvalidAssetAddress(address asset);
+error AssetAlreadySupported(address asset, address vault);
+error AssetNotSupported(address asset, address vault);
 
 // Platform validation errors
-error InvalidPlatformName();
-error PlatformAlreadySupported();
-error PlatformNotSupported();
+error InvalidPlatformName(string platform);
+error PlatformAlreadySupported(string platform, address vault);
+error PlatformNotSupported(string platform, address vault);
 
 // Setting validation errors
-error CooldownTooLong();
-error DeviationTooHigh();
+error CooldownTooLong(uint256 requested, uint256 maximum);
+error DeviationTooHigh(uint256 requested, uint256 maximum);
+
+// Batch operation errors
+error EmptyAssetArray();
+error AssetArrayTooLarge(uint256 length, uint256 maxLength);
 
 /// @title AssetLogic
 /// @notice Library for asset management operations
@@ -31,6 +35,14 @@ library AssetLogic {
     
     event AssetAdded(address indexed vault, address indexed asset, uint256 position);
     event AssetRemoved(address indexed vault, address indexed asset);
+    event BatchAssetsAdded(address indexed vault, address[] assets, uint256 totalCount);
+
+    /*//////////////////////////////////////////////////////////////
+                           CONSTANTS
+    //////////////////////////////////////////////////////////////*/
+    
+    /// @notice Maximum number of assets that can be added in a single batch
+    uint256 public constant MAX_BATCH_SIZE = 20;
 
     /*//////////////////////////////////////////////////////////////
                            ASSET MANAGEMENT
@@ -48,13 +60,68 @@ library AssetLogic {
         mapping(address => bool) storage isAssetSupported
     ) internal {
         // Note: address(0) validation is handled by caller (Vault checks factory whitelist)
-        if (isAssetSupported[asset]) revert AssetAlreadySupported();
+        if (isAssetSupported[asset]) revert AssetAlreadySupported(asset, address(this));
         
         supportedAssets.push(asset);
         assetPosition[asset] = supportedAssets.length - 1;
         isAssetSupported[asset] = true;
         
         emit AssetAdded(address(this), asset, supportedAssets.length - 1);
+    }
+
+    /// @notice Add multiple supported assets to the vault in a single transaction
+    /// @param assets Array of asset addresses to add
+    /// @param supportedAssets Array of supported assets
+    /// @param assetPosition Mapping of asset positions
+    /// @param isAssetSupported Mapping of asset support status
+    function batchAddSupportedAssets(
+        address[] memory assets,
+        address[] storage supportedAssets,
+        mapping(address => uint256) storage assetPosition,
+        mapping(address => bool) storage isAssetSupported
+    ) internal {
+        uint256 assetsLength = assets.length;
+        
+        // Validate batch size
+        if (assetsLength == 0) revert EmptyAssetArray();
+        if (assetsLength > MAX_BATCH_SIZE) revert AssetArrayTooLarge(assetsLength, MAX_BATCH_SIZE);
+        
+        // Track successful additions for event
+        address[] memory addedAssets = new address[](assetsLength);
+        uint256 addedCount = 0;
+        
+        // Process each asset
+        for (uint256 i = 0; i < assetsLength;) {
+            address asset = assets[i];
+            
+            // Skip if already supported (don't revert, just continue)
+            if (!isAssetSupported[asset]) {
+                // Add asset
+                supportedAssets.push(asset);
+                assetPosition[asset] = supportedAssets.length - 1;
+                isAssetSupported[asset] = true;
+                
+                // Track for event
+                addedAssets[addedCount] = asset;
+                addedCount++;
+                
+                emit AssetAdded(address(this), asset, supportedAssets.length - 1);
+            }
+            
+            unchecked { ++i; }
+        }
+        
+        // Emit batch event if any assets were added
+        if (addedCount > 0) {
+            // Create properly sized array for event
+            address[] memory finalAddedAssets = new address[](addedCount);
+            for (uint256 j = 0; j < addedCount;) {
+                finalAddedAssets[j] = addedAssets[j];
+                unchecked { ++j; }
+            }
+            
+            emit BatchAssetsAdded(address(this), finalAddedAssets, supportedAssets.length);
+        }
     }
     
     /// @notice Remove a supported asset from the vault
@@ -68,7 +135,7 @@ library AssetLogic {
         mapping(address => uint256) storage assetPosition,
         mapping(address => bool) storage isAssetSupported
     ) internal {
-        if (!isAssetSupported[asset]) revert AssetNotSupported();
+        if (!isAssetSupported[asset]) revert AssetNotSupported(asset, address(this));
         
         uint256 indexToRemove = assetPosition[asset];
         uint256 lastIndex = supportedAssets.length - 1;
@@ -80,7 +147,7 @@ library AssetLogic {
             assetPosition[lastAsset] = indexToRemove;
         }
         
-        // Remove last element
+        // Remove the last element
         supportedAssets.pop();
         delete assetPosition[asset];
         delete isAssetSupported[asset];
@@ -101,8 +168,8 @@ library AssetLogic {
         string[] storage supportedPlatforms,
         mapping(string => bool) storage isPlatformSupported
     ) internal {
-        if (bytes(platform).length == 0) revert InvalidPlatformName();
-        if (isPlatformSupported[platform]) revert PlatformAlreadySupported();
+        if (bytes(platform).length == 0) revert InvalidPlatformName(platform);
+        if (isPlatformSupported[platform]) revert PlatformAlreadySupported(platform, address(this));
         
         supportedPlatforms.push(platform);
         isPlatformSupported[platform] = true;
@@ -117,7 +184,7 @@ library AssetLogic {
         string[] storage supportedPlatforms,
         mapping(string => bool) storage isPlatformSupported
     ) internal {
-        if (!isPlatformSupported[platform]) revert PlatformNotSupported();
+        if (!isPlatformSupported[platform]) revert PlatformNotSupported(platform, address(this));
         
         // Find and remove from array
         for (uint256 i = 0; i < supportedPlatforms.length; i++) {
@@ -198,8 +265,8 @@ library AssetLogic {
         uint256 newMaxPriceDeviationBps,
         uint256 MAX_PRICE_DEVIATION
     ) internal pure returns (uint256, uint256) {
-        if (newRealizationCooldown > 24 hours) revert CooldownTooLong();
-        if (newMaxPriceDeviationBps > MAX_PRICE_DEVIATION) revert DeviationTooHigh();
+        if (newRealizationCooldown > 24 hours) revert CooldownTooLong(newRealizationCooldown, 24 hours);
+        if (newMaxPriceDeviationBps > MAX_PRICE_DEVIATION) revert DeviationTooHigh(newMaxPriceDeviationBps, MAX_PRICE_DEVIATION);
         
         return (newRealizationCooldown, newMaxPriceDeviationBps);
     }
