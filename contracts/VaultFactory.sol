@@ -27,44 +27,44 @@ import "./interfaces/guards/IAssetGuard.sol";
 //////////////////////////////////////////////////////////////*/
 
 // Authorization errors
-error OnlyVaultManager();
-error Unauthorized();
+error OnlyVaultManager(address caller, address vault, address expectedManager);
+error Unauthorized(address caller, address expected);
 
 // Asset validation errors
-error InvalidAsset();
-error AssetNotWhitelisted();
-error InvalidAssetForType();
-error AssetAlreadyAdded();
-error AssetNotInList();
-error TooManyDecimals();
+error InvalidAsset(address asset);
+error AssetNotWhitelisted(address asset);
+error InvalidAssetForType(address asset, uint16 assetType);
+error AssetAlreadyAdded(address asset);
+error AssetNotInList(address asset, uint256 arrayLength);
+error TooManyDecimals(uint8 decimals, uint8 maxDecimals);
 
 // Parameter validation errors
-error InvalidManager();
-error InvalidGovernanceAddress();
-error InvalidTreasuryAddress();
-error InvalidAdminAddress();
-error InvalidAssetHandler();
-error InvalidImplementation();
-error InvalidAddress();
+error InvalidManager(address manager);
+error InvalidGovernanceAddress(address governance);
+error InvalidTreasuryAddress(address treasury);
+error InvalidAdminAddress(address admin);
+error InvalidAssetHandler(address assetHandler);
+error InvalidImplementation(address implementation);
+error InvalidAddress(address addr, string context);
 
 // Capacity/limit errors
-error BelowMinCapacity();
-error AboveMaxCapacity();
-error InvalidLimits();
+error BelowMinCapacity(uint256 requested, uint256 minimum);
+error AboveMaxCapacity(uint256 requested, uint256 maximum);
+error InvalidLimits(uint256 minLimit, uint256 maxLimit);
 
 // Fee validation errors
-error InsufficientCreationFee();
-error ManagementFeeExceedsMax();
-error PerformanceFeeExceedsMax();
-error WithdrawalFeeExceedsMax();
-error ProtocolFeeExceedsMax();
+error InsufficientCreationFee(uint256 sent, uint256 required);
+error ManagementFeeExceedsMax(uint256 requested, uint256 maximum);
+error PerformanceFeeExceedsMax(uint256 requested, uint256 maximum);
+error WithdrawalFeeExceedsMax(uint256 requested, uint256 maximum);
+error ProtocolFeeExceedsMax(uint256 requested, uint256 maximum);
 
 // Operation errors
-error NotAVault();
-error FeeTransferFailed();
-error NativeTokenRecoveryFailed();
-error ArrayLengthMismatch();
-error VersionTooLow();
+error NotAVault(address vault);
+error FeeTransferFailed(address to, uint256 amount);
+error NativeTokenRecoveryFailed(address to, uint256 amount);
+error ArrayLengthMismatch(uint256 arrayLength1, uint256 arrayLength2);
+error VersionTooLow(uint256 currentVersion, uint256 minimumVersion);
 
 /// @title Vault Factory
 /// @notice Factory contract for creating and managing vaults
@@ -126,7 +126,7 @@ contract VaultFactory is
     //////////////////////////////////////////////////////////////*/
     
     modifier onlyVaultManager(address _vault) {
-        if (vaultManager[_vault] != msg.sender) revert OnlyVaultManager();
+        if (vaultManager[_vault] != msg.sender) revert OnlyVaultManager(msg.sender, _vault, vaultManager[_vault]);
         _;
     }
 
@@ -189,24 +189,24 @@ contract VaultFactory is
         uint256 _withdrawalFee
     ) external payable whenNotPaused returns (address vault) {
     
-        if (msg.value < creationFee) revert InsufficientCreationFee();
-        if (!underlyingAssetAllowed[_underlyingAsset]) revert AssetNotWhitelisted();
-        if (_manager == address(0)) revert InvalidManager();
-        if (_maxCapacity < minCapacityLimit) revert BelowMinCapacity();
-        if (_maxCapacity > maxCapacityLimit) revert AboveMaxCapacity();
+        if (msg.value < creationFee) revert InsufficientCreationFee(msg.value, creationFee);
+        if (!underlyingAssetAllowed[_underlyingAsset]) revert AssetNotWhitelisted(_underlyingAsset);
+        if (_manager == address(0)) revert InvalidManager(_manager);
+        if (_maxCapacity < minCapacityLimit) revert BelowMinCapacity(_maxCapacity, minCapacityLimit);
+        if (_maxCapacity > maxCapacityLimit) revert AboveMaxCapacity(_maxCapacity, maxCapacityLimit);
         
         // Validate fees using new structure
-        if (_managerFee > 200) revert ManagementFeeExceedsMax();
-        if (_withdrawalFee > 100) revert WithdrawalFeeExceedsMax();
+        if (_managerFee > 200) revert ManagementFeeExceedsMax(_managerFee, 200);
+        if (_withdrawalFee > 100) revert WithdrawalFeeExceedsMax(_withdrawalFee, 100);
         
         // Validate asset decimals
         uint8 decimals = IERC20Metadata(_underlyingAsset).decimals();
-        if (decimals > 18) revert TooManyDecimals();
+        if (decimals > 18) revert TooManyDecimals(decimals, 18);
         
         // Transfer creation fee to treasury
         if (msg.value > 0) {
             (bool success, ) = treasury.call{value: msg.value}("");
-            if (!success) revert FeeTransferFailed();
+            if (!success) revert FeeTransferFailed(treasury, msg.value);
         }
         
         // Create vault proxy
@@ -249,7 +249,7 @@ contract VaultFactory is
         uint16 _tokenType,
         bool _allowed
     ) external onlyOwner {
-        if (_asset == address(0)) revert InvalidAsset();
+        if (_asset == address(0)) revert InvalidAsset(_asset);
         
         bool wasWhitelisted = assetWhitelisted[_asset];
         assetWhitelisted[_asset] = _allowed;
@@ -262,7 +262,7 @@ contract VaultFactory is
         } else if (!_allowed && wasWhitelisted) {
             // Remove from whitelist
             if (assetIndex[_asset] >= whitelistedAssets.length) {
-                revert AssetNotInList();
+                revert AssetNotInList(_asset, whitelistedAssets.length);
             }
             
             // Move last element to deleted spot to maintain array structure
@@ -292,11 +292,11 @@ contract VaultFactory is
         bool[] memory _allowed
     ) external onlyOwner {
         if (_assets.length != _tokenTypes.length || _assets.length != _allowed.length) {
-            revert ArrayLengthMismatch();
+            revert ArrayLengthMismatch(_assets.length, _tokenTypes.length);
         }
         
         for (uint256 i = 0; i < _assets.length; i++) {
-            if (_assets[i] == address(0)) revert InvalidAsset();
+            if (_assets[i] == address(0)) revert InvalidAsset(_assets[i]);
             this.setAssetWhitelist(_assets[i], _tokenTypes[i], _allowed[i]);
         }
     }
@@ -315,7 +315,7 @@ contract VaultFactory is
     /// @notice Set the governance address
     /// @param _governanceAddress The address of the governance contract
     function setGovernanceAddress(address _governanceAddress) external onlyOwner {
-        if (_governanceAddress == address(0)) revert InvalidGovernanceAddress();
+        if (_governanceAddress == address(0)) revert InvalidGovernanceAddress(_governanceAddress);
         governance = _governanceAddress;
         emit GovernanceAddressSet(_governanceAddress);
     }
@@ -323,7 +323,7 @@ contract VaultFactory is
     /// @notice Set the treasury address
     /// @param _treasuryAddress The address of the treasury contract
     function setTreasuryAddress(address _treasuryAddress) external onlyOwner {
-        if (_treasuryAddress == address(0)) revert InvalidTreasuryAddress();
+        if (_treasuryAddress == address(0)) revert InvalidTreasuryAddress(_treasuryAddress);
         treasury = _treasuryAddress;
         emit TreasuryAddressSet(_treasuryAddress);
     }
@@ -331,7 +331,7 @@ contract VaultFactory is
     /// @notice Set the admin address
     /// @param _adminAddress The address of the admin
     function setAdminAddress(address _adminAddress) external onlyOwner {
-        if (_adminAddress == address(0)) revert InvalidAdminAddress();
+        if (_adminAddress == address(0)) revert InvalidAdminAddress(_adminAddress);
         admin = _adminAddress;
         emit AdminAddressSet(_adminAddress);
     }
@@ -345,11 +345,11 @@ contract VaultFactory is
         uint256 _managerFee,
         uint256 _withdrawalFee
     ) external onlyOwner {
-        if (!isVault[_vault]) revert NotAVault();
+        if (!isVault[_vault]) revert NotAVault(_vault);
         
         // Validate fees using new structure
-        if (_managerFee > 200) revert ManagementFeeExceedsMax();
-        if (_withdrawalFee > 100) revert WithdrawalFeeExceedsMax();
+        if (_managerFee > 200) revert ManagementFeeExceedsMax(_managerFee, 200);
+        if (_withdrawalFee > 100) revert WithdrawalFeeExceedsMax(_withdrawalFee, 100);
         
         IVault(_vault).updateFees(_managerFee, _withdrawalFee);
     }
@@ -363,7 +363,7 @@ contract VaultFactory is
     /// @notice Set the asset handler address
     /// @param assetHandler The address of the asset handler
     function setAssetHandler(address assetHandler) external onlyOwner {
-        if (assetHandler == address(0)) revert InvalidAssetHandler();
+        if (assetHandler == address(0)) revert InvalidAssetHandler(assetHandler);
         _assetHandler = assetHandler;
         emit SetAssetHandler(assetHandler);
     }
@@ -407,7 +407,7 @@ contract VaultFactory is
     /// @notice Update vault implementation
     /// @param _newImplementation New implementation address
     function updateVaultImplementation(address _newImplementation) external onlyOwner {
-        if (_newImplementation == address(0)) revert InvalidImplementation();
+        if (_newImplementation == address(0)) revert InvalidImplementation(_newImplementation);
         
         address oldImplementation = vaultImplementation;
         vaultImplementation = _newImplementation;
@@ -420,7 +420,7 @@ contract VaultFactory is
     /// @param _vault Vault address
     /// @param _newImplementation New implementation address (optional, uses current if not provided)
     function upgradeVault(address _vault, address _newImplementation) external onlyOwner {
-        if (!isVault[_vault]) revert NotAVault();
+        if (!isVault[_vault]) revert NotAVault(_vault);
         
         address implementationToUse = _newImplementation != address(0) ? 
             _newImplementation : vaultImplementation;
@@ -445,7 +445,7 @@ contract VaultFactory is
             _newImplementation : vaultImplementation;
             
         for (uint256 i = 0; i < _vaults.length; i++) {
-            if (!isVault[_vaults[i]]) revert NotAVault();
+            if (!isVault[_vaults[i]]) revert NotAVault(_vaults[i]);
             
             ProxyAdmin(proxyAdmin).upgradeAndCall(
                 ITransparentUpgradeableProxy(_vaults[i]),
@@ -466,7 +466,7 @@ contract VaultFactory is
         uint256 _minCapacityLimit,
         uint256 _creationFee
     ) external onlyOwner {
-        if (_maxCapacityLimit <= _minCapacityLimit) revert InvalidLimits();
+        if (_maxCapacityLimit <= _minCapacityLimit) revert InvalidLimits(_minCapacityLimit, _maxCapacityLimit);
         
         maxCapacityLimit = _maxCapacityLimit;
         minCapacityLimit = _minCapacityLimit;
@@ -495,8 +495,8 @@ contract VaultFactory is
         uint16 _tokenType
     ) external onlyOwner {
         // Allow address(0) for native ETH only if tokenType is NativeTokenType (2)
-        if (_asset == address(0) && _tokenType != 2) revert InvalidAssetForType();
-        if (underlyingAssetAllowed[_asset]) revert AssetAlreadyAdded();
+        if (_asset == address(0) && _tokenType != 2) revert InvalidAssetForType(_asset, _tokenType);
+        if (underlyingAssetAllowed[_asset]) revert AssetAlreadyAdded(_asset);
         
         // Add to underlying assets
         underlyingAssetAllowed[_asset] = true;
@@ -515,8 +515,8 @@ contract VaultFactory is
         uint16 _tokenType
     ) external onlyOwner {
         // Allow address(0) for native ETH only if tokenType is NativeTokenType (2)
-        if (_asset == address(0) && _tokenType != 2) revert InvalidAssetForType();
-        if (assetWhitelisted[_asset]) revert AssetAlreadyAdded();
+        if (_asset == address(0) && _tokenType != 2) revert InvalidAssetForType(_asset, _tokenType);
+        if (assetWhitelisted[_asset]) revert AssetAlreadyAdded(_asset);
         
         // Add to whitelist
         assetWhitelisted[_asset] = true;
@@ -530,13 +530,13 @@ contract VaultFactory is
     /// @notice Remove underlying asset
     /// @param _asset Asset address
     function removeUnderlyingAsset(address _asset) external onlyOwner {
-        if (_asset == address(0)) revert InvalidAsset();
-        if (!underlyingAssetAllowed[_asset]) revert AssetNotInList();
+        if (_asset == address(0)) revert InvalidAsset(_asset);
+        if (!underlyingAssetAllowed[_asset]) revert AssetNotInList(_asset, underlyingAssets.length);
         
         // Remove from underlying assets
         underlyingAssetAllowed[_asset] = false;
         
-        if (underlyingAssetIndex[_asset] >= underlyingAssets.length) revert AssetNotInList();
+        if (underlyingAssetIndex[_asset] >= underlyingAssets.length) revert AssetNotInList(_asset, underlyingAssets.length);
         
         // Move last element to deleted spot
         address lastAsset = underlyingAssets[underlyingAssets.length - 1];
@@ -555,13 +555,13 @@ contract VaultFactory is
     /// @notice Remove whitelisted asset
     /// @param _asset Asset address
     function removeWhitelistedAsset(address _asset) external onlyOwner {
-        if (_asset == address(0)) revert InvalidAsset();
-        if (!assetWhitelisted[_asset]) revert AssetNotWhitelisted();
+        if (_asset == address(0)) revert InvalidAsset(_asset);
+        if (!assetWhitelisted[_asset]) revert AssetNotWhitelisted(_asset);
         
         // Remove from whitelist
         assetWhitelisted[_asset] = false;
         
-        if (assetIndex[_asset] >= whitelistedAssets.length) revert AssetNotInList();
+        if (assetIndex[_asset] >= whitelistedAssets.length) revert AssetNotInList(_asset, whitelistedAssets.length);
         
         // Move last element to deleted spot
         address lastAsset = whitelistedAssets[whitelistedAssets.length - 1];
@@ -613,7 +613,7 @@ contract VaultFactory is
     /// @param _name Name identifier
     /// @param _address Address to map
     function setGovernanceAddress(bytes32 _name, address _address) external onlyOwner {
-        if (_address == address(0)) revert InvalidAddress();
+        if (_address == address(0)) revert InvalidAddress(_address, "Governance address");
         governanceAddresses[_name] = _address;
         emit GovernanceAddressMapped(_name, _address);
     }
@@ -726,7 +726,7 @@ contract VaultFactory is
         bool isPaused,
         uint256 sharePrice
     ) {
-        if (!isVault[_vault]) revert NotAVault();
+        if (!isVault[_vault]) revert NotAVault(_vault);
         
         IVault vault = IVault(_vault);
         manager = vaultManager[_vault];
@@ -749,7 +749,7 @@ contract VaultFactory is
         uint256 maxCap,
         uint256 minDeposit
     ) {
-        if (!isVault[_vault]) revert NotAVault();
+        if (!isVault[_vault]) revert NotAVault(_vault);
         
         return IVault(_vault).getVaultInfo();
     }
@@ -808,7 +808,7 @@ contract VaultFactory is
      /// @notice Set the vault storage version
      /// @param _vaultStorageVersion The vault storage version
      function setVaultStorageVersion(uint256 _vaultStorageVersion) external onlyOwner {
-         if (_vaultStorageVersion <= vaultStorageVersion) revert VersionTooLow();
+         if (_vaultStorageVersion <= vaultStorageVersion) revert VersionTooLow(vaultStorageVersion, _vaultStorageVersion);
          vaultStorageVersion = _vaultStorageVersion;
          emit SetVaultStorageVersion(_vaultStorageVersion);
      }
@@ -829,7 +829,7 @@ contract VaultFactory is
         if (_asset == address(0)) {
             // Native token
             (bool success, ) = treasury.call{value: _amount}("");
-            if (!success) revert NativeTokenRecoveryFailed();
+            if (!success) revert NativeTokenRecoveryFailed(treasury, _amount);
         } else {
             // ERC20 token
             IERC20(_asset).transfer(treasury, _amount);

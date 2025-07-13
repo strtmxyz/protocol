@@ -9,11 +9,11 @@ import "@uniswap/v3-periphery/contracts/libraries/BytesLib.sol";
 //////////////////////////////////////////////////////////////*/
 
 // Data validation errors
-error InvalidOffset();
-error InputIsNotArray();
-error InvalidArrayPosition();
-error ReadingBytesOutOfBounds();
-error SlicingOutOfRange();
+error InvalidOffset(uint256 offset, uint256 maximum);
+error InputIsNotArray(uint8 inputNum, uint256 arrayLength);
+error InvalidArrayPosition(uint8 arrayIndex, uint256 arrayLength);
+error ReadingBytesOutOfBounds(uint256 dataLength, uint256 requiredLength);
+error SlicingOutOfRange(uint256 dataLength, uint256 startPosition);
 
 /// @title TxDataUtils
 /// @notice Utility functions for handling transaction data
@@ -34,7 +34,7 @@ contract TxDataUtils {
   }
 
   function getBytes(bytes memory data, uint8 inputNum, uint256 offset) public pure returns (bytes memory) {
-    if (offset >= 20) revert InvalidOffset(); // offset is in byte32 slots, not bytes
+    if (offset >= 20) revert InvalidOffset(offset, 20); // offset is in byte32 slots, not bytes
     offset = offset * 32; // convert offset to bytes
     uint256 bytesLenPos = uint256(read32(data, 32 * inputNum + 4 + offset, 32));
     uint256 bytesLen = uint256(read32(data, bytesLenPos + 4 + offset, 32));
@@ -44,7 +44,7 @@ contract TxDataUtils {
   function getArrayLast(bytes memory data, uint8 inputNum) public pure returns (bytes32) {
     bytes32 arrayPos = read32(data, 32 * inputNum + 4, 32);
     bytes32 arrayLen = read32(data, uint256(arrayPos) + 4, 32);
-    if (arrayLen <= 0) revert InputIsNotArray();
+    if (arrayLen <= 0) revert InputIsNotArray(inputNum, uint256(arrayLen));
     return read32(data, uint256(arrayPos) + 4 + (uint256(arrayLen) * 32), 32);
   }
 
@@ -56,20 +56,20 @@ contract TxDataUtils {
   function getArrayIndex(bytes memory data, uint8 inputNum, uint8 arrayIndex) public pure returns (bytes32) {
     bytes32 arrayPos = read32(data, 32 * inputNum + 4, 32);
     bytes32 arrayLen = read32(data, uint256(arrayPos) + 4, 32);
-    if (arrayLen <= 0) revert InputIsNotArray();
-    if (uint256(arrayLen) <= arrayIndex) revert InvalidArrayPosition();
+    if (arrayLen <= 0) revert InputIsNotArray(inputNum, uint256(arrayLen));
+    if (uint256(arrayLen) <= arrayIndex) revert InvalidArrayPosition(arrayIndex, uint256(arrayLen));
     return read32(data, uint256(arrayPos) + 4 + ((1 + uint256(arrayIndex)) * 32), 32);
   }
 
   function read4left(bytes memory data, uint256 offset) public pure returns (bytes4 o) {
-    if (data.length < offset + 4) revert ReadingBytesOutOfBounds();
+    if (data.length < offset + 4) revert ReadingBytesOutOfBounds(data.length, offset + 4);
     assembly {
       o := mload(add(data, add(32, offset)))
     }
   }
 
   function read32(bytes memory data, uint256 offset, uint256 length) public pure returns (bytes32 o) {
-    if (data.length < offset + length) revert ReadingBytesOutOfBounds();
+    if (data.length < offset + length) revert ReadingBytesOutOfBounds(data.length, offset + length);
     assembly {
       o := mload(add(data, add(32, offset)))
       let lb := sub(32, length)
@@ -84,7 +84,7 @@ contract TxDataUtils {
   }
 
   function sliceUint(bytes memory data, uint256 start) internal pure returns (uint256) {
-    if (data.length < start + 32) revert SlicingOutOfRange();
+    if (data.length < start + 32) revert SlicingOutOfRange(data.length, start);
     uint256 x;
     assembly {
       x := mload(add(data, add(0x20, start)))

@@ -15,12 +15,12 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 //////////////////////////////////////////////////////////////*/
 
 // Asset validation errors
-error UnsupportedDestinationAsset();
-error UnsupportedSourceAsset();
+error UnsupportedDestinationAsset(address vault, address asset);
+error UnsupportedSourceAsset(address vault, address asset);
 
 // Transaction validation errors
-error RecipientIsNotVault();
-error PayableAmountMustBeGreaterThanZero();
+error RecipientIsNotVault(address vault, address recipient);
+error PayableAmountMustBeGreaterThanZero(uint256 amount);
 
 contract KyberswapGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initializable {
   using Path for bytes;
@@ -41,9 +41,9 @@ contract KyberswapGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initi
       address dstAsset = swapExecutionParams.desc.dstToken;
 
       IHasSupportedAsset supportedAsset = IHasSupportedAsset(_vault);
-      if (!supportedAsset.isSupportedAsset(dstAsset)) revert UnsupportedDestinationAsset();
+      if (!supportedAsset.isSupportedAsset(dstAsset)) revert UnsupportedDestinationAsset(_vault, dstAsset);
 
-      if (_vault != swapExecutionParams.desc.dstReceiver) revert RecipientIsNotVault();
+      if (_vault != swapExecutionParams.desc.dstReceiver) revert RecipientIsNotVault(_vault, swapExecutionParams.desc.dstReceiver);
 
       emit ExchangeFrom(_vault, _to, srcAsset, swapExecutionParams.desc.amount, dstAsset);
 
@@ -55,9 +55,9 @@ contract KyberswapGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initi
       address dstAsset = swapDescriptionV2.dstToken;
 
       IHasSupportedAsset supportedAsset = IHasSupportedAsset(_vault);
-      if (!supportedAsset.isSupportedAsset(dstAsset)) revert UnsupportedDestinationAsset();
+      if (!supportedAsset.isSupportedAsset(dstAsset)) revert UnsupportedDestinationAsset(_vault, dstAsset);
 
-      if (_vault != swapDescriptionV2.dstReceiver) revert RecipientIsNotVault();
+      if (_vault != swapDescriptionV2.dstReceiver) revert RecipientIsNotVault(_vault, swapDescriptionV2.dstReceiver);
 
       emit ExchangeFrom(_vault, _to, srcAsset, swapDescriptionV2.amount, dstAsset);
 
@@ -70,10 +70,10 @@ contract KyberswapGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initi
   function txGuard(address _vault, address _to, bytes memory _data, uint256 _nativeTokenAmount)
     public override returns (uint16 txType)
   {
-    if (_nativeTokenAmount <= 0) revert PayableAmountMustBeGreaterThanZero();
+    if (_nativeTokenAmount <= 0) revert PayableAmountMustBeGreaterThanZero(_nativeTokenAmount);
 
     IHasSupportedAsset supportedAsset = IHasSupportedAsset(_vault);
-    if (!supportedAsset.isSupportedAsset(address(0))) revert UnsupportedSourceAsset();
+    if (!supportedAsset.isSupportedAsset(address(0))) revert UnsupportedSourceAsset(_vault, address(0));
 
     bytes4 method = getMethod(_data);
 
@@ -81,9 +81,9 @@ contract KyberswapGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initi
       (IMetaAggregationRouterV2.SwapExecutionParams memory swapExecutionParams) = abi.decode(getParams(_data), (IMetaAggregationRouterV2.SwapExecutionParams));
       address dstAsset = swapExecutionParams.desc.dstToken;
 
-      if (!supportedAsset.isSupportedAsset(dstAsset)) revert UnsupportedDestinationAsset();
+      if (!supportedAsset.isSupportedAsset(dstAsset)) revert UnsupportedDestinationAsset(_vault, dstAsset);
 
-      if (_vault != swapExecutionParams.desc.dstReceiver) revert RecipientIsNotVault();
+      if (_vault != swapExecutionParams.desc.dstReceiver) revert RecipientIsNotVault(_vault, swapExecutionParams.desc.dstReceiver);
 
       emit ExchangeFrom(_vault, _to, address(0), swapExecutionParams.desc.amount, dstAsset);
 
@@ -93,9 +93,9 @@ contract KyberswapGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initi
       (,IMetaAggregationRouterV2.SwapDescriptionV2 memory swapDescriptionV2) = abi.decode(getParams(_data), (address,IMetaAggregationRouterV2.SwapDescriptionV2));
       address dstAsset = swapDescriptionV2.dstToken;
 
-      if (!supportedAsset.isSupportedAsset(dstAsset)) revert UnsupportedDestinationAsset();
+      if (!supportedAsset.isSupportedAsset(dstAsset)) revert UnsupportedDestinationAsset(_vault, dstAsset);
 
-      if (_vault != swapDescriptionV2.dstReceiver) revert RecipientIsNotVault();
+      if (_vault != swapDescriptionV2.dstReceiver) revert RecipientIsNotVault(_vault, swapDescriptionV2.dstReceiver);
 
       emit ExchangeFrom(_vault, _to, address(0), swapDescriptionV2.amount, dstAsset);
 

@@ -19,13 +19,13 @@ interface IVaultMinter {
 //////////////////////////////////////////////////////////////*/
 
 // Fee validation errors
-error ManagementFeeTooHigh();
-error PerformanceFeeTooHigh();
-error WithdrawalFeeTooHigh();
-error ProtocolFeeTooHigh();
+error ManagementFeeTooHigh(uint256 requested, uint256 maximum);
+error PerformanceFeeTooHigh(uint256 requested, uint256 maximum);
+error WithdrawalFeeTooHigh(uint256 requested, uint256 maximum);
+error ProtocolFeeTooHigh(uint256 requested, uint256 maximum);
 
 // Fee extraction errors
-error InsufficientUnderlyingBalanceForFees();
+error InsufficientUnderlyingBalanceForFees(address vault, uint256 balance, uint256 required);
 
 /// @title FeeLogic
 /// @notice Library for fee calculations and extractions with mint shares support
@@ -156,9 +156,9 @@ library FeeLogic {
         uint256 withdrawalFee
     ) internal pure {
         // Manager management fee: 0-2% (0-200 basis points)
-        if (managerFee > 200) revert ManagementFeeTooHigh();
+        if (managerFee > 200) revert ManagementFeeTooHigh(managerFee, 200);
         // Withdrawal fee: 0-1% (0-100 basis points)
-        if (withdrawalFee > 100) revert WithdrawalFeeTooHigh();
+        if (withdrawalFee > 100) revert WithdrawalFeeTooHigh(withdrawalFee, 100);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -234,7 +234,7 @@ library FeeLogic {
         uint256 totalFees = managementFeeAmount + managerPerformanceFee + protocolFeeAmount;
         uint256 underlyingBalance = IERC20(asset).balanceOf(vault);
         
-        if (underlyingBalance < totalFees) revert InsufficientUnderlyingBalanceForFees();
+        if (underlyingBalance < totalFees) revert InsufficientUnderlyingBalanceForFees(vault, underlyingBalance, totalFees);
         
         uint256 managerFees = managementFeeAmount + managerPerformanceFee;
         

@@ -14,15 +14,15 @@ import "../interfaces/IAssetHandler.sol";
 //////////////////////////////////////////////////////////////*/
 
 // Price feed errors
-error PriceAggregatorNotFound();
-error ChainlinkPriceExpired();
-error PriceNotAvailable(); 
-error PriceGetFailed();
+error PriceAggregatorNotFound(address asset);
+error ChainlinkPriceExpired(address asset, uint256 lastUpdated, uint256 timeout);
+error PriceNotAvailable(address asset, uint256 price);
+error PriceGetFailed(address asset, address aggregator);
 
 // Asset validation errors
-error InvalidAssetAddress();
-error InvalidAssetForType();
-error InvalidAggregatorAddress();
+error InvalidAssetAddress(address asset);
+error InvalidAssetForType(address asset, uint16 assetType);
+error InvalidAggregatorAddress(address aggregator, address asset);
 
 /// @title AssetHandler
 /// @notice Contract for handling asset price feeds
@@ -56,7 +56,7 @@ contract AssetHandler is OwnableUpgradeable, IAssetHandler {
   function getUSDPrice(address asset) external view override returns (uint256 price) {
     address aggregator = priceAggregators[asset];
 
-    if (aggregator == address(0)) revert PriceAggregatorNotFound();
+    if (aggregator == address(0)) revert PriceAggregatorNotFound(asset);
 
     try IAggregatorV3Interface(aggregator).latestRoundData() returns (
       uint80,
@@ -66,16 +66,16 @@ contract AssetHandler is OwnableUpgradeable, IAssetHandler {
       uint80
     ) {
       // check chainlink price updated within 25 hours
-      if (updatedAt + chainlinkTimeout < block.timestamp) revert ChainlinkPriceExpired();
+      if (updatedAt + chainlinkTimeout < block.timestamp) revert ChainlinkPriceExpired(asset, updatedAt, chainlinkTimeout);
 
       if (_price > 0) {
         price = uint256(_price) * 10**10; // convert Chainlink decimals 8 -> 18
       }
     } catch {
-      revert PriceGetFailed();
+      revert PriceGetFailed(asset, aggregator);
     }
 
-    if (price <= 0) revert PriceNotAvailable();
+    if (price <= 0) revert PriceNotAvailable(asset, price);
   }
 
   /* ========== MUTATIVE FUNCTIONS ========== */
@@ -99,8 +99,8 @@ contract AssetHandler is OwnableUpgradeable, IAssetHandler {
     address aggregator
   ) public override onlyOwner {
      // Allow address(0) for native ETH only if tokenType is NativeTokenType (2)
-    if (asset == address(0) && assetType != 2) revert InvalidAssetForType();
-    if (aggregator == address(0)) revert InvalidAggregatorAddress();
+    if (asset == address(0) && assetType != 2) revert InvalidAssetForType(asset, assetType);
+    if (aggregator == address(0)) revert InvalidAggregatorAddress(aggregator, asset);
 
     assetTypes[asset] = assetType;
     priceAggregators[asset] = aggregator;

@@ -9,8 +9,8 @@ import "./interfaces/IGovernance.sol";
 //////////////////////////////////////////////////////////////*/
 
 // Address validation errors
-error InvalidExtContractAddress();
-error InvalidGuardAddress();
+error InvalidExtContractAddress(address extContract);
+error InvalidGuardAddress(address guardAddress, string context);
 
 /// @title Governance
 /// @dev A contract with storage managed by governance
@@ -57,8 +57,8 @@ contract Governance is IGovernance, OwnableUpgradeable {
   /// @param extContract The third party contract to integrate
   /// @param guardAddress The protections for manager third party contract interaction
   function _setContractGuard(address extContract, address guardAddress) internal {
-    if (extContract == address(0)) revert InvalidExtContractAddress();
-    if (guardAddress == address(0)) revert InvalidGuardAddress();
+    if (extContract == address(0)) revert InvalidExtContractAddress(extContract);
+    if (guardAddress == address(0)) revert InvalidGuardAddress(guardAddress, "setContractGuard");
 
     contractGuards[extContract] = guardAddress;
 
@@ -77,7 +77,7 @@ contract Governance is IGovernance, OwnableUpgradeable {
   /// @param assetType Asset type as defined in Asset Handler
   /// @param guardAddress The asset guard address that allows manager interaction
   function _setAssetGuard(uint16 assetType, address guardAddress) internal {
-    if (guardAddress == address(0)) revert InvalidGuardAddress();
+    if (guardAddress == address(0)) revert InvalidGuardAddress(guardAddress, "setAssetGuard");
 
     assetGuards[assetType] = guardAddress;
 
