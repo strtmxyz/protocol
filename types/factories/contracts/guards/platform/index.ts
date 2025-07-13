@@ -3,5 +3,3 @@
 /* eslint-disable */
 export { AmbientGuard__factory } from "./AmbientGuard__factory";
 export { KyberswapGuard__factory } from "./KyberswapGuard__factory";
-export { PancakeV2RouterGuard__factory } from "./PancakeV2RouterGuard__factory";
-export { PancakeV3RouterGuard__factory } from "./PancakeV3RouterGuard__factory";

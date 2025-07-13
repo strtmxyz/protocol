@@ -10,9 +10,10 @@
     "clean": "hardhat clean",
     "test": "hardhat test",
     "test:assethandler": "hardhat run scripts/testAssetHandler.ts --network monadTestnet",
+    "test:assethandler:tokens": "hardhat run scripts/testAssetHandlerTokens.ts --network monadTestnet",
     "test:guards": "hardhat run scripts/testGuardsIntegration.ts --network monadTestnet",
     "test:system": "hardhat run scripts/testSystem.ts --network monadTestnet",
-    "create:vault": "hardhat run scripts/createVault.ts --network monadTestnet",
+    "remove:assets": "hardhat run deployment/vault/remove.ts --network monadTestnet",
     
     "deploy:governance": "hardhat run deployment/governance/deploy.ts --network monadTestnet",
     "deploy:assethandler": "hardhat run deployment/oracles/deploy.ts --network monadTestnet",
@@ -22,9 +23,6 @@
     
     "deploy:guard:ERC20Guard": "hardhat run deployment/guards/ERC20Guard.ts --network monadTestnet",
     "deploy:guard:ETHGuard": "hardhat run deployment/guards/ETHGuard.ts --network monadTestnet",
-    "deploy:guard:ERC20PancakeLPGuard": "hardhat run deployment/guards/ERC20PancakeLPGuard.ts --network monadTestnet",
-    "deploy:guard:PancakeV2RouterGuard": "hardhat run deployment/guards/PancakeV2RouterGuard.ts --network monadTestnet",
-    "deploy:guard:PancakeV3RouterGuard": "hardhat run deployment/guards/PancakeV3RouterGuard.ts --network monadTestnet",
     "deploy:guard:KyberswapGuard": "hardhat run deployment/guards/KyberswapGuard.ts --network monadTestnet",
     "deploy:guard:AmbientGuard": "hardhat run deployment/guards/AmbientGuard.ts --network monadTestnet",
     
@@ -35,7 +33,9 @@
     "deploy:localhost": "npm run deploy:all -- --network localhost",
     "deploy:sonic-testnet": "npm run deploy:all -- --network sonicBlazeTestnet",
     "deploy:sonic-mainnet": "npm run deploy:all -- --network sonicMainnet",
-    "deploy:monad-testnet": "npm run deploy:all -- --network monadTestnet"
+    "deploy:monad-testnet": "npm run deploy:all -- --network monadTestnet",
+    "check:vault": "hardhat run scripts/checkVaultInfo.ts --network monadTestnet",
+    "check:platforms": "hardhat run scripts/checkVaultPlatforms.ts --network monadTestnet"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",

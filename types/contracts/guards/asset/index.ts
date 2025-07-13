@@ -4,5 +4,4 @@
 import type * as stEthGuardSol from "./StETHGuard.sol";
 export type { stEthGuardSol };
 export type { ERC20Guard } from "./ERC20Guard";
-export type { ERC20PancakeLPGuard } from "./ERC20PancakeLPGuard";
 export type { ETHGuard } from "./ETHGuard";

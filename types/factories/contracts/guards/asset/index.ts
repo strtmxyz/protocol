@@ -3,5 +3,4 @@
 /* eslint-disable */
 export * as stEthGuardSol from "./StETHGuard.sol";
 export { ERC20Guard__factory } from "./ERC20Guard__factory";
-export { ERC20PancakeLPGuard__factory } from "./ERC20PancakeLPGuard__factory";
 export { ETHGuard__factory } from "./ETHGuard__factory";

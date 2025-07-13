@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Volumes/Development/Workspace/stratum/protocol/contracts/Governance.sol": {
-      "lastModificationDate": 1751932943105,
-      "contentHash": "973dbf15aad42add7cd45b149fb62391",
+      "lastModificationDate": 1752342830618,
+      "contentHash": "45dc58f168218f1e9ea69e537e9c5275",
       "sourceName": "contracts/Governance.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -799,6 +799,48 @@
         "Proxy"
       ]
     },
+    "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol": {
+      "lastModificationDate": 1751508356311,
+      "contentHash": "0a5c323fd908535580597848b8e550fb",
+      "sourceName": "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IBeacon"
+      ]
+    },
     "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/utils/StorageSlot.sol": {
       "lastModificationDate": 1751508356322,
       "contentHash": "e656d64c4ce918f3d13030b91c935134",
@@ -885,48 +927,6 @@
         "Address"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol": {
-      "lastModificationDate": 1751508356311,
-      "contentHash": "0a5c323fd908535580597848b8e550fb",
-      "sourceName": "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IBeacon"
-      ]
-    },
     "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/utils/Errors.sol": {
       "lastModificationDate": 1751508356316,
       "contentHash": "6b5eac2b85500c3012977849cfd633d8",
@@ -970,8 +970,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/VaultFactory.sol": {
-      "lastModificationDate": 1752216628366,
-      "contentHash": "82a899110af9faad57c5ce5866ba96ec",
+      "lastModificationDate": 1752342801290,
+      "contentHash": "b5013859ee9f007a72f3fb7f28bc6c2b",
       "sourceName": "contracts/VaultFactory.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -1159,48 +1159,6 @@
         "IAggregatorV3Interface"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IHasGuardInfo.sol": {
-      "lastModificationDate": 1751508348671,
-      "contentHash": "30cb8fe70c0a30fff35c12c7b8ab1898",
-      "sourceName": "contracts/interfaces/IHasGuardInfo.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IHasGuardInfo"
-      ]
-    },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IAssetHandler.sol": {
       "lastModificationDate": 1751508348673,
       "contentHash": "8e4bfbd164ee3a615ea340570c42120a",
@@ -1243,10 +1201,10 @@
         "IAssetHandler"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IHasOwnable.sol": {
-      "lastModificationDate": 1751622076488,
-      "contentHash": "159f9c7ec4770867af8997eea19c9e2b",
-      "sourceName": "contracts/interfaces/IHasOwnable.sol",
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IHasAssetInfo.sol": {
+      "lastModificationDate": 1751508348670,
+      "contentHash": "49c3b5d93fc7a9bd55ed008bd89d3cb8",
+      "sourceName": "contracts/interfaces/IHasAssetInfo.sol",
       "solcConfig": {
         "version": "0.8.27",
         "settings": {
@@ -1282,7 +1240,49 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "IHasOwnable"
+        "IHasAssetInfo"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IHasGuardInfo.sol": {
+      "lastModificationDate": 1751508348671,
+      "contentHash": "30cb8fe70c0a30fff35c12c7b8ab1898",
+      "sourceName": "contracts/interfaces/IHasGuardInfo.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IHasGuardInfo"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IHasPausable.sol": {
@@ -1325,6 +1325,48 @@
       ],
       "artifacts": [
         "IHasPausable"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IHasOwnable.sol": {
+      "lastModificationDate": 1751622076488,
+      "contentHash": "159f9c7ec4770867af8997eea19c9e2b",
+      "sourceName": "contracts/interfaces/IHasOwnable.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IHasOwnable"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/guards/IPlatformGuard.sol": {
@@ -1411,48 +1453,6 @@
       ],
       "artifacts": [
         "IAssetGuard"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IHasAssetInfo.sol": {
-      "lastModificationDate": 1751508348670,
-      "contentHash": "49c3b5d93fc7a9bd55ed008bd89d3cb8",
-      "sourceName": "contracts/interfaces/IHasAssetInfo.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IHasAssetInfo"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol": {
@@ -2078,48 +2078,6 @@
         "IERC1363"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/interfaces/IERC20.sol": {
-      "lastModificationDate": 1751508356387,
-      "contentHash": "79af12d64eacc7d77b9ee2ac4b4d51ee",
-      "sourceName": "@openzeppelin/contracts/interfaces/IERC20.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [
-        "../token/ERC20/IERC20.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": []
-    },
     "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
       "lastModificationDate": 1751508356395,
       "contentHash": "f808b485ee0cdc6768ee8385ae5f9a2a",
@@ -2156,6 +2114,48 @@
       },
       "imports": [
         "../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": []
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/interfaces/IERC20.sol": {
+      "lastModificationDate": 1751508356387,
+      "contentHash": "79af12d64eacc7d77b9ee2ac4b4d51ee",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../token/ERC20/IERC20.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -2205,8 +2205,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/Vault.sol": {
-      "lastModificationDate": 1752222406957,
-      "contentHash": "42e821401c15c9b05b111126fe058f94",
+      "lastModificationDate": 1752342693505,
+      "contentHash": "af158e5c108c1e7eee0ee19c4d329f9e",
       "sourceName": "contracts/Vault.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2403,9 +2403,53 @@
         "VaultLogic"
       ]
     },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/AssetLogic.sol": {
+      "lastModificationDate": 1752342907123,
+      "contentHash": "cbc718a2f5e992ef8db52dca20f17465",
+      "sourceName": "contracts/utils/AssetLogic.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../interfaces/IAssetHandler.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AssetLogic"
+      ]
+    },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/FeeLogic.sol": {
-      "lastModificationDate": 1752198370793,
-      "contentHash": "76446cc68df8d0878c1de6eeb7f66450",
+      "lastModificationDate": 1752342881594,
+      "contentHash": "f75484e53047b13dbf3fa25ecb3871db",
       "sourceName": "contracts/utils/FeeLogic.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2493,9 +2537,60 @@
         "ReentrancyGuardUpgradeable"
       ]
     },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/KyberswapGuard.sol": {
+      "lastModificationDate": 1752343009966,
+      "contentHash": "91d5ef203d326cfbff886fbd59331bad",
+      "sourceName": "contracts/guards/platform/KyberswapGuard.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../../interfaces/guards/IPlatformGuard.sol",
+        "../../utils/TxDataUtils.sol",
+        "../../interfaces/IHasSupportedAsset.sol",
+        "../../interfaces/IVault.sol",
+        "../../interfaces/ITransactionTypes.sol",
+        "../../interfaces/external/kyberswap/IMetaAggregationRouterV2.sol",
+        "@uniswap/v3-periphery/contracts/libraries/Path.sol",
+        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "KyberswapGuard"
+      ]
+    },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/TxDataUtils.sol": {
-      "lastModificationDate": 1751632039619,
-      "contentHash": "b0f0b2dc7ad938ec293ef1467c5d032c",
+      "lastModificationDate": 1752342964326,
+      "contentHash": "6f67bbaa8de55ce25798ce70e9d225cc",
       "sourceName": "contracts/utils/TxDataUtils.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2581,141 +2676,6 @@
         "ITransactionTypes"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol": {
-      "lastModificationDate": 1751508356309,
-      "contentHash": "2acae54ad209714bca07edf4bae32f72",
-      "sourceName": "@openzeppelin/contracts/proxy/utils/Initializable.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "Initializable"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/node_modules/@uniswap/v3-periphery/contracts/libraries/BytesLib.sol": {
-      "lastModificationDate": 1751508349583,
-      "contentHash": "0b6c25823f2ff337ee6e0be765a3fe11",
-      "sourceName": "@uniswap/v3-periphery/contracts/libraries/BytesLib.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.8.0 <0.9.0"
-      ],
-      "artifacts": [
-        "BytesLib"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/KyberswapGuard.sol": {
-      "lastModificationDate": 1752228009700,
-      "contentHash": "d37f2338083a676a201a944639855959",
-      "sourceName": "contracts/guards/platform/KyberswapGuard.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [
-        "../../interfaces/guards/IPlatformGuard.sol",
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/IVault.sol",
-        "../../interfaces/ITransactionTypes.sol",
-        "../../interfaces/external/kyberswap/IMetaAggregationRouterV2.sol",
-        "@uniswap/v3-periphery/contracts/libraries/Path.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "KyberswapGuard"
-      ]
-    },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/kyberswap/IMetaAggregationRouterV2.sol": {
       "lastModificationDate": 1751508348673,
       "contentHash": "9c807c418adf444931052207723c5770",
@@ -2756,6 +2716,48 @@
       ],
       "artifacts": [
         "IMetaAggregationRouterV2"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol": {
+      "lastModificationDate": 1751508356309,
+      "contentHash": "2acae54ad209714bca07edf4bae32f72",
+      "sourceName": "@openzeppelin/contracts/proxy/utils/Initializable.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Initializable"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/node_modules/@uniswap/v3-periphery/contracts/libraries/Path.sol": {
@@ -2802,10 +2804,52 @@
         "Path"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/StETHGuard.sol": {
-      "lastModificationDate": 1751508348669,
-      "contentHash": "16a401640ae3a0e7e2b45d1375b7c687",
-      "sourceName": "contracts/guards/asset/StETHGuard.sol",
+    "/Volumes/Development/Workspace/stratum/protocol/node_modules/@uniswap/v3-periphery/contracts/libraries/BytesLib.sol": {
+      "lastModificationDate": 1751508349583,
+      "contentHash": "0b6c25823f2ff337ee6e0be765a3fe11",
+      "sourceName": "@uniswap/v3-periphery/contracts/libraries/BytesLib.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.0 <0.9.0"
+      ],
+      "artifacts": [
+        "BytesLib"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/AmbientGuard.sol": {
+      "lastModificationDate": 1752220327478,
+      "contentHash": "a68f2e9b76d6672b9700519477e76e7a",
+      "sourceName": "contracts/guards/platform/AmbientGuard.sol",
       "solcConfig": {
         "version": "0.8.27",
         "settings": {
@@ -2837,16 +2881,156 @@
         }
       },
       "imports": [
-        "./ERC20Guard.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "../../interfaces/IHasAssetInfo.sol"
+        "../../interfaces/guards/IPlatformGuard.sol",
+        "../../utils/TxDataUtils.sol",
+        "../../interfaces/IHasSupportedAsset.sol",
+        "../../interfaces/IVault.sol",
+        "../../interfaces/ITransactionTypes.sol",
+        "../../interfaces/external/ambient/ICrocSwapDex.sol",
+        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "IStETH",
-        "StETHGuard"
+        "AmbientGuard"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/ambient/ICrocSwapDex.sol": {
+      "lastModificationDate": 1751862265837,
+      "contentHash": "95688442bebc02a8ad3d6b3e950c9cf4",
+      "sourceName": "contracts/interfaces/external/ambient/ICrocSwapDex.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ICrocSwapDex"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/ETHGuard.sol": {
+      "lastModificationDate": 1751631824086,
+      "contentHash": "172c3c75febf302b523ce04c524e0846",
+      "sourceName": "contracts/guards/asset/ETHGuard.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../../utils/TxDataUtils.sol",
+        "../../interfaces/guards/IGuard.sol",
+        "../../interfaces/IVault.sol",
+        "../../interfaces/IHasSupportedAsset.sol",
+        "../../interfaces/IHasGuardInfo.sol",
+        "../../interfaces/guards/IAssetGuard.sol",
+        "../../interfaces/IHasAssetInfo.sol",
+        "../../interfaces/IWETH.sol",
+        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ETHGuard"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IWETH.sol": {
+      "lastModificationDate": 1751508348671,
+      "contentHash": "23b0d90cb4920e1d046e647db2708ed5",
+      "sourceName": "contracts/interfaces/IWETH.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IWETH"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/ERC20Guard.sol": {
@@ -2904,52 +3088,10 @@
         "ERC20Guard"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IWETH.sol": {
-      "lastModificationDate": 1751508348671,
-      "contentHash": "23b0d90cb4920e1d046e647db2708ed5",
-      "sourceName": "contracts/interfaces/IWETH.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IWETH"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/ETHGuard.sol": {
-      "lastModificationDate": 1751631824086,
-      "contentHash": "172c3c75febf302b523ce04c524e0846",
-      "sourceName": "contracts/guards/asset/ETHGuard.sol",
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/StETHGuard.sol": {
+      "lastModificationDate": 1751508348669,
+      "contentHash": "16a401640ae3a0e7e2b45d1375b7c687",
+      "sourceName": "contracts/guards/asset/StETHGuard.sol",
       "solcConfig": {
         "version": "0.8.27",
         "settings": {
@@ -2981,71 +3123,21 @@
         }
       },
       "imports": [
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/guards/IGuard.sol",
-        "../../interfaces/IVault.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/IHasGuardInfo.sol",
-        "../../interfaces/guards/IAssetGuard.sol",
-        "../../interfaces/IHasAssetInfo.sol",
-        "../../interfaces/IWETH.sol",
-        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
+        "./ERC20Guard.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "../../interfaces/IHasAssetInfo.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "ETHGuard"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/AssetLogic.sol": {
-      "lastModificationDate": 1751885475761,
-      "contentHash": "e7e9822999ed422a27b9394c3e31fdc3",
-      "sourceName": "contracts/utils/AssetLogic.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [
-        "../interfaces/IAssetHandler.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "AssetLogic"
+        "IStETH",
+        "StETHGuard"
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/utils/AssetHandler.sol": {
-      "lastModificationDate": 1751632556186,
-      "contentHash": "2f5c1b89dacea61d5ac048ffe1e2e43d",
+      "lastModificationDate": 1752342857158,
+      "contentHash": "25a653dc3ea8eb7068a922e778cb99dd",
       "sourceName": "contracts/utils/AssetHandler.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -3217,10 +3309,52 @@
         "IHasDaoInfo"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/AmbientGuard.sol": {
-      "lastModificationDate": 1752220327478,
-      "contentHash": "a68f2e9b76d6672b9700519477e76e7a",
-      "sourceName": "contracts/guards/platform/AmbientGuard.sol",
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/test/MockOracle.sol": {
+      "lastModificationDate": 1752346379242,
+      "contentHash": "e021f29a399972ec2cb00546d2f23b1b",
+      "sourceName": "contracts/test/MockOracle.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "MockOracle"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/test/MockAssetHandler.sol": {
+      "lastModificationDate": 1752347424241,
+      "contentHash": "bca91bde184b705ad445c0cf71940eb3",
+      "sourceName": "contracts/test/MockAssetHandler.sol",
       "solcConfig": {
         "version": "0.8.27",
         "settings": {
@@ -3252,383 +3386,15 @@
         }
       },
       "imports": [
-        "../../interfaces/guards/IPlatformGuard.sol",
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/IVault.sol",
-        "../../interfaces/ITransactionTypes.sol",
-        "../../interfaces/external/ambient/ICrocSwapDex.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
+        "../interfaces/IAssetHandler.sol",
+        "../interfaces/guards/IAssetGuard.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "AmbientGuard"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/ambient/ICrocSwapDex.sol": {
-      "lastModificationDate": 1751862265837,
-      "contentHash": "95688442bebc02a8ad3d6b3e950c9cf4",
-      "sourceName": "contracts/interfaces/external/ambient/ICrocSwapDex.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ICrocSwapDex"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/pancakeswap/IUniversalRouter.sol": {
-      "lastModificationDate": 1751889920677,
-      "contentHash": "73bc85c31b0029faa67212a53cbf8fe7",
-      "sourceName": "contracts/interfaces/external/pancakeswap/IUniversalRouter.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IUniversalRouter"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/PancakeV3RouterGuard.sol": {
-      "lastModificationDate": 1752220312565,
-      "contentHash": "78e5225bcc24d0cbcd72052d479cf0d0",
-      "sourceName": "contracts/guards/platform/PancakeV3RouterGuard.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [
-        "../../interfaces/guards/IPlatformGuard.sol",
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/ITransactionTypes.sol",
-        "../../interfaces/external/pancakeswap/IUniversalRouter.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "PancakeV3RouterGuard"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/pancakeswap/IPancakeV2Pair.sol": {
-      "lastModificationDate": 1751889901746,
-      "contentHash": "acbd0dc63c1f587c71765fb280c90ca5",
-      "sourceName": "contracts/interfaces/external/pancakeswap/IPancakeV2Pair.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPancakeV2Pair"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/pancakeswap/IPancakeV2Router.sol": {
-      "lastModificationDate": 1751890005219,
-      "contentHash": "c00c6e6a0a60e3e5f0cb228bd772b542",
-      "sourceName": "contracts/interfaces/external/pancakeswap/IPancakeV2Router.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.2"
-      ],
-      "artifacts": [
-        "IPancakeV2Router"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/PancakeV2RouterGuard.sol": {
-      "lastModificationDate": 1752220280918,
-      "contentHash": "4c30015e9cc57487113fddfeefdb75e1",
-      "sourceName": "contracts/guards/platform/PancakeV2RouterGuard.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [
-        "../../interfaces/guards/IPlatformGuard.sol",
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/ITransactionTypes.sol",
-        "../../interfaces/external/pancakeswap/IPancakeV2Router.sol",
-        "../../interfaces/external/pancakeswap/IPancakeV2Factory.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "PancakeV2RouterGuard"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/external/pancakeswap/IPancakeV2Factory.sol": {
-      "lastModificationDate": 1751889911116,
-      "contentHash": "1c8ea636d51ac27164602c2b97d22100",
-      "sourceName": "contracts/interfaces/external/pancakeswap/IPancakeV2Factory.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPancakeV2Factory"
-      ]
-    },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/ERC20PancakeLPGuard.sol": {
-      "lastModificationDate": 1752222449958,
-      "contentHash": "747be0dba3ecdcb0de5c4f44e152bd8a",
-      "sourceName": "contracts/guards/asset/ERC20PancakeLPGuard.sol",
-      "solcConfig": {
-        "version": "0.8.27",
-        "settings": {
-          "viaIR": true,
-          "outputSelection": {
-            "*": {
-              "*": [
-                "storageLayout",
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "metadata": {
-            "bytecodeHash": "none",
-            "useLiteralContent": true
-          },
-          "evmVersion": "paris"
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol",
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/guards/IGuard.sol",
-        "../../interfaces/IVault.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/IHasGuardInfo.sol",
-        "../../interfaces/guards/IAssetGuard.sol",
-        "../../interfaces/IHasAssetInfo.sol",
-        "../../interfaces/external/pancakeswap/IPancakeV2Pair.sol",
-        "./ERC20Guard.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ERC20PancakeLPGuard"
+        "IERC20Metadata",
+        "MockAssetHandler"
       ]
     }
   }

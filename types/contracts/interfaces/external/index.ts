@@ -5,5 +5,3 @@ import type * as ambient from "./ambient";
 export type { ambient };
 import type * as kyberswap from "./kyberswap";
 export type { kyberswap };
-import type * as pancakeswap from "./pancakeswap";
-export type { pancakeswap };

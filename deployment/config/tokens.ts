@@ -33,15 +33,15 @@ export const getSupportedTokens = (networkName: string): {
                 },
                 {
                     // USDC
-                    address: '0xd32ea1c76ef1c296f131dd4c5b2a0aac3b22485a',
-                    aggregator: '0x74265c4060CB011CE32fabB2682A08B3390C061D', // USDC/USD on Monad Testnet
+                    address: config.USDC,
+                    aggregator: '0x70BB0758a38ae43418ffcEd9A25273dd4e804D15', // USDC/USD on Monad Testnet
                     type: ERC20AssetType, // ERC20
                     isUnderlying: true // Can be used as vault underlying
                 },
                 {
                     // USDT
                     address: '0x88b8E2161DEDC77EF4ab7585569D2415a1C1055D',
-                    aggregator: '0xc9Ba9f4EFdbaA1158DE97658e428D1962dB60616', // USDT/USD on Monad Testnet
+                    aggregator: '0x14eE6bE30A91989851Dc23203E41C804D4D71441', // USDT/USD on Monad Testnet
                     type: ERC20AssetType, // ERC20
                     isUnderlying: true // Can be used as vault underlying
                 },

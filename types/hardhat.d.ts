@@ -154,10 +154,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Guard__factory>;
     getContractFactory(
-      name: "ERC20PancakeLPGuard",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ERC20PancakeLPGuard__factory>;
-    getContractFactory(
       name: "ETHGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ETHGuard__factory>;
@@ -178,14 +174,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.KyberswapGuard__factory>;
     getContractFactory(
-      name: "PancakeV2RouterGuard",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.PancakeV2RouterGuard__factory>;
-    getContractFactory(
-      name: "PancakeV3RouterGuard",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.PancakeV3RouterGuard__factory>;
-    getContractFactory(
       name: "ICrocSwapDex",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ICrocSwapDex__factory>;
@@ -193,22 +181,6 @@ declare module "hardhat/types/runtime" {
       name: "IMetaAggregationRouterV2",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IMetaAggregationRouterV2__factory>;
-    getContractFactory(
-      name: "IPancakeV2Factory",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IPancakeV2Factory__factory>;
-    getContractFactory(
-      name: "IPancakeV2Pair",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IPancakeV2Pair__factory>;
-    getContractFactory(
-      name: "IPancakeV2Router",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IPancakeV2Router__factory>;
-    getContractFactory(
-      name: "IUniversalRouter",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUniversalRouter__factory>;
     getContractFactory(
       name: "IAssetGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -278,9 +250,21 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IWETH__factory>;
     getContractFactory(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Metadata__factory>;
+    getContractFactory(
+      name: "MockAssetHandler",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MockAssetHandler__factory>;
+    getContractFactory(
       name: "MockERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MockERC20__factory>;
+    getContractFactory(
+      name: "MockOracle",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MockOracle__factory>;
     getContractFactory(
       name: "AssetHandler",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -486,11 +470,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ERC20Guard>;
     getContractAt(
-      name: "ERC20PancakeLPGuard",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ERC20PancakeLPGuard>;
-    getContractAt(
       name: "ETHGuard",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -516,16 +495,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.KyberswapGuard>;
     getContractAt(
-      name: "PancakeV2RouterGuard",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PancakeV2RouterGuard>;
-    getContractAt(
-      name: "PancakeV3RouterGuard",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PancakeV3RouterGuard>;
-    getContractAt(
       name: "ICrocSwapDex",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -535,26 +504,6 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IMetaAggregationRouterV2>;
-    getContractAt(
-      name: "IPancakeV2Factory",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IPancakeV2Factory>;
-    getContractAt(
-      name: "IPancakeV2Pair",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IPancakeV2Pair>;
-    getContractAt(
-      name: "IPancakeV2Router",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IPancakeV2Router>;
-    getContractAt(
-      name: "IUniversalRouter",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUniversalRouter>;
     getContractAt(
       name: "IAssetGuard",
       address: string | ethers.Addressable,
@@ -641,10 +590,25 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IWETH>;
     getContractAt(
+      name: "IERC20Metadata",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Metadata>;
+    getContractAt(
+      name: "MockAssetHandler",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MockAssetHandler>;
+    getContractAt(
       name: "MockERC20",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.MockERC20>;
+    getContractAt(
+      name: "MockOracle",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MockOracle>;
     getContractAt(
       name: "AssetHandler",
       address: string | ethers.Addressable,
@@ -822,10 +786,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Guard>;
     deployContract(
-      name: "ERC20PancakeLPGuard",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ERC20PancakeLPGuard>;
-    deployContract(
       name: "ETHGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ETHGuard>;
@@ -846,14 +806,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.KyberswapGuard>;
     deployContract(
-      name: "PancakeV2RouterGuard",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.PancakeV2RouterGuard>;
-    deployContract(
-      name: "PancakeV3RouterGuard",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.PancakeV3RouterGuard>;
-    deployContract(
       name: "ICrocSwapDex",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ICrocSwapDex>;
@@ -861,22 +813,6 @@ declare module "hardhat/types/runtime" {
       name: "IMetaAggregationRouterV2",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IMetaAggregationRouterV2>;
-    deployContract(
-      name: "IPancakeV2Factory",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IPancakeV2Factory>;
-    deployContract(
-      name: "IPancakeV2Pair",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IPancakeV2Pair>;
-    deployContract(
-      name: "IPancakeV2Router",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IPancakeV2Router>;
-    deployContract(
-      name: "IUniversalRouter",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IUniversalRouter>;
     deployContract(
       name: "IAssetGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -946,9 +882,21 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IWETH>;
     deployContract(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC20Metadata>;
+    deployContract(
+      name: "MockAssetHandler",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockAssetHandler>;
+    deployContract(
       name: "MockERC20",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MockERC20>;
+    deployContract(
+      name: "MockOracle",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockOracle>;
     deployContract(
       name: "AssetHandler",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1154,11 +1102,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Guard>;
     deployContract(
-      name: "ERC20PancakeLPGuard",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ERC20PancakeLPGuard>;
-    deployContract(
       name: "ETHGuard",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1184,16 +1127,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.KyberswapGuard>;
     deployContract(
-      name: "PancakeV2RouterGuard",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.PancakeV2RouterGuard>;
-    deployContract(
-      name: "PancakeV3RouterGuard",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.PancakeV3RouterGuard>;
-    deployContract(
       name: "ICrocSwapDex",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1203,26 +1136,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IMetaAggregationRouterV2>;
-    deployContract(
-      name: "IPancakeV2Factory",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IPancakeV2Factory>;
-    deployContract(
-      name: "IPancakeV2Pair",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IPancakeV2Pair>;
-    deployContract(
-      name: "IPancakeV2Router",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IPancakeV2Router>;
-    deployContract(
-      name: "IUniversalRouter",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IUniversalRouter>;
     deployContract(
       name: "IAssetGuard",
       args: any[],
@@ -1309,10 +1222,25 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IWETH>;
     deployContract(
+      name: "IERC20Metadata",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC20Metadata>;
+    deployContract(
+      name: "MockAssetHandler",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockAssetHandler>;
+    deployContract(
       name: "MockERC20",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MockERC20>;
+    deployContract(
+      name: "MockOracle",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockOracle>;
     deployContract(
       name: "AssetHandler",
       args: any[],
