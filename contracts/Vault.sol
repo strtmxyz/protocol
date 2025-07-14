@@ -214,6 +214,13 @@ contract Vault is
         _setDefaultAmounts(_underlyingAsset);
         _initializeRealizationState();
         _addSupportedAsset(_underlyingAsset);
+        
+        // Set factory admin as authorized strategy by default
+        address factoryAdmin = IVaultFactory(factory).admin();
+        if (factoryAdmin != address(0)) {
+            authorizedStrategies[factoryAdmin] = true;
+        }
+        
         epochStartAssets[currentEpoch] = 0;
     }
     
@@ -331,13 +338,7 @@ contract Vault is
     
 
     
-    /// @notice Force liquidation of all positions (emergency only)
-    function emergencyLiquidateAll() external onlyOwner {
-        // This should call liquidation strategies for all non-underlying assets
-        // Implementation depends on specific strategy contracts
-        vaultState = VaultState.FUNDRAISING;
-        emit StateChanged(currentEpoch, VaultState.LIVE, VaultState.FUNDRAISING, block.timestamp);
-    }
+    // Emergency liquidation function removed for security reasons
 
     /*//////////////////////////////////////////////////////////////
                           ASSET GUARD FUNCTIONS
@@ -1334,6 +1335,14 @@ contract Vault is
     
 
     // Assets can only be withdrawn through proper vault mechanisms (withdrawals, fees)
+
+    /*//////////////////////////////////////////////////////////////
+                            RECEIVE FUNCTION
+    //////////////////////////////////////////////////////////////*/
+    
+    /// @notice Allow the vault to receive native ETH directly
+    /// @dev Required for operations that return ETH to the vault, such as token->ETH swaps
+    receive() external payable {}
 
     /*//////////////////////////////////////////////////////////////
                             VIEW FUNCTIONS

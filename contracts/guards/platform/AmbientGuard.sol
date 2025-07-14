@@ -21,6 +21,7 @@ error UnsupportedSourceAsset();
 error RecipientIsNotVault();
 error PayableAmountMustBeGreaterThanZero();
 error UnsupportedCallpath();
+error InsufficientNativeTokenAmount();
 
 /// @title AmbientGuard
 /// @notice Guard for Ambient Finance (formerly CrocSwap) protocol
@@ -32,6 +33,10 @@ contract AmbientGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initial
     // Supported callpaths for Ambient Finance
     // Only support swap operations for now
     uint16 public constant SWAP_PROXY_IDX = 1;
+    // Not Used
+    uint16 public constant FLAT_LP_PROXY_IDX = 2;
+    // Not Used
+    uint16 public constant KNOCKOUT_LP_V2_PROXY_IDX = 7;
 
     function initialize() public initializer {
         platformName = "AmbientGuard";
@@ -53,7 +58,7 @@ contract AmbientGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initial
             // Only support swap operations
             if (callpath != SWAP_PROXY_IDX) revert UnsupportedCallpath();
             
-            _handleSwapCallpath(_vault, _to, cmd);
+            _handleSwapCallpath(_vault, _to, cmd, 0);
             txType = uint16(TransactionType.Exchange);
         }
 
@@ -71,9 +76,6 @@ contract AmbientGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initial
     {
         if (_nativeTokenAmount <= 0) revert PayableAmountMustBeGreaterThanZero();
 
-        IHasSupportedAsset supportedAsset = IHasSupportedAsset(_vault);
-        if (!supportedAsset.isSupportedAsset(address(0))) revert UnsupportedSourceAsset();
-
         bytes4 method = getMethod(_data);
 
         if (method == ICrocSwapDex.userCmd.selector) {
@@ -82,16 +84,16 @@ contract AmbientGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initial
             // Only support swap operations
             if (callpath != SWAP_PROXY_IDX) revert UnsupportedCallpath();
             
-            _handleSwapCallpath(_vault, _to, cmd);
+            _handleSwapCallpath(_vault, _to, cmd, _nativeTokenAmount);
             txType = uint16(TransactionType.Exchange);
         }
 
         return txType;
     }
 
-    function _handleSwapCallpath(address _vault, address _to, bytes memory cmd) internal {
-        // Parse cmd data theo Ambient's swap command structure
-        // Based on real transaction analysis từ Monad testnet
+    function _handleSwapCallpath(address _vault, address _to, bytes memory cmd, uint256 _nativeTokenAmount) internal {
+        // Parse cmd data according to Ambient's swap command structure
+        // Based on real transaction analysis from Monad testnet
         
         // Extract base token address (chunk 0)
         address baseToken;
@@ -117,11 +119,11 @@ contract AmbientGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initial
             swapParams := mload(add(cmd, 256))  // Chunk 7: contains isBuy + other flags
         }
         
-        // Determine swap direction từ cmd data
+        // Determine swap direction from cmd data
         // swapParams contains packed data including isBuy flag
         bool isBuy = (swapParams & 0x1) == 1;
         
-        // Determine source và destination tokens based on swap direction
+        // Determine source and destination tokens based on swap direction
         address sourceToken;
         address destToken;
         
@@ -135,11 +137,20 @@ contract AmbientGuard is TxDataUtils, IPlatformGuard, ITransactionTypes, Initial
             destToken = quoteToken;    // Receiving quote token
         }
         
+        // Additional validation for ETH transactions
+        address NATIVE_TOKEN_ADDRESS = address(0);
+        if (sourceToken == NATIVE_TOKEN_ADDRESS) {
+            // If source token is ETH, verify sufficient native token amount
+            if (_nativeTokenAmount < qty) {
+                revert InsufficientNativeTokenAmount();
+            }
+        }
+        
         // Validate both tokens are supported by vault
         IHasSupportedAsset supportedAsset = IHasSupportedAsset(_vault);
         
         // Source token validation (token being spent)
-        if (sourceToken != address(0) && !supportedAsset.isSupportedAsset(sourceToken)) {
+        if (!supportedAsset.isSupportedAsset(sourceToken)) {
             revert UnsupportedSourceAsset();
         }
         
