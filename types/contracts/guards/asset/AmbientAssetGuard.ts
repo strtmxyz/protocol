@@ -23,55 +23,51 @@ import type {
   TypedContractMethod,
 } from "../../../common";
 
-export interface AmbientGuardInterface extends Interface {
+export interface AmbientAssetGuardInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "FLAT_LP_PROXY_IDX"
-      | "KNOCKOUT_LP_V2_PROXY_IDX"
-      | "SWAP_PROXY_IDX"
+      | "calcValue"
       | "convert32toAddress"
+      | "crocQueryEndpoint"
       | "getArrayIndex"
       | "getArrayLast"
       | "getArrayLength"
+      | "getBalance"
       | "getBytes"
+      | "getDecimals"
       | "getInput"
       | "getMethod"
       | "getParams"
+      | "getRangeTokens"
       | "initialize"
-      | "platformName"
+      | "poolConfigs"
       | "read32"
       | "read4left"
+      | "setPoolConfig"
       | "txGuard(address,address,bytes)"
       | "txGuard(address,address,bytes,uint256)"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
-      | "AddLiquidity"
-      | "ExchangeFrom"
-      | "ExchangeTo"
+      | "ERC20Approval"
+      | "ERC721Approval"
       | "Initialized"
-      | "RemoveLiquidity"
       | "UnwrapNativeToken"
-      | "VertexDeposit"
-      | "VertexSlowMode"
+      | "WrapNativeToken"
   ): EventFragment;
 
   encodeFunctionData(
-    functionFragment: "FLAT_LP_PROXY_IDX",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "KNOCKOUT_LP_V2_PROXY_IDX",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "SWAP_PROXY_IDX",
-    values?: undefined
+    functionFragment: "calcValue",
+    values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "convert32toAddress",
     values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "crocQueryEndpoint",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getArrayIndex",
@@ -86,8 +82,16 @@ export interface AmbientGuardInterface extends Interface {
     values: [BytesLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getBalance",
+    values: [AddressLike, AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getBytes",
     values: [BytesLike, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDecimals",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getInput",
@@ -102,12 +106,16 @@ export interface AmbientGuardInterface extends Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "initialize",
-    values?: undefined
+    functionFragment: "getRangeTokens",
+    values: [AddressLike, AddressLike, AddressLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "platformName",
-    values?: undefined
+    functionFragment: "initialize",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "poolConfigs",
+    values: [AddressLike, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "read32",
@@ -118,6 +126,10 @@ export interface AmbientGuardInterface extends Interface {
     values: [BytesLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "setPoolConfig",
+    values: [AddressLike, AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "txGuard(address,address,bytes)",
     values: [AddressLike, AddressLike, BytesLike]
   ): string;
@@ -126,20 +138,13 @@ export interface AmbientGuardInterface extends Interface {
     values: [AddressLike, AddressLike, BytesLike, BigNumberish]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "FLAT_LP_PROXY_IDX",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "KNOCKOUT_LP_V2_PROXY_IDX",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "SWAP_PROXY_IDX",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "calcValue", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "convert32toAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "crocQueryEndpoint",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -154,17 +159,30 @@ export interface AmbientGuardInterface extends Interface {
     functionFragment: "getArrayLength",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getBalance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getBytes", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getDecimals",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getInput", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getMethod", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getParams", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getRangeTokens",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "platformName",
+    functionFragment: "poolConfigs",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "read32", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "read4left", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setPoolConfig",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "txGuard(address,address,bytes)",
     data: BytesLike
@@ -175,24 +193,24 @@ export interface AmbientGuardInterface extends Interface {
   ): Result;
 }
 
-export namespace AddLiquidityEvent {
+export namespace ERC20ApprovalEvent {
   export type InputTuple = [
     vault: AddressLike,
-    dex: AddressLike,
-    pair: AddressLike,
-    params: BytesLike
+    token: AddressLike,
+    spender: AddressLike,
+    amount: BigNumberish
   ];
   export type OutputTuple = [
     vault: string,
-    dex: string,
-    pair: string,
-    params: string
+    token: string,
+    spender: string,
+    amount: bigint
   ];
   export interface OutputObject {
     vault: string;
-    dex: string;
-    pair: string;
-    params: string;
+    token: string;
+    spender: string;
+    amount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -200,55 +218,24 @@ export namespace AddLiquidityEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace ExchangeFromEvent {
+export namespace ERC721ApprovalEvent {
   export type InputTuple = [
     vault: AddressLike,
-    dex: AddressLike,
-    sourceAsset: AddressLike,
-    sourceAmount: BigNumberish,
-    dstAsset: AddressLike
+    token: AddressLike,
+    spender: AddressLike,
+    tokenId: BigNumberish
   ];
   export type OutputTuple = [
     vault: string,
-    dex: string,
-    sourceAsset: string,
-    sourceAmount: bigint,
-    dstAsset: string
+    token: string,
+    spender: string,
+    tokenId: bigint
   ];
   export interface OutputObject {
     vault: string;
-    dex: string;
-    sourceAsset: string;
-    sourceAmount: bigint;
-    dstAsset: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace ExchangeToEvent {
-  export type InputTuple = [
-    vault: AddressLike,
-    dex: AddressLike,
-    sourceAsset: AddressLike,
-    dstAsset: AddressLike,
-    dstAmount: BigNumberish
-  ];
-  export type OutputTuple = [
-    vault: string,
-    dex: string,
-    sourceAsset: string,
-    dstAsset: string,
-    dstAmount: bigint
-  ];
-  export interface OutputObject {
-    vault: string;
-    dex: string;
-    sourceAsset: string;
-    dstAsset: string;
-    dstAmount: bigint;
+    token: string;
+    spender: string;
+    tokenId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -268,59 +255,16 @@ export namespace InitializedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace RemoveLiquidityEvent {
-  export type InputTuple = [
-    vault: AddressLike,
-    dex: AddressLike,
-    pair: AddressLike,
-    params: BytesLike
-  ];
-  export type OutputTuple = [
-    vault: string,
-    dex: string,
-    pair: string,
-    params: string
-  ];
-  export interface OutputObject {
-    vault: string;
-    dex: string;
-    pair: string;
-    params: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
 export namespace UnwrapNativeTokenEvent {
   export type InputTuple = [
     vault: AddressLike,
-    dex: AddressLike,
-    amountMinimum: BigNumberish
-  ];
-  export type OutputTuple = [vault: string, dex: string, amountMinimum: bigint];
-  export interface OutputObject {
-    vault: string;
-    dex: string;
-    amountMinimum: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace VertexDepositEvent {
-  export type InputTuple = [
-    vault: AddressLike,
-    endpoint: AddressLike,
+    token: AddressLike,
     amount: BigNumberish
   ];
-  export type OutputTuple = [vault: string, endpoint: string, amount: bigint];
+  export type OutputTuple = [vault: string, token: string, amount: bigint];
   export interface OutputObject {
     vault: string;
-    endpoint: string;
+    token: string;
     amount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -329,17 +273,17 @@ export namespace VertexDepositEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace VertexSlowModeEvent {
+export namespace WrapNativeTokenEvent {
   export type InputTuple = [
     vault: AddressLike,
-    endpoint: AddressLike,
-    deadline: BigNumberish
+    token: AddressLike,
+    amount: BigNumberish
   ];
-  export type OutputTuple = [vault: string, endpoint: string, deadline: bigint];
+  export type OutputTuple = [vault: string, token: string, amount: bigint];
   export interface OutputObject {
     vault: string;
-    endpoint: string;
-    deadline: bigint;
+    token: string;
+    amount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -347,11 +291,11 @@ export namespace VertexSlowModeEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export interface AmbientGuard extends BaseContract {
-  connect(runner?: ContractRunner | null): AmbientGuard;
+export interface AmbientAssetGuard extends BaseContract {
+  connect(runner?: ContractRunner | null): AmbientAssetGuard;
   waitForDeployment(): Promise<this>;
 
-  interface: AmbientGuardInterface;
+  interface: AmbientAssetGuardInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -390,13 +334,15 @@ export interface AmbientGuard extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  FLAT_LP_PROXY_IDX: TypedContractMethod<[], [bigint], "view">;
-
-  KNOCKOUT_LP_V2_PROXY_IDX: TypedContractMethod<[], [bigint], "view">;
-
-  SWAP_PROXY_IDX: TypedContractMethod<[], [bigint], "view">;
+  calcValue: TypedContractMethod<
+    [vault: AddressLike, asset: AddressLike, balance: BigNumberish],
+    [bigint],
+    "view"
+  >;
 
   convert32toAddress: TypedContractMethod<[data: BytesLike], [string], "view">;
+
+  crocQueryEndpoint: TypedContractMethod<[], [string], "view">;
 
   getArrayIndex: TypedContractMethod<
     [data: BytesLike, inputNum: BigNumberish, arrayIndex: BigNumberish],
@@ -416,11 +362,19 @@ export interface AmbientGuard extends BaseContract {
     "view"
   >;
 
+  getBalance: TypedContractMethod<
+    [vault: AddressLike, asset: AddressLike],
+    [bigint],
+    "view"
+  >;
+
   getBytes: TypedContractMethod<
     [data: BytesLike, inputNum: BigNumberish, offset: BigNumberish],
     [string],
     "view"
   >;
+
+  getDecimals: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
   getInput: TypedContractMethod<
     [data: BytesLike, inputNum: BigNumberish],
@@ -432,9 +386,35 @@ export interface AmbientGuard extends BaseContract {
 
   getParams: TypedContractMethod<[data: BytesLike], [string], "view">;
 
-  initialize: TypedContractMethod<[], [void], "nonpayable">;
+  getRangeTokens: TypedContractMethod<
+    [
+      vault: AddressLike,
+      baseAsset: AddressLike,
+      quoteAsset: AddressLike,
+      bidTick: BigNumberish,
+      askTick: BigNumberish
+    ],
+    [
+      [bigint, bigint, bigint] & {
+        liq: bigint;
+        baseQty: bigint;
+        quoteQty: bigint;
+      }
+    ],
+    "view"
+  >;
 
-  platformName: TypedContractMethod<[], [string], "view">;
+  initialize: TypedContractMethod<
+    [_crocQueryEndpoint: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  poolConfigs: TypedContractMethod<
+    [arg0: AddressLike, arg1: AddressLike],
+    [bigint],
+    "view"
+  >;
 
   read32: TypedContractMethod<
     [data: BytesLike, offset: BigNumberish, length: BigNumberish],
@@ -448,21 +428,22 @@ export interface AmbientGuard extends BaseContract {
     "view"
   >;
 
-  "txGuard(address,address,bytes)": TypedContractMethod<
-    [_vault: AddressLike, _to: AddressLike, _data: BytesLike],
-    [bigint],
+  setPoolConfig: TypedContractMethod<
+    [baseAsset: AddressLike, quoteAsset: AddressLike, poolIdx: BigNumberish],
+    [void],
     "nonpayable"
   >;
 
-  "txGuard(address,address,bytes,uint256)": TypedContractMethod<
-    [
-      _vault: AddressLike,
-      _to: AddressLike,
-      _data: BytesLike,
-      _nativeTokenAmount: BigNumberish
-    ],
+  "txGuard(address,address,bytes)": TypedContractMethod<
+    [arg0: AddressLike, arg1: AddressLike, arg2: BytesLike],
     [bigint],
-    "nonpayable"
+    "view"
+  >;
+
+  "txGuard(address,address,bytes,uint256)": TypedContractMethod<
+    [arg0: AddressLike, arg1: AddressLike, arg2: BytesLike, arg3: BigNumberish],
+    [bigint],
+    "view"
   >;
 
   getFunction<T extends ContractMethod = ContractMethod>(
@@ -470,17 +451,18 @@ export interface AmbientGuard extends BaseContract {
   ): T;
 
   getFunction(
-    nameOrSignature: "FLAT_LP_PROXY_IDX"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "KNOCKOUT_LP_V2_PROXY_IDX"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "SWAP_PROXY_IDX"
-  ): TypedContractMethod<[], [bigint], "view">;
+    nameOrSignature: "calcValue"
+  ): TypedContractMethod<
+    [vault: AddressLike, asset: AddressLike, balance: BigNumberish],
+    [bigint],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "convert32toAddress"
   ): TypedContractMethod<[data: BytesLike], [string], "view">;
+  getFunction(
+    nameOrSignature: "crocQueryEndpoint"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "getArrayIndex"
   ): TypedContractMethod<
@@ -503,12 +485,22 @@ export interface AmbientGuard extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "getBalance"
+  ): TypedContractMethod<
+    [vault: AddressLike, asset: AddressLike],
+    [bigint],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "getBytes"
   ): TypedContractMethod<
     [data: BytesLike, inputNum: BigNumberish, offset: BigNumberish],
     [string],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "getDecimals"
+  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "getInput"
   ): TypedContractMethod<
@@ -523,11 +515,38 @@ export interface AmbientGuard extends BaseContract {
     nameOrSignature: "getParams"
   ): TypedContractMethod<[data: BytesLike], [string], "view">;
   getFunction(
-    nameOrSignature: "initialize"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+    nameOrSignature: "getRangeTokens"
+  ): TypedContractMethod<
+    [
+      vault: AddressLike,
+      baseAsset: AddressLike,
+      quoteAsset: AddressLike,
+      bidTick: BigNumberish,
+      askTick: BigNumberish
+    ],
+    [
+      [bigint, bigint, bigint] & {
+        liq: bigint;
+        baseQty: bigint;
+        quoteQty: bigint;
+      }
+    ],
+    "view"
+  >;
   getFunction(
-    nameOrSignature: "platformName"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: "initialize"
+  ): TypedContractMethod<
+    [_crocQueryEndpoint: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "poolConfigs"
+  ): TypedContractMethod<
+    [arg0: AddressLike, arg1: AddressLike],
+    [bigint],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "read32"
   ): TypedContractMethod<
@@ -543,45 +562,40 @@ export interface AmbientGuard extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "setPoolConfig"
+  ): TypedContractMethod<
+    [baseAsset: AddressLike, quoteAsset: AddressLike, poolIdx: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "txGuard(address,address,bytes)"
   ): TypedContractMethod<
-    [_vault: AddressLike, _to: AddressLike, _data: BytesLike],
+    [arg0: AddressLike, arg1: AddressLike, arg2: BytesLike],
     [bigint],
-    "nonpayable"
+    "view"
   >;
   getFunction(
     nameOrSignature: "txGuard(address,address,bytes,uint256)"
   ): TypedContractMethod<
-    [
-      _vault: AddressLike,
-      _to: AddressLike,
-      _data: BytesLike,
-      _nativeTokenAmount: BigNumberish
-    ],
+    [arg0: AddressLike, arg1: AddressLike, arg2: BytesLike, arg3: BigNumberish],
     [bigint],
-    "nonpayable"
+    "view"
   >;
 
   getEvent(
-    key: "AddLiquidity"
+    key: "ERC20Approval"
   ): TypedContractEvent<
-    AddLiquidityEvent.InputTuple,
-    AddLiquidityEvent.OutputTuple,
-    AddLiquidityEvent.OutputObject
+    ERC20ApprovalEvent.InputTuple,
+    ERC20ApprovalEvent.OutputTuple,
+    ERC20ApprovalEvent.OutputObject
   >;
   getEvent(
-    key: "ExchangeFrom"
+    key: "ERC721Approval"
   ): TypedContractEvent<
-    ExchangeFromEvent.InputTuple,
-    ExchangeFromEvent.OutputTuple,
-    ExchangeFromEvent.OutputObject
-  >;
-  getEvent(
-    key: "ExchangeTo"
-  ): TypedContractEvent<
-    ExchangeToEvent.InputTuple,
-    ExchangeToEvent.OutputTuple,
-    ExchangeToEvent.OutputObject
+    ERC721ApprovalEvent.InputTuple,
+    ERC721ApprovalEvent.OutputTuple,
+    ERC721ApprovalEvent.OutputObject
   >;
   getEvent(
     key: "Initialized"
@@ -591,13 +605,6 @@ export interface AmbientGuard extends BaseContract {
     InitializedEvent.OutputObject
   >;
   getEvent(
-    key: "RemoveLiquidity"
-  ): TypedContractEvent<
-    RemoveLiquidityEvent.InputTuple,
-    RemoveLiquidityEvent.OutputTuple,
-    RemoveLiquidityEvent.OutputObject
-  >;
-  getEvent(
     key: "UnwrapNativeToken"
   ): TypedContractEvent<
     UnwrapNativeTokenEvent.InputTuple,
@@ -605,52 +612,34 @@ export interface AmbientGuard extends BaseContract {
     UnwrapNativeTokenEvent.OutputObject
   >;
   getEvent(
-    key: "VertexDeposit"
+    key: "WrapNativeToken"
   ): TypedContractEvent<
-    VertexDepositEvent.InputTuple,
-    VertexDepositEvent.OutputTuple,
-    VertexDepositEvent.OutputObject
-  >;
-  getEvent(
-    key: "VertexSlowMode"
-  ): TypedContractEvent<
-    VertexSlowModeEvent.InputTuple,
-    VertexSlowModeEvent.OutputTuple,
-    VertexSlowModeEvent.OutputObject
+    WrapNativeTokenEvent.InputTuple,
+    WrapNativeTokenEvent.OutputTuple,
+    WrapNativeTokenEvent.OutputObject
   >;
 
   filters: {
-    "AddLiquidity(address,address,address,bytes)": TypedContractEvent<
-      AddLiquidityEvent.InputTuple,
-      AddLiquidityEvent.OutputTuple,
-      AddLiquidityEvent.OutputObject
+    "ERC20Approval(address,address,address,uint256)": TypedContractEvent<
+      ERC20ApprovalEvent.InputTuple,
+      ERC20ApprovalEvent.OutputTuple,
+      ERC20ApprovalEvent.OutputObject
     >;
-    AddLiquidity: TypedContractEvent<
-      AddLiquidityEvent.InputTuple,
-      AddLiquidityEvent.OutputTuple,
-      AddLiquidityEvent.OutputObject
-    >;
-
-    "ExchangeFrom(address,address,address,uint256,address)": TypedContractEvent<
-      ExchangeFromEvent.InputTuple,
-      ExchangeFromEvent.OutputTuple,
-      ExchangeFromEvent.OutputObject
-    >;
-    ExchangeFrom: TypedContractEvent<
-      ExchangeFromEvent.InputTuple,
-      ExchangeFromEvent.OutputTuple,
-      ExchangeFromEvent.OutputObject
+    ERC20Approval: TypedContractEvent<
+      ERC20ApprovalEvent.InputTuple,
+      ERC20ApprovalEvent.OutputTuple,
+      ERC20ApprovalEvent.OutputObject
     >;
 
-    "ExchangeTo(address,address,address,address,uint256)": TypedContractEvent<
-      ExchangeToEvent.InputTuple,
-      ExchangeToEvent.OutputTuple,
-      ExchangeToEvent.OutputObject
+    "ERC721Approval(address,address,address,uint256)": TypedContractEvent<
+      ERC721ApprovalEvent.InputTuple,
+      ERC721ApprovalEvent.OutputTuple,
+      ERC721ApprovalEvent.OutputObject
     >;
-    ExchangeTo: TypedContractEvent<
-      ExchangeToEvent.InputTuple,
-      ExchangeToEvent.OutputTuple,
-      ExchangeToEvent.OutputObject
+    ERC721Approval: TypedContractEvent<
+      ERC721ApprovalEvent.InputTuple,
+      ERC721ApprovalEvent.OutputTuple,
+      ERC721ApprovalEvent.OutputObject
     >;
 
     "Initialized(uint64)": TypedContractEvent<
@@ -664,17 +653,6 @@ export interface AmbientGuard extends BaseContract {
       InitializedEvent.OutputObject
     >;
 
-    "RemoveLiquidity(address,address,address,bytes)": TypedContractEvent<
-      RemoveLiquidityEvent.InputTuple,
-      RemoveLiquidityEvent.OutputTuple,
-      RemoveLiquidityEvent.OutputObject
-    >;
-    RemoveLiquidity: TypedContractEvent<
-      RemoveLiquidityEvent.InputTuple,
-      RemoveLiquidityEvent.OutputTuple,
-      RemoveLiquidityEvent.OutputObject
-    >;
-
     "UnwrapNativeToken(address,address,uint256)": TypedContractEvent<
       UnwrapNativeTokenEvent.InputTuple,
       UnwrapNativeTokenEvent.OutputTuple,
@@ -686,26 +664,15 @@ export interface AmbientGuard extends BaseContract {
       UnwrapNativeTokenEvent.OutputObject
     >;
 
-    "VertexDeposit(address,address,uint256)": TypedContractEvent<
-      VertexDepositEvent.InputTuple,
-      VertexDepositEvent.OutputTuple,
-      VertexDepositEvent.OutputObject
+    "WrapNativeToken(address,address,uint256)": TypedContractEvent<
+      WrapNativeTokenEvent.InputTuple,
+      WrapNativeTokenEvent.OutputTuple,
+      WrapNativeTokenEvent.OutputObject
     >;
-    VertexDeposit: TypedContractEvent<
-      VertexDepositEvent.InputTuple,
-      VertexDepositEvent.OutputTuple,
-      VertexDepositEvent.OutputObject
-    >;
-
-    "VertexSlowMode(address,address,uint256)": TypedContractEvent<
-      VertexSlowModeEvent.InputTuple,
-      VertexSlowModeEvent.OutputTuple,
-      VertexSlowModeEvent.OutputObject
-    >;
-    VertexSlowMode: TypedContractEvent<
-      VertexSlowModeEvent.InputTuple,
-      VertexSlowModeEvent.OutputTuple,
-      VertexSlowModeEvent.OutputObject
+    WrapNativeToken: TypedContractEvent<
+      WrapNativeTokenEvent.InputTuple,
+      WrapNativeTokenEvent.OutputTuple,
+      WrapNativeTokenEvent.OutputObject
     >;
   };
 }

@@ -150,6 +150,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Governance__factory>;
     getContractFactory(
+      name: "AmbientAssetGuard",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AmbientAssetGuard__factory>;
+    getContractFactory(
       name: "ERC20Guard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Guard__factory>;
@@ -173,6 +177,10 @@ declare module "hardhat/types/runtime" {
       name: "KyberswapGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.KyberswapGuard__factory>;
+    getContractFactory(
+      name: "ICrocQuery",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ICrocQuery__factory>;
     getContractFactory(
       name: "ICrocSwapDex",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -465,6 +473,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Governance>;
     getContractAt(
+      name: "AmbientAssetGuard",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AmbientAssetGuard>;
+    getContractAt(
       name: "ERC20Guard",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -494,6 +507,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.KyberswapGuard>;
+    getContractAt(
+      name: "ICrocQuery",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ICrocQuery>;
     getContractAt(
       name: "ICrocSwapDex",
       address: string | ethers.Addressable,
@@ -782,6 +800,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Governance>;
     deployContract(
+      name: "AmbientAssetGuard",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AmbientAssetGuard>;
+    deployContract(
       name: "ERC20Guard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Guard>;
@@ -805,6 +827,10 @@ declare module "hardhat/types/runtime" {
       name: "KyberswapGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.KyberswapGuard>;
+    deployContract(
+      name: "ICrocQuery",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ICrocQuery>;
     deployContract(
       name: "ICrocSwapDex",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1097,6 +1123,11 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Governance>;
     deployContract(
+      name: "AmbientAssetGuard",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AmbientAssetGuard>;
+    deployContract(
       name: "ERC20Guard",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1126,6 +1157,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.KyberswapGuard>;
+    deployContract(
+      name: "ICrocQuery",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ICrocQuery>;
     deployContract(
       name: "ICrocSwapDex",
       args: any[],

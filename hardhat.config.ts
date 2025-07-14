@@ -57,6 +57,14 @@ const config: HardhatUserConfig = {
         ?[
           process.env.OWNER_PRIVATE_KEY,
         ]:[],
+      timeout: 600000, // Increase timeout to 10 minutes
+      gasMultiplier: 1.2, // Add 20% to estimated gas
+      httpHeaders: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      throwOnCallFailures: false, // Don't throw on call failures
+      throwOnTransactionFailures: true,
     },
   },
   sourcify: {

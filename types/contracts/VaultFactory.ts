@@ -39,6 +39,9 @@ export interface VaultFactoryInterface extends Interface {
       | "deployedVaults"
       | "emergencyRecoverAsset"
       | "getAddress"
+      | "getAdjustedCapacityLimits"
+      | "getAdjustedMaxCapacityLimit"
+      | "getAdjustedMinCapacityLimit"
       | "getAssetGuard"
       | "getAssetHandler"
       | "getAssetPrice"
@@ -82,6 +85,7 @@ export interface VaultFactoryInterface extends Interface {
       | "setAssetHandler"
       | "setAssetWhitelist"
       | "setFactorySettings"
+      | "setFactorySettingsInAssetUnits"
       | "setGovernanceAddress(bytes32,address)"
       | "setGovernanceAddress(address)"
       | "setMaximumSupportedAssetCount"
@@ -111,6 +115,7 @@ export interface VaultFactoryInterface extends Interface {
       | "AdminAddressSet"
       | "AssetWhitelisted"
       | "AssetWhitelistedRemoved"
+      | "FactorySettingsUpdated"
       | "GovernanceAddressMapped"
       | "GovernanceAddressSet"
       | "Initialized"
@@ -183,6 +188,18 @@ export interface VaultFactoryInterface extends Interface {
   encodeFunctionData(
     functionFragment: "getAddress",
     values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAdjustedCapacityLimits",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAdjustedMaxCapacityLimit",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAdjustedMinCapacityLimit",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getAssetGuard",
@@ -348,6 +365,10 @@ export interface VaultFactoryInterface extends Interface {
     values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "setFactorySettingsInAssetUnits",
+    values: [BigNumberish, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setGovernanceAddress(bytes32,address)",
     values: [BytesLike, AddressLike]
   ): string;
@@ -470,6 +491,18 @@ export interface VaultFactoryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getAddress", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getAdjustedCapacityLimits",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAdjustedMaxCapacityLimit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAdjustedMinCapacityLimit",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getAssetGuard",
     data: BytesLike
@@ -616,6 +649,10 @@ export interface VaultFactoryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setFactorySettingsInAssetUnits",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setGovernanceAddress(bytes32,address)",
     data: BytesLike
   ): Result;
@@ -729,6 +766,28 @@ export namespace AssetWhitelistedRemovedEvent {
   export type OutputTuple = [asset: string];
   export interface OutputObject {
     asset: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace FactorySettingsUpdatedEvent {
+  export type InputTuple = [
+    maxCapacityLimit: BigNumberish,
+    minCapacityLimit: BigNumberish,
+    creationFee: BigNumberish
+  ];
+  export type OutputTuple = [
+    maxCapacityLimit: bigint,
+    minCapacityLimit: bigint,
+    creationFee: bigint
+  ];
+  export interface OutputObject {
+    maxCapacityLimit: bigint;
+    minCapacityLimit: bigint;
+    creationFee: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -1039,6 +1098,24 @@ export interface VaultFactory extends BaseContract {
 
   getAddress: TypedContractMethod<[_name: BytesLike], [string], "view">;
 
+  getAdjustedCapacityLimits: TypedContractMethod<
+    [underlyingAsset: AddressLike],
+    [[bigint, bigint] & { adjustedMaxLimit: bigint; adjustedMinLimit: bigint }],
+    "view"
+  >;
+
+  getAdjustedMaxCapacityLimit: TypedContractMethod<
+    [underlyingAsset: AddressLike],
+    [bigint],
+    "view"
+  >;
+
+  getAdjustedMinCapacityLimit: TypedContractMethod<
+    [underlyingAsset: AddressLike],
+    [bigint],
+    "view"
+  >;
+
   getAssetGuard: TypedContractMethod<
     [externalAsset: AddressLike],
     [string],
@@ -1227,6 +1304,16 @@ export interface VaultFactory extends BaseContract {
     "nonpayable"
   >;
 
+  setFactorySettingsInAssetUnits: TypedContractMethod<
+    [
+      _maxCapacityAmount: BigNumberish,
+      _minCapacityAmount: BigNumberish,
+      _creationFee: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
+
   "setGovernanceAddress(bytes32,address)": TypedContractMethod<
     [_name: BytesLike, _address: AddressLike],
     [void],
@@ -1398,6 +1485,19 @@ export interface VaultFactory extends BaseContract {
   getFunction(
     nameOrSignature: "getAddress"
   ): TypedContractMethod<[_name: BytesLike], [string], "view">;
+  getFunction(
+    nameOrSignature: "getAdjustedCapacityLimits"
+  ): TypedContractMethod<
+    [underlyingAsset: AddressLike],
+    [[bigint, bigint] & { adjustedMaxLimit: bigint; adjustedMinLimit: bigint }],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getAdjustedMaxCapacityLimit"
+  ): TypedContractMethod<[underlyingAsset: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getAdjustedMinCapacityLimit"
+  ): TypedContractMethod<[underlyingAsset: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "getAssetGuard"
   ): TypedContractMethod<[externalAsset: AddressLike], [string], "view">;
@@ -1594,6 +1694,17 @@ export interface VaultFactory extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "setFactorySettingsInAssetUnits"
+  ): TypedContractMethod<
+    [
+      _maxCapacityAmount: BigNumberish,
+      _minCapacityAmount: BigNumberish,
+      _creationFee: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "setGovernanceAddress(bytes32,address)"
   ): TypedContractMethod<
     [_name: BytesLike, _address: AddressLike],
@@ -1708,6 +1819,13 @@ export interface VaultFactory extends BaseContract {
     AssetWhitelistedRemovedEvent.InputTuple,
     AssetWhitelistedRemovedEvent.OutputTuple,
     AssetWhitelistedRemovedEvent.OutputObject
+  >;
+  getEvent(
+    key: "FactorySettingsUpdated"
+  ): TypedContractEvent<
+    FactorySettingsUpdatedEvent.InputTuple,
+    FactorySettingsUpdatedEvent.OutputTuple,
+    FactorySettingsUpdatedEvent.OutputObject
   >;
   getEvent(
     key: "GovernanceAddressMapped"
@@ -1840,6 +1958,17 @@ export interface VaultFactory extends BaseContract {
       AssetWhitelistedRemovedEvent.InputTuple,
       AssetWhitelistedRemovedEvent.OutputTuple,
       AssetWhitelistedRemovedEvent.OutputObject
+    >;
+
+    "FactorySettingsUpdated(uint256,uint256,uint256)": TypedContractEvent<
+      FactorySettingsUpdatedEvent.InputTuple,
+      FactorySettingsUpdatedEvent.OutputTuple,
+      FactorySettingsUpdatedEvent.OutputObject
+    >;
+    FactorySettingsUpdated: TypedContractEvent<
+      FactorySettingsUpdatedEvent.InputTuple,
+      FactorySettingsUpdatedEvent.OutputTuple,
+      FactorySettingsUpdatedEvent.OutputObject
     >;
 
     "GovernanceAddressMapped(bytes32,address)": TypedContractEvent<

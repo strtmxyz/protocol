@@ -559,6 +559,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address[]",
+        name: "_assets",
+        type: "address[]",
+      },
+    ],
+    name: "batchAddSupportedAssets",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "target",
         type: "address",
@@ -677,13 +690,6 @@ const _abi = [
         type: "uint256",
       },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "emergencyLiquidateAll",
-    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },

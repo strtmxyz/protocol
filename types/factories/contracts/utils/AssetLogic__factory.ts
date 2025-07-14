@@ -59,10 +59,48 @@ const _abi = [
     name: "AssetRemoved",
     type: "event",
   },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "vault",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address[]",
+        name: "assets",
+        type: "address[]",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalCount",
+        type: "uint256",
+      },
+    ],
+    name: "BatchAssetsAdded",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "MAX_BATCH_SIZE",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ] as const;
 
 const _bytecode =
-  "0x6080806040523460175760119081601d823930815050f35b600080fdfe600080fdfea164736f6c634300081b000a";
+  "0x60808060405234601757604c9081601d823930815050f35b600080fdfe6080806040526004361015601257600080fd5b60003560e01c63cfdbf25414602657600080fd5b6000366003190112603a5780601460209252f35b600080fdfea164736f6c634300081b000a";
 
 type AssetLogicConstructorParams =
   | [signer?: Signer]

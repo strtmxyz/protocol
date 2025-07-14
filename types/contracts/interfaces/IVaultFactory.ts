@@ -69,6 +69,7 @@ export interface IVaultFactoryInterface extends Interface {
       | "AdminAddressSet"
       | "AssetWhitelisted"
       | "AssetWhitelistedRemoved"
+      | "FactorySettingsUpdated"
       | "GovernanceAddressMapped"
       | "GovernanceAddressSet"
       | "SetAssetHandler"
@@ -363,6 +364,28 @@ export namespace AssetWhitelistedRemovedEvent {
   export type OutputTuple = [asset: string];
   export interface OutputObject {
     asset: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace FactorySettingsUpdatedEvent {
+  export type InputTuple = [
+    maxCapacityLimit: BigNumberish,
+    minCapacityLimit: BigNumberish,
+    creationFee: BigNumberish
+  ];
+  export type OutputTuple = [
+    maxCapacityLimit: bigint,
+    minCapacityLimit: bigint,
+    creationFee: bigint
+  ];
+  export interface OutputObject {
+    maxCapacityLimit: bigint;
+    minCapacityLimit: bigint;
+    creationFee: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -877,6 +900,13 @@ export interface IVaultFactory extends BaseContract {
     AssetWhitelistedRemovedEvent.OutputObject
   >;
   getEvent(
+    key: "FactorySettingsUpdated"
+  ): TypedContractEvent<
+    FactorySettingsUpdatedEvent.InputTuple,
+    FactorySettingsUpdatedEvent.OutputTuple,
+    FactorySettingsUpdatedEvent.OutputObject
+  >;
+  getEvent(
     key: "GovernanceAddressMapped"
   ): TypedContractEvent<
     GovernanceAddressMappedEvent.InputTuple,
@@ -979,6 +1009,17 @@ export interface IVaultFactory extends BaseContract {
       AssetWhitelistedRemovedEvent.InputTuple,
       AssetWhitelistedRemovedEvent.OutputTuple,
       AssetWhitelistedRemovedEvent.OutputObject
+    >;
+
+    "FactorySettingsUpdated(uint256,uint256,uint256)": TypedContractEvent<
+      FactorySettingsUpdatedEvent.InputTuple,
+      FactorySettingsUpdatedEvent.OutputTuple,
+      FactorySettingsUpdatedEvent.OutputObject
+    >;
+    FactorySettingsUpdated: TypedContractEvent<
+      FactorySettingsUpdatedEvent.InputTuple,
+      FactorySettingsUpdatedEvent.OutputTuple,
+      FactorySettingsUpdatedEvent.OutputObject
     >;
 
     "GovernanceAddressMapped(bytes32,address)": TypedContractEvent<

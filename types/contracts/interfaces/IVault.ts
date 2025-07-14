@@ -33,6 +33,7 @@ export interface IVaultInterface extends Interface {
       | "areAllPositionsLiquidated"
       | "asset"
       | "balanceOf"
+      | "batchAddSupportedAssets"
       | "callContract"
       | "canGoLive"
       | "convertToAssets"
@@ -40,7 +41,6 @@ export interface IVaultInterface extends Interface {
       | "currentEpoch"
       | "decimals"
       | "deposit"
-      | "emergencyLiquidateAll"
       | "epochStartTime"
       | "factory"
       | "fundraisingDuration"
@@ -135,6 +135,10 @@ export interface IVaultInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "batchAddSupportedAssets",
+    values: [AddressLike[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "callContract",
     values: [AddressLike, BigNumberish, BytesLike]
   ): string;
@@ -155,10 +159,6 @@ export interface IVaultInterface extends Interface {
   encodeFunctionData(
     functionFragment: "deposit",
     values: [BigNumberish, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "emergencyLiquidateAll",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "epochStartTime",
@@ -353,6 +353,10 @@ export interface IVaultInterface extends Interface {
   decodeFunctionResult(functionFragment: "asset", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "batchAddSupportedAssets",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "callContract",
     data: BytesLike
   ): Result;
@@ -371,10 +375,6 @@ export interface IVaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "emergencyLiquidateAll",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "epochStartTime",
     data: BytesLike
@@ -926,6 +926,12 @@ export interface IVault extends BaseContract {
 
   balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
 
+  batchAddSupportedAssets: TypedContractMethod<
+    [_assets: AddressLike[]],
+    [void],
+    "nonpayable"
+  >;
+
   callContract: TypedContractMethod<
     [target: AddressLike, value: BigNumberish, data: BytesLike],
     [void],
@@ -955,8 +961,6 @@ export interface IVault extends BaseContract {
     [bigint],
     "nonpayable"
   >;
-
-  emergencyLiquidateAll: TypedContractMethod<[], [void], "nonpayable">;
 
   epochStartTime: TypedContractMethod<[], [bigint], "view">;
 
@@ -1179,6 +1183,9 @@ export interface IVault extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
   getFunction(
+    nameOrSignature: "batchAddSupportedAssets"
+  ): TypedContractMethod<[_assets: AddressLike[]], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "callContract"
   ): TypedContractMethod<
     [target: AddressLike, value: BigNumberish, data: BytesLike],
@@ -1207,9 +1214,6 @@ export interface IVault extends BaseContract {
     [bigint],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "emergencyLiquidateAll"
-  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "epochStartTime"
   ): TypedContractMethod<[], [bigint], "view">;

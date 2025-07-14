@@ -15,12 +15,34 @@
     "type": "error"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "inputNum",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "arrayLength",
+        "type": "uint256"
+      }
+    ],
     "name": "InputIsNotArray",
     "type": "error"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "arrayIndex",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "arrayLength",
+        "type": "uint256"
+      }
+    ],
     "name": "InvalidArrayPosition",
     "type": "error"
   },
@@ -35,7 +57,18 @@
     "type": "error"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "offset",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maximum",
+        "type": "uint256"
+      }
+    ],
     "name": "InvalidOffset",
     "type": "error"
   },
@@ -55,7 +88,18 @@
     "type": "error"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "dataLength",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "requiredLength",
+        "type": "uint256"
+      }
+    ],
     "name": "ReadingBytesOutOfBounds",
     "type": "error"
   },

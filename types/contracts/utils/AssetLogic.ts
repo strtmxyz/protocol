@@ -4,7 +4,9 @@
 import type {
   BaseContract,
   BigNumberish,
+  BytesLike,
   FunctionFragment,
+  Result,
   Interface,
   EventFragment,
   AddressLike,
@@ -18,12 +20,25 @@ import type {
   TypedEventLog,
   TypedLogDescription,
   TypedListener,
+  TypedContractMethod,
 } from "../../common";
 
 export interface AssetLogicInterface extends Interface {
+  getFunction(nameOrSignature: "MAX_BATCH_SIZE"): FunctionFragment;
+
   getEvent(
-    nameOrSignatureOrTopic: "AssetAdded" | "AssetRemoved"
+    nameOrSignatureOrTopic: "AssetAdded" | "AssetRemoved" | "BatchAssetsAdded"
   ): EventFragment;
+
+  encodeFunctionData(
+    functionFragment: "MAX_BATCH_SIZE",
+    values?: undefined
+  ): string;
+
+  decodeFunctionResult(
+    functionFragment: "MAX_BATCH_SIZE",
+    data: BytesLike
+  ): Result;
 }
 
 export namespace AssetAddedEvent {
@@ -50,6 +65,28 @@ export namespace AssetRemovedEvent {
   export interface OutputObject {
     vault: string;
     asset: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace BatchAssetsAddedEvent {
+  export type InputTuple = [
+    vault: AddressLike,
+    assets: AddressLike[],
+    totalCount: BigNumberish
+  ];
+  export type OutputTuple = [
+    vault: string,
+    assets: string[],
+    totalCount: bigint
+  ];
+  export interface OutputObject {
+    vault: string;
+    assets: string[];
+    totalCount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -100,9 +137,15 @@ export interface AssetLogic extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  MAX_BATCH_SIZE: TypedContractMethod<[], [bigint], "view">;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
+
+  getFunction(
+    nameOrSignature: "MAX_BATCH_SIZE"
+  ): TypedContractMethod<[], [bigint], "view">;
 
   getEvent(
     key: "AssetAdded"
@@ -117,6 +160,13 @@ export interface AssetLogic extends BaseContract {
     AssetRemovedEvent.InputTuple,
     AssetRemovedEvent.OutputTuple,
     AssetRemovedEvent.OutputObject
+  >;
+  getEvent(
+    key: "BatchAssetsAdded"
+  ): TypedContractEvent<
+    BatchAssetsAddedEvent.InputTuple,
+    BatchAssetsAddedEvent.OutputTuple,
+    BatchAssetsAddedEvent.OutputObject
   >;
 
   filters: {
@@ -140,6 +190,17 @@ export interface AssetLogic extends BaseContract {
       AssetRemovedEvent.InputTuple,
       AssetRemovedEvent.OutputTuple,
       AssetRemovedEvent.OutputObject
+    >;
+
+    "BatchAssetsAdded(address,address[],uint256)": TypedContractEvent<
+      BatchAssetsAddedEvent.InputTuple,
+      BatchAssetsAddedEvent.OutputTuple,
+      BatchAssetsAddedEvent.OutputObject
+    >;
+    BatchAssetsAdded: TypedContractEvent<
+      BatchAssetsAddedEvent.InputTuple,
+      BatchAssetsAddedEvent.OutputTuple,
+      BatchAssetsAddedEvent.OutputObject
     >;
   };
 }

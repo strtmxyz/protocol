@@ -45,6 +45,7 @@ export interface VaultInterface extends Interface {
       | "assetPosition"
       | "authorizedStrategies"
       | "balanceOf"
+      | "batchAddSupportedAssets"
       | "callContract"
       | "canGoLive"
       | "convertAssetValueToUnderlying"
@@ -55,7 +56,6 @@ export interface VaultInterface extends Interface {
       | "decimals"
       | "decodeRevertReason"
       | "deposit"
-      | "emergencyLiquidateAll"
       | "emergencyOracleMode"
       | "epochEndAssets"
       | "epochStartAssets"
@@ -140,6 +140,7 @@ export interface VaultInterface extends Interface {
       | "AssetAdded"
       | "AssetRemoved"
       | "AutoRealizationTriggered"
+      | "BatchAssetsAdded"
       | "ContractCalled"
       | "Deposit"
       | "Deposited"
@@ -233,6 +234,10 @@ export interface VaultInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "batchAddSupportedAssets",
+    values: [AddressLike[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "callContract",
     values: [AddressLike, BigNumberish, BytesLike]
   ): string;
@@ -265,10 +270,6 @@ export interface VaultInterface extends Interface {
   encodeFunctionData(
     functionFragment: "deposit",
     values: [BigNumberish, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "emergencyLiquidateAll",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "emergencyOracleMode",
@@ -614,6 +615,10 @@ export interface VaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "batchAddSupportedAssets",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "callContract",
     data: BytesLike
   ): Result;
@@ -644,10 +649,6 @@ export interface VaultInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "emergencyLiquidateAll",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "emergencyOracleMode",
     data: BytesLike
@@ -973,6 +974,28 @@ export namespace AutoRealizationTriggeredEvent {
     preRealizationValue: bigint;
     totalFeesExtracted: bigint;
     blockNumber: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace BatchAssetsAddedEvent {
+  export type InputTuple = [
+    vault: AddressLike,
+    assets: AddressLike[],
+    totalCount: BigNumberish
+  ];
+  export type OutputTuple = [
+    vault: string,
+    assets: string[],
+    totalCount: bigint
+  ];
+  export interface OutputObject {
+    vault: string;
+    assets: string[];
+    totalCount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -1448,6 +1471,12 @@ export interface Vault extends BaseContract {
 
   balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
 
+  batchAddSupportedAssets: TypedContractMethod<
+    [_assets: AddressLike[]],
+    [void],
+    "nonpayable"
+  >;
+
   callContract: TypedContractMethod<
     [target: AddressLike, value: BigNumberish, data: BytesLike],
     [void],
@@ -1503,8 +1532,6 @@ export interface Vault extends BaseContract {
     [bigint],
     "nonpayable"
   >;
-
-  emergencyLiquidateAll: TypedContractMethod<[], [void], "nonpayable">;
 
   emergencyOracleMode: TypedContractMethod<[], [boolean], "view">;
 
@@ -1885,6 +1912,9 @@ export interface Vault extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
   getFunction(
+    nameOrSignature: "batchAddSupportedAssets"
+  ): TypedContractMethod<[_assets: AddressLike[]], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "callContract"
   ): TypedContractMethod<
     [target: AddressLike, value: BigNumberish, data: BytesLike],
@@ -1938,9 +1968,6 @@ export interface Vault extends BaseContract {
     [bigint],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "emergencyLiquidateAll"
-  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "emergencyOracleMode"
   ): TypedContractMethod<[], [boolean], "view">;
@@ -2322,6 +2349,13 @@ export interface Vault extends BaseContract {
     AutoRealizationTriggeredEvent.OutputObject
   >;
   getEvent(
+    key: "BatchAssetsAdded"
+  ): TypedContractEvent<
+    BatchAssetsAddedEvent.InputTuple,
+    BatchAssetsAddedEvent.OutputTuple,
+    BatchAssetsAddedEvent.OutputObject
+  >;
+  getEvent(
     key: "ContractCalled"
   ): TypedContractEvent<
     ContractCalledEvent.InputTuple,
@@ -2495,6 +2529,17 @@ export interface Vault extends BaseContract {
       AutoRealizationTriggeredEvent.InputTuple,
       AutoRealizationTriggeredEvent.OutputTuple,
       AutoRealizationTriggeredEvent.OutputObject
+    >;
+
+    "BatchAssetsAdded(address,address[],uint256)": TypedContractEvent<
+      BatchAssetsAddedEvent.InputTuple,
+      BatchAssetsAddedEvent.OutputTuple,
+      BatchAssetsAddedEvent.OutputObject
+    >;
+    BatchAssetsAdded: TypedContractEvent<
+      BatchAssetsAddedEvent.InputTuple,
+      BatchAssetsAddedEvent.OutputTuple,
+      BatchAssetsAddedEvent.OutputObject
     >;
 
     "ContractCalled(address,address,bytes,uint256)": TypedContractEvent<

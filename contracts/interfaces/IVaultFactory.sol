@@ -72,6 +72,12 @@ interface IVaultFactory {
         address indexed asset
     );
 
+    event FactorySettingsUpdated(
+        uint256 maxCapacityLimit,
+        uint256 minCapacityLimit, 
+        uint256 creationFee
+    );
+
     /*//////////////////////////////////////////////////////////////
                             VIEW FUNCTIONS
     //////////////////////////////////////////////////////////////*/

@@ -19,7 +19,6 @@
     "deploy:assethandler": "hardhat run deployment/oracles/deploy.ts --network monadTestnet",
     "deploy:vaultfactory": "hardhat run deployment/vault/deploy.ts --network monadTestnet",
     "deploy:implementation": "hardhat run deployment/vault/deployImplementation.ts --network monadTestnet",
-    "deploy:all": "hardhat run deployment/deployAll.ts --network monadTestnet",
     
     "deploy:guard:ERC20Guard": "hardhat run deployment/guards/ERC20Guard.ts --network monadTestnet",
     "deploy:guard:ETHGuard": "hardhat run deployment/guards/ETHGuard.ts --network monadTestnet",
@@ -29,6 +28,9 @@
     "config:assets": "hardhat run deployment/oracles/setting.ts --network monadTestnet",
     "config:vault": "hardhat run deployment/vault/setting.ts --network monadTestnet",
     "config:governance": "hardhat run deployment/governance/setting.ts --network monadTestnet",
+    
+    "query:ambient": "hardhat run scripts/queryAmbientData.ts --network monadTestnet",
+    "query:ambient:localhost": "hardhat run scripts/queryAmbientData.ts --network localhost",
     
     "deploy:localhost": "npm run deploy:all -- --network localhost",
     "deploy:sonic-testnet": "npm run deploy:all -- --network sonicBlazeTestnet",

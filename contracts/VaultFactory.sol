@@ -167,6 +167,45 @@ contract VaultFactory is
     }
 
     /*//////////////////////////////////////////////////////////////
+                            CAPACITY CALCULATION HELPERS
+    //////////////////////////////////////////////////////////////*/
+    
+    /// @notice Adjust capacity limit based on underlying asset decimals
+    /// @param baseLimit The base limit (stored with 18 decimals, e.g., 10M * 1e18)
+    /// @param assetDecimals Decimals of the underlying asset
+    /// @return adjustedLimit Capacity limit adjusted for asset decimals
+    function _getAdjustedCapacityLimit(uint256 baseLimit, uint8 assetDecimals) internal pure returns (uint256 adjustedLimit) {
+        // Base limit represents: amount * 1e18 (e.g., 10M * 1e18)
+        // We want: amount * 10^assetDecimals (e.g., 10M * 1e6 for USDC)
+        // Formula: (baseLimit / 1e18) * 10^assetDecimals = baseLimit * 10^assetDecimals / 1e18
+        
+        if (assetDecimals <= 18) {
+            // For smaller decimals: divide by the difference
+            // Example: 10M * 1e18 -> 10M * 1e6 = (10M * 1e18) / 1e12
+            adjustedLimit = baseLimit / (10 ** (18 - assetDecimals));
+        } else {
+            // For larger decimals: multiply by the difference (should not happen due to validation)
+            adjustedLimit = baseLimit * (10 ** (assetDecimals - 18));
+        }
+    }
+    
+    /// @notice Get adjusted max capacity limit for a specific underlying asset
+    /// @param underlyingAsset The underlying asset address
+    /// @return adjustedLimit Max capacity limit adjusted for asset decimals
+    function getAdjustedMaxCapacityLimit(address underlyingAsset) external view returns (uint256 adjustedLimit) {
+        uint8 decimals = IERC20Metadata(underlyingAsset).decimals();
+        return _getAdjustedCapacityLimit(maxCapacityLimit, decimals);
+    }
+    
+    /// @notice Get adjusted min capacity limit for a specific underlying asset
+    /// @param underlyingAsset The underlying asset address
+    /// @return adjustedLimit Min capacity limit adjusted for asset decimals
+    function getAdjustedMinCapacityLimit(address underlyingAsset) external view returns (uint256 adjustedLimit) {
+        uint8 decimals = IERC20Metadata(underlyingAsset).decimals();
+        return _getAdjustedCapacityLimit(minCapacityLimit, decimals);
+    }
+
+    /*//////////////////////////////////////////////////////////////
                             VAULT CREATION
     //////////////////////////////////////////////////////////////*/
     
@@ -192,16 +231,20 @@ contract VaultFactory is
         if (msg.value < creationFee) revert InsufficientCreationFee(msg.value, creationFee);
         if (!underlyingAssetAllowed[_underlyingAsset]) revert AssetNotWhitelisted(_underlyingAsset);
         if (_manager == address(0)) revert InvalidManager(_manager);
-        if (_maxCapacity < minCapacityLimit) revert BelowMinCapacity(_maxCapacity, minCapacityLimit);
-        if (_maxCapacity > maxCapacityLimit) revert AboveMaxCapacity(_maxCapacity, maxCapacityLimit);
+        // Validate asset decimals first
+        uint8 decimals = IERC20Metadata(_underlyingAsset).decimals();
+        if (decimals > 18) revert TooManyDecimals(decimals, 18);
+        
+        // Calculate capacity limits based on underlying asset decimals
+        uint256 adjustedMinLimit = _getAdjustedCapacityLimit(minCapacityLimit, decimals);
+        uint256 adjustedMaxLimit = _getAdjustedCapacityLimit(maxCapacityLimit, decimals);
+        
+        if (_maxCapacity < adjustedMinLimit) revert BelowMinCapacity(_maxCapacity, adjustedMinLimit);
+        if (_maxCapacity > adjustedMaxLimit) revert AboveMaxCapacity(_maxCapacity, adjustedMaxLimit);
         
         // Validate fees using new structure
         if (_managerFee > 200) revert ManagementFeeExceedsMax(_managerFee, 200);
         if (_withdrawalFee > 100) revert WithdrawalFeeExceedsMax(_withdrawalFee, 100);
-        
-        // Validate asset decimals
-        uint8 decimals = IERC20Metadata(_underlyingAsset).decimals();
-        if (decimals > 18) revert TooManyDecimals(decimals, 18);
         
         // Transfer creation fee to treasury
         if (msg.value > 0) {
@@ -458,8 +501,8 @@ contract VaultFactory is
     }
     
     /// @notice Set factory settings
-    /// @param _maxCapacityLimit Maximum capacity limit
-    /// @param _minCapacityLimit Minimum capacity limit
+    /// @param _maxCapacityLimit Maximum capacity limit (in 18 decimals, e.g., 10M = 10000000 * 1e18)
+    /// @param _minCapacityLimit Minimum capacity limit (in 18 decimals, e.g., 1K = 1000 * 1e18)
     /// @param _creationFee Creation fee in native token
     function setFactorySettings(
         uint256 _maxCapacityLimit,
@@ -471,6 +514,42 @@ contract VaultFactory is
         maxCapacityLimit = _maxCapacityLimit;
         minCapacityLimit = _minCapacityLimit;
         creationFee = _creationFee;
+        
+        emit FactorySettingsUpdated(_maxCapacityLimit, _minCapacityLimit, _creationFee);
+    }
+    
+    /// @notice Set capacity limits using asset-specific values (for easy configuration)
+    /// @param _maxCapacityAmount Maximum capacity amount (in asset units, e.g., 10000000 for 10M)
+    /// @param _minCapacityAmount Minimum capacity amount (in asset units, e.g., 1000 for 1K)
+    /// @param _creationFee Creation fee in native token
+    /// @dev This function converts asset amounts to 18-decimal format for internal storage
+    function setFactorySettingsInAssetUnits(
+        uint256 _maxCapacityAmount,
+        uint256 _minCapacityAmount,
+        uint256 _creationFee
+    ) external onlyOwner {
+        // Convert to 18-decimal format for internal storage
+        // Example: 10M units -> 10M * 1e18
+        uint256 maxCapacityLimit18 = _maxCapacityAmount * 1e18;
+        uint256 minCapacityLimit18 = _minCapacityAmount * 1e18;
+        
+        if (maxCapacityLimit18 <= minCapacityLimit18) revert InvalidLimits(minCapacityLimit18, maxCapacityLimit18);
+        
+        maxCapacityLimit = maxCapacityLimit18;
+        minCapacityLimit = minCapacityLimit18;
+        creationFee = _creationFee;
+        
+        emit FactorySettingsUpdated(maxCapacityLimit18, minCapacityLimit18, _creationFee);
+    }
+    
+    /// @notice Get adjusted capacity limits for a specific asset
+    /// @param underlyingAsset The underlying asset address
+    /// @return adjustedMaxLimit Max capacity limit adjusted for asset decimals
+    /// @return adjustedMinLimit Min capacity limit adjusted for asset decimals
+    function getAdjustedCapacityLimits(address underlyingAsset) external view returns (uint256 adjustedMaxLimit, uint256 adjustedMinLimit) {
+        uint8 decimals = IERC20Metadata(underlyingAsset).decimals();
+        adjustedMaxLimit = _getAdjustedCapacityLimit(maxCapacityLimit, decimals);
+        adjustedMinLimit = _getAdjustedCapacityLimit(minCapacityLimit, decimals);
     }
     
     /// @notice Emergency pause factory

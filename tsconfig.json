@@ -19,8 +19,9 @@
     "contracts/**/*",
     "./scripts/**/*",
     "./test/**/*",
-    "./hardhat.config.ts"
-, "deployment", "deployment"  ],
+    "./hardhat.config.ts",
+    "deployment"
+  ],
   "exclude": [
     "node_modules",
     "dist",

@@ -137,8 +137,7 @@ interface IVault is IERC4626 {
     /// @notice Advance to next epoch (must return to underlying asset first)
     function advanceEpoch() external;
     
-    /// @notice Force liquidation of all positions (emergency only)
-    function emergencyLiquidateAll() external;
+    // Emergency liquidation function removed for security reasons
 
     /*//////////////////////////////////////////////////////////////
                             ASSET MANAGEMENT
@@ -147,7 +146,7 @@ interface IVault is IERC4626 {
     /// @notice Add a supported asset
     /// @param _asset Asset to add
     function addSupportedAsset(address _asset) external;
-
+    
     /// @notice Add multiple supported assets in a single transaction
     /// @param _assets Array of assets to add
     function batchAddSupportedAssets(address[] calldata _assets) external;

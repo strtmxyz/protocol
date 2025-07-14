@@ -34,18 +34,18 @@ export const getGovernanceConfig = (networkName: string): GovernanceConfig => {
                 assetGuards: [
                     {
                         assetType: ERC20AssetType,
-                        guardAddress: '0xaEE58BDC21EbA74D79515301937b16d4B7f814A2'
+                        guardAddress: '0x505668d7cAEadF0EE969CF3117edC7d5360d0e75'
                     },
                     {
                         assetType: NativeTokenType,
-                        guardAddress: '0x38d79DD9D4F11d98e855Bd68bd2dE404e7B4778f'
+                        guardAddress: '0x38b27Ad8a21e33fc93f4c37129CD8fc805b245F9'
                     },
 
                 ],
                 contractGuards: [
                     {
                         externalAddress: '0x88B96aF200c8a9c35442C8AC6cd3D22695AaE4F0',
-                        guardAddress: '0x300710EEAF921567AD3Ed7f94b3EE54c7b8D5632' //AmbientGuard
+                        guardAddress: '0x4A70CbCe9c5c4d6E7c9236aa004F6ba23a805584' //AmbientGuard
                     },
                 ],
             }
