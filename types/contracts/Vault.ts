@@ -54,7 +54,6 @@ export interface VaultInterface extends Interface {
       | "currentEpoch"
       | "currentRealization"
       | "decimals"
-      | "decodeRevertReason"
       | "deposit"
       | "emergencyOracleMode"
       | "epochEndAssets"
@@ -69,6 +68,7 @@ export interface VaultInterface extends Interface {
       | "getEpochInfo"
       | "getSupportedAssets"
       | "getSupportedAssetsCount"
+      | "getVaultAssetBreakdown"
       | "getVaultInfo"
       | "goLive"
       | "initialize"
@@ -264,10 +264,6 @@ export interface VaultInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "decodeRevertReason",
-    values: [BytesLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "deposit",
     values: [BigNumberish, AddressLike]
   ): string;
@@ -318,6 +314,10 @@ export interface VaultInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getSupportedAssetsCount",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getVaultAssetBreakdown",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -644,10 +644,6 @@ export interface VaultInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "decodeRevertReason",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "emergencyOracleMode",
@@ -696,6 +692,10 @@ export interface VaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getSupportedAssetsCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getVaultAssetBreakdown",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -1521,12 +1521,6 @@ export interface Vault extends BaseContract {
 
   decimals: TypedContractMethod<[], [bigint], "view">;
 
-  decodeRevertReason: TypedContractMethod<
-    [returnData: BytesLike],
-    [string],
-    "view"
-  >;
-
   deposit: TypedContractMethod<
     [assets: BigNumberish, receiver: AddressLike],
     [bigint],
@@ -1585,6 +1579,18 @@ export interface Vault extends BaseContract {
   getSupportedAssets: TypedContractMethod<[], [string[]], "view">;
 
   getSupportedAssetsCount: TypedContractMethod<[], [bigint], "view">;
+
+  getVaultAssetBreakdown: TypedContractMethod<
+    [],
+    [
+      [string[], bigint[], bigint[]] & {
+        assetAddresses: string[];
+        assetBalances: bigint[];
+        assetValues: bigint[];
+      }
+    ],
+    "view"
+  >;
 
   getVaultInfo: TypedContractMethod<
     [],
@@ -1959,9 +1965,6 @@ export interface Vault extends BaseContract {
     nameOrSignature: "decimals"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "decodeRevertReason"
-  ): TypedContractMethod<[returnData: BytesLike], [string], "view">;
-  getFunction(
     nameOrSignature: "deposit"
   ): TypedContractMethod<
     [assets: BigNumberish, receiver: AddressLike],
@@ -2034,6 +2037,19 @@ export interface Vault extends BaseContract {
   getFunction(
     nameOrSignature: "getSupportedAssetsCount"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getVaultAssetBreakdown"
+  ): TypedContractMethod<
+    [],
+    [
+      [string[], bigint[], bigint[]] & {
+        assetAddresses: string[];
+        assetBalances: bigint[];
+        assetValues: bigint[];
+      }
+    ],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "getVaultInfo"
   ): TypedContractMethod<

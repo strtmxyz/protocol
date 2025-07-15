@@ -515,66 +515,6 @@ contract Vault is
     }
 
     /*//////////////////////////////////////////////////////////////
-                        ERROR HANDLING HELPERS
-    //////////////////////////////////////////////////////////////*/
-
-
-
-    /// @notice Safe wrapper for guard calls with better error context
-    /// @param guard Guard address
-    /// @param target Target contract
-    /// @param data Transaction data
-    /// @param value ETH value
-    /// @return txType Transaction type returned by guard
-    function _callGuardWithContext(address guard, address target, bytes calldata data, uint256 value) internal returns (uint16 txType) {
-        try IGuard(guard).txGuard(address(this), target, data, value) returns (uint16 returnedTxType) {
-            return returnedTxType;
-        } catch Error(string memory reason) {
-            revert(string(abi.encodePacked("Guard validation failed: ", reason)));
-        } catch (bytes memory) {
-            // Handle custom errors or provide context
-            revert TransactionRejectedByGuard(guard, target);
-        }
-    }
-
-    /// @notice Safe wrapper for external contract calls with better error context
-    /// @param target Target contract
-    /// @param data Call data
-    /// @param value ETH value
-    /// @return success Whether call succeeded
-    /// @return returnData Return data from call
-    function _callExternalWithContext(address target, bytes calldata data, uint256 value) internal returns (bool success, bytes memory returnData) {
-        (success, returnData) = target.call{value: value}(data);
-        if (!success) {
-            // Try to decode revert reason
-            if (returnData.length > 0) {
-                // Try to decode string revert reason
-                try this.decodeRevertReason(returnData) returns (string memory reason) {
-                    revert(string(abi.encodePacked("External call failed: ", reason)));
-                } catch {
-                    // If decode fails, use generic error with context
-                    revert ContractCallFailed(target, data);
-                }
-            } else {
-                // No return data, use generic error
-                revert ContractCallFailed(target, data);
-            }
-        }
-    }
-
-    /// @notice Decode revert reason from return data
-    /// @param returnData Return data from failed call
-    /// @return reason Decoded revert reason
-    function decodeRevertReason(bytes calldata returnData) external pure returns (string memory reason) {
-        // Check if it's a string revert (Error(string))
-        if (returnData.length >= 68 && bytes4(returnData[:4]) == 0x08c379a0) {
-            // Decode the string from the Error(string) selector
-            return abi.decode(returnData[4:], (string));
-        }
-        return "Unknown error";
-    }
-
-    /*//////////////////////////////////////////////////////////////
                             ERC4626 OVERRIDES
     //////////////////////////////////////////////////////////////*/
     
@@ -886,14 +826,15 @@ contract Vault is
         // Execute guard validation
         uint16 txType;
         if (value > 0) {
-            txType = _callGuardWithContext(guard, target, data, value);
+            txType = IGuard(guard).txGuard(address(this), target, data, value);
         } else {
-            txType = _callGuardWithContext(guard, target, data, 0);
+            txType = IGuard(guard).txGuard(address(this), target, data);
         }
         if (txType == 0) revert TransactionRejectedByGuard(guard, target);
         
         // Execute the call
-        (, bytes memory resultData) = _callExternalWithContext(target, data, value);
+        (bool success, bytes memory resultData) = target.call{value: value}(data);
+        if (!success) revert ContractCallFailed(target, data);
         
         // Check for post-transaction guard callback
         (bool hasFunction, bytes memory returnData) = guard.call(

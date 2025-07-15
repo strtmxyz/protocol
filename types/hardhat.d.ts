@@ -150,10 +150,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Governance__factory>;
     getContractFactory(
-      name: "AmbientAssetGuard",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.AmbientAssetGuard__factory>;
-    getContractFactory(
       name: "ERC20Guard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Guard__factory>;
@@ -258,6 +254,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IWETH__factory>;
     getContractFactory(
+      name: "AmbientGuardFix",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AmbientGuardFix__factory>;
+    getContractFactory(
+      name: "MockAmbientDex",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MockAmbientDex__factory>;
+    getContractFactory(
       name: "IERC20Metadata",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC20Metadata__factory>;
@@ -273,6 +277,10 @@ declare module "hardhat/types/runtime" {
       name: "MockOracle",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MockOracle__factory>;
+    getContractFactory(
+      name: "MockVault",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MockVault__factory>;
     getContractFactory(
       name: "AssetHandler",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -473,11 +481,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Governance>;
     getContractAt(
-      name: "AmbientAssetGuard",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.AmbientAssetGuard>;
-    getContractAt(
       name: "ERC20Guard",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -608,6 +611,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IWETH>;
     getContractAt(
+      name: "AmbientGuardFix",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AmbientGuardFix>;
+    getContractAt(
+      name: "MockAmbientDex",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MockAmbientDex>;
+    getContractAt(
       name: "IERC20Metadata",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -627,6 +640,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.MockOracle>;
+    getContractAt(
+      name: "MockVault",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MockVault>;
     getContractAt(
       name: "AssetHandler",
       address: string | ethers.Addressable,
@@ -800,10 +818,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Governance>;
     deployContract(
-      name: "AmbientAssetGuard",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AmbientAssetGuard>;
-    deployContract(
       name: "ERC20Guard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Guard>;
@@ -908,6 +922,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IWETH>;
     deployContract(
+      name: "AmbientGuardFix",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AmbientGuardFix>;
+    deployContract(
+      name: "MockAmbientDex",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockAmbientDex>;
+    deployContract(
       name: "IERC20Metadata",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC20Metadata>;
@@ -923,6 +945,10 @@ declare module "hardhat/types/runtime" {
       name: "MockOracle",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MockOracle>;
+    deployContract(
+      name: "MockVault",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockVault>;
     deployContract(
       name: "AssetHandler",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1123,11 +1149,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Governance>;
     deployContract(
-      name: "AmbientAssetGuard",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AmbientAssetGuard>;
-    deployContract(
       name: "ERC20Guard",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1258,6 +1279,16 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IWETH>;
     deployContract(
+      name: "AmbientGuardFix",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AmbientGuardFix>;
+    deployContract(
+      name: "MockAmbientDex",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockAmbientDex>;
+    deployContract(
       name: "IERC20Metadata",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1277,6 +1308,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MockOracle>;
+    deployContract(
+      name: "MockVault",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockVault>;
     deployContract(
       name: "AssetHandler",
       args: any[],

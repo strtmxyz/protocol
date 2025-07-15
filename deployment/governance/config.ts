@@ -45,7 +45,7 @@ export const getGovernanceConfig = (networkName: string): GovernanceConfig => {
                 contractGuards: [
                     {
                         externalAddress: '0x88B96aF200c8a9c35442C8AC6cd3D22695AaE4F0',
-                        guardAddress: '0x4A70CbCe9c5c4d6E7c9236aa004F6ba23a805584' //AmbientGuard
+                        guardAddress: '0x0fC052f97029Ce4e744edc31B3e9353F88BD9FC7' //AmbientGuard
                     },
                 ],
             }

@@ -2,6 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as stEthGuardSol from "./StETHGuard.sol";
-export { AmbientAssetGuard__factory } from "./AmbientAssetGuard__factory";
 export { ERC20Guard__factory } from "./ERC20Guard__factory";
 export { ETHGuard__factory } from "./ETHGuard__factory";

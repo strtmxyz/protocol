@@ -2,5 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as mockAssetHandlerSol from "./MockAssetHandler.sol";
+export { AmbientGuardFix__factory } from "./AmbientGuardFix__factory";
+export { MockAmbientDex__factory } from "./MockAmbientDex__factory";
 export { MockERC20__factory } from "./MockERC20__factory";
 export { MockOracle__factory } from "./MockOracle__factory";
+export { MockVault__factory } from "./MockVault__factory";

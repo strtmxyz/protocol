@@ -3,5 +3,8 @@
 /* eslint-disable */
 import type * as mockAssetHandlerSol from "./MockAssetHandler.sol";
 export type { mockAssetHandlerSol };
+export type { AmbientGuardFix } from "./AmbientGuardFix";
+export type { MockAmbientDex } from "./MockAmbientDex";
 export type { MockERC20 } from "./MockERC20";
 export type { MockOracle } from "./MockOracle";
+export type { MockVault } from "./MockVault";

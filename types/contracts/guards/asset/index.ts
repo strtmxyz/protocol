@@ -3,6 +3,5 @@
 /* eslint-disable */
 import type * as stEthGuardSol from "./StETHGuard.sol";
 export type { stEthGuardSol };
-export type { AmbientAssetGuard } from "./AmbientAssetGuard";
 export type { ERC20Guard } from "./ERC20Guard";
 export type { ETHGuard } from "./ETHGuard";

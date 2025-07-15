@@ -16,11 +16,6 @@
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "InsufficientNativeTokenAmount",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint8",
@@ -34,11 +29,6 @@
       }
     ],
     "name": "InvalidArrayPosition",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidInitialization",
     "type": "error"
   },
   {
@@ -58,16 +48,6 @@
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "NotInitializing",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "PayableAmountMustBeGreaterThanZero",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -81,21 +61,6 @@
       }
     ],
     "name": "ReadingBytesOutOfBounds",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "UnsupportedCallpath",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "UnsupportedDestinationAsset",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "UnsupportedSourceAsset",
     "type": "error"
   },
   {
@@ -127,6 +92,31 @@
       }
     ],
     "name": "AddLiquidity",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "DebugCall",
     "type": "event"
   },
   {
@@ -201,19 +191,6 @@
       }
     ],
     "name": "ExchangeTo",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint64",
-        "name": "version",
-        "type": "uint64"
-      }
-    ],
-    "name": "Initialized",
     "type": "event"
   },
   {
@@ -321,58 +298,6 @@
     ],
     "name": "VertexSlowMode",
     "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "FLAT_LP_PROXY_IDX",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "KNOCKOUT_LP_V2_PROXY_IDX",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "NATIVE_TOKEN_ADDRESS",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "SWAP_PROXY_IDX",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "inputs": [
@@ -563,13 +488,6 @@
   },
   {
     "inputs": [],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "platformName",
     "outputs": [
       {
@@ -638,17 +556,17 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_vault",
+        "name": "vault",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_to",
+        "name": "to",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_data",
+        "name": "data",
         "type": "bytes"
       }
     ],
@@ -656,7 +574,7 @@
     "outputs": [
       {
         "internalType": "uint16",
-        "name": "txType",
+        "name": "",
         "type": "uint16"
       }
     ],
@@ -667,22 +585,22 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_vault",
+        "name": "vault",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_to",
+        "name": "to",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_data",
+        "name": "data",
         "type": "bytes"
       },
       {
         "internalType": "uint256",
-        "name": "_nativeTokenAmount",
+        "name": "value",
         "type": "uint256"
       }
     ],
@@ -690,7 +608,7 @@
     "outputs": [
       {
         "internalType": "uint16",
-        "name": "txType",
+        "name": "",
         "type": "uint16"
       }
     ],

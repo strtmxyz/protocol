@@ -20,11 +20,18 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:8545",
       timeout: 600000,
       allowUnlimitedContractSize: true,
-      accounts: process.env.OWNER_PRIVATE_KEY ? [process.env.OWNER_PRIVATE_KEY] : [],
+      // Dùng tài khoản mặc định của hardhat node thay vì tài khoản từ env
     },
     hardhat: {
       allowUnlimitedContractSize: true,
       chainId: 31337,
+      accounts: {
+        mnemonic: "test test test test test test test test test test test junk",
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        accountsBalance: "10000000000000000000000" // 10000 ETH
+      },
     },
     arbitrumSepolia : {
       url: 'https://sepolia-rollup.arbitrum.io/rpc',
@@ -127,7 +134,6 @@ const config: HardhatUserConfig = {
       "ERC20Guard",
       "ETHGuard",
       "AmbientGuard",
-      "KyberswapGuard",
       "Governance",
       "VaultFactory",
       "Vault",

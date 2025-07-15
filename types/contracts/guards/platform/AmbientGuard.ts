@@ -26,10 +26,6 @@ import type {
 export interface AmbientGuardInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "FLAT_LP_PROXY_IDX"
-      | "KNOCKOUT_LP_V2_PROXY_IDX"
-      | "NATIVE_TOKEN_ADDRESS"
-      | "NATIVE_TOKEN_ID"
       | "SWAP_PROXY_IDX"
       | "convert32toAddress"
       | "getArrayIndex"
@@ -59,22 +55,6 @@ export interface AmbientGuardInterface extends Interface {
       | "VertexSlowMode"
   ): EventFragment;
 
-  encodeFunctionData(
-    functionFragment: "FLAT_LP_PROXY_IDX",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "KNOCKOUT_LP_V2_PROXY_IDX",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "NATIVE_TOKEN_ADDRESS",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "NATIVE_TOKEN_ID",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "SWAP_PROXY_IDX",
     values?: undefined
@@ -136,22 +116,6 @@ export interface AmbientGuardInterface extends Interface {
     values: [AddressLike, AddressLike, BytesLike, BigNumberish]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "FLAT_LP_PROXY_IDX",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "KNOCKOUT_LP_V2_PROXY_IDX",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "NATIVE_TOKEN_ADDRESS",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "NATIVE_TOKEN_ID",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "SWAP_PROXY_IDX",
     data: BytesLike
@@ -408,14 +372,6 @@ export interface AmbientGuard extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  FLAT_LP_PROXY_IDX: TypedContractMethod<[], [bigint], "view">;
-
-  KNOCKOUT_LP_V2_PROXY_IDX: TypedContractMethod<[], [bigint], "view">;
-
-  NATIVE_TOKEN_ADDRESS: TypedContractMethod<[], [string], "view">;
-
-  NATIVE_TOKEN_ID: TypedContractMethod<[], [bigint], "view">;
-
   SWAP_PROXY_IDX: TypedContractMethod<[], [bigint], "view">;
 
   convert32toAddress: TypedContractMethod<[data: BytesLike], [string], "view">;
@@ -491,18 +447,6 @@ export interface AmbientGuard extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
-  getFunction(
-    nameOrSignature: "FLAT_LP_PROXY_IDX"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "KNOCKOUT_LP_V2_PROXY_IDX"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "NATIVE_TOKEN_ADDRESS"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "NATIVE_TOKEN_ID"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "SWAP_PROXY_IDX"
   ): TypedContractMethod<[], [bigint], "view">;

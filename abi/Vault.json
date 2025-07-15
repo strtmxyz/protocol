@@ -1844,25 +1844,6 @@
   {
     "inputs": [
       {
-        "internalType": "bytes",
-        "name": "returnData",
-        "type": "bytes"
-      }
-    ],
-    "name": "decodeRevertReason",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "reason",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "assets",
         "type": "uint256"
@@ -2106,6 +2087,29 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVaultAssetBreakdown",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "assetAddresses",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "assetBalances",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "assetValues",
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",

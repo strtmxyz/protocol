@@ -1032,8 +1032,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/interfaces/IVault.sol": {
-      "lastModificationDate": 1752466164225,
-      "contentHash": "8c297ed4934d1ac4112884598c2fa68f",
+      "lastModificationDate": 1752559177501,
+      "contentHash": "4e7c2be8ff086f07a28292a5c9878285",
       "sourceName": "contracts/interfaces/IVault.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2205,8 +2205,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/Vault.sol": {
-      "lastModificationDate": 1752475446449,
-      "contentHash": "dd446fa5510c1f07fdeef3635994b6f2",
+      "lastModificationDate": 1752608739103,
+      "contentHash": "fdb4c8711f2c7dabc12f44012326771a",
       "sourceName": "contracts/Vault.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -2847,8 +2847,8 @@
       ]
     },
     "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/platform/AmbientGuard.sol": {
-      "lastModificationDate": 1752468826628,
-      "contentHash": "ddef4a10faceb50cf187ca008d45152a",
+      "lastModificationDate": 1752607868658,
+      "contentHash": "a68f2e9b76d6672b9700519477e76e7a",
       "sourceName": "contracts/guards/platform/AmbientGuard.sol",
       "solcConfig": {
         "version": "0.8.27",
@@ -3439,10 +3439,10 @@
         "MockOracle"
       ]
     },
-    "/Volumes/Development/Workspace/stratum/protocol/contracts/guards/asset/AmbientAssetGuard.sol": {
-      "lastModificationDate": 1752429070032,
-      "contentHash": "3951ec84750fce32f312f4c991853642",
-      "sourceName": "contracts/guards/asset/AmbientAssetGuard.sol",
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/test/MockAmbientDex.sol": {
+      "lastModificationDate": 1752568727440,
+      "contentHash": "17d1b800354c8683bb0ef02c2873401c",
+      "sourceName": "contracts/test/MockAmbientDex.sol",
       "solcConfig": {
         "version": "0.8.27",
         "settings": {
@@ -3474,22 +3474,104 @@
         }
       },
       "imports": [
-        "../../utils/TxDataUtils.sol",
-        "../../interfaces/guards/IGuard.sol",
-        "../../interfaces/IVault.sol",
-        "../../interfaces/IHasSupportedAsset.sol",
-        "../../interfaces/IHasGuardInfo.sol",
-        "../../interfaces/guards/IAssetGuard.sol",
-        "../../interfaces/IHasAssetInfo.sol",
-        "../../interfaces/external/ambient/ICrocQuery.sol",
-        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
-        "@openzeppelin/contracts/proxy/utils/Initializable.sol"
+        "../interfaces/external/ambient/ICrocSwapDex.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "AmbientAssetGuard"
+        "MockAmbientDex"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/test/AmbientGuardFix.sol": {
+      "lastModificationDate": 1752568211340,
+      "contentHash": "1ffb3a8642ec6a82e6f95e272e754c95",
+      "sourceName": "contracts/test/AmbientGuardFix.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../interfaces/guards/IPlatformGuard.sol",
+        "../utils/TxDataUtils.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AmbientGuardFix"
+      ]
+    },
+    "/Volumes/Development/Workspace/stratum/protocol/contracts/test/MockVault.sol": {
+      "lastModificationDate": 1752573540334,
+      "contentHash": "058710431f0c4b4bd5066fa4bbe44dbb",
+      "sourceName": "contracts/test/MockVault.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "storageLayout",
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris"
+        }
+      },
+      "imports": [
+        "../interfaces/IHasSupportedAsset.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "MockVault"
       ]
     }
   }

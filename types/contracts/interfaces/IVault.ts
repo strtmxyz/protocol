@@ -48,6 +48,7 @@ export interface IVaultInterface extends Interface {
       | "getAssetsToLiquidate"
       | "getEpochInfo"
       | "getSupportedAssetsCount"
+      | "getVaultAssetBreakdown"
       | "getVaultInfo"
       | "goLive"
       | "initialize"
@@ -183,6 +184,10 @@ export interface IVaultInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getSupportedAssetsCount",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getVaultAssetBreakdown",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -398,6 +403,10 @@ export interface IVaultInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getSupportedAssetsCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getVaultAssetBreakdown",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -992,6 +1001,18 @@ export interface IVault extends BaseContract {
 
   getSupportedAssetsCount: TypedContractMethod<[], [bigint], "view">;
 
+  getVaultAssetBreakdown: TypedContractMethod<
+    [],
+    [
+      [string[], bigint[], bigint[]] & {
+        assetAddresses: string[];
+        assetBalances: bigint[];
+        assetValues: bigint[];
+      }
+    ],
+    "view"
+  >;
+
   getVaultInfo: TypedContractMethod<
     [],
     [
@@ -1251,6 +1272,19 @@ export interface IVault extends BaseContract {
   getFunction(
     nameOrSignature: "getSupportedAssetsCount"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getVaultAssetBreakdown"
+  ): TypedContractMethod<
+    [],
+    [
+      [string[], bigint[], bigint[]] & {
+        assetAddresses: string[];
+        assetBalances: bigint[];
+        assetValues: bigint[];
+      }
+    ],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "getVaultInfo"
   ): TypedContractMethod<
