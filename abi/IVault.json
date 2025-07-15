@@ -685,13 +685,6 @@
   },
   {
     "inputs": [],
-    "name": "emergencyLiquidateAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "epochStartTime",
     "outputs": [
       {

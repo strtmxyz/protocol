@@ -531,7 +531,7 @@ contract Vault is
             return returnedTxType;
         } catch Error(string memory reason) {
             revert(string(abi.encodePacked("Guard validation failed: ", reason)));
-        } catch (bytes memory lowLevelData) {
+        } catch (bytes memory) {
             // Handle custom errors or provide context
             revert TransactionRejectedByGuard(guard, target);
         }
@@ -636,7 +636,6 @@ contract Vault is
     /// @param assetAddress The asset to convert
     /// @param amount Amount of the asset
     /// @param cachedFactory Cached factory address
-    /// @param assetHandlerAddr Cached asset handler address  
     /// @param underlyingPriceUSD Cached underlying price
     /// @param underlyingDecimals Cached underlying decimals
     /// @return Value in underlying asset terms
@@ -644,7 +643,7 @@ contract Vault is
         address assetAddress, 
         uint256 amount,
         address cachedFactory,
-        address assetHandlerAddr,
+        address,
         uint256 underlyingPriceUSD,
         uint8 underlyingDecimals
     ) internal view returns (uint256) {
@@ -894,7 +893,7 @@ contract Vault is
         if (txType == 0) revert TransactionRejectedByGuard(guard, target);
         
         // Execute the call
-        (bool success, bytes memory resultData) = _callExternalWithContext(target, data, value);
+        (, bytes memory resultData) = _callExternalWithContext(target, data, value);
         
         // Check for post-transaction guard callback
         (bool hasFunction, bytes memory returnData) = guard.call(
@@ -1405,6 +1404,26 @@ contract Vault is
     /// @return totalValue Total value of assets to liquidate
     function getAssetsToLiquidate() external view returns (address[] memory assetsToLiquidate, uint256 totalValue) {
         return _getAssetsToLiquidate();
+    }
+    
+    /// @notice Get vault breakdown by asset
+    /// @return assetAddresses Array of asset addresses
+    /// @return assetBalances Array of asset balances  
+    /// @return assetValues Array of values in underlying asset terms
+    function getVaultAssetBreakdown() external view returns (
+        address[] memory assetAddresses,
+        uint256[] memory assetBalances,
+        uint256[] memory assetValues
+    ) {
+        return VaultLogic.getVaultAssetBreakdown(
+            address(this),
+            factory,
+            asset(),
+            supportedAssets,
+            lastAssetPrices,
+            emergencyOracleMode,
+            maxPriceDeviationBps
+        );
     }
     
     /// @notice Public wrapper for asset value conversion (for try-catch usage)

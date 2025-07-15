@@ -246,6 +246,16 @@ interface IVault is IERC4626 {
     /// @return totalValue Total value of assets to liquidate
     function getAssetsToLiquidate() external view returns (address[] memory assetsToLiquidate, uint256 totalValue);
 
+    /// @notice Get vault breakdown by asset
+    /// @return assetAddresses Array of asset addresses
+    /// @return assetBalances Array of asset balances  
+    /// @return assetValues Array of values in underlying asset terms
+    function getVaultAssetBreakdown() external view returns (
+        address[] memory assetAddresses,
+        uint256[] memory assetBalances,
+        uint256[] memory assetValues
+    );
+
     /*//////////////////////////////////////////////////////////////
                             STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
