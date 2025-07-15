@@ -13,31 +13,35 @@
     "test:assethandler:tokens": "hardhat run scripts/testAssetHandlerTokens.ts --network monadTestnet",
     "test:guards": "hardhat run scripts/testGuardsIntegration.ts --network monadTestnet",
     "test:system": "hardhat run scripts/testSystem.ts --network monadTestnet",
+    "test:ambient": "hardhat run scripts/testAmbientGuardFix.ts --network hardhat",
     "remove:assets": "hardhat run deployment/vault/remove.ts --network monadTestnet",
     
     "deploy:governance": "hardhat run deployment/governance/deploy.ts --network monadTestnet",
     "deploy:assethandler": "hardhat run deployment/oracles/deploy.ts --network monadTestnet",
     "deploy:vaultfactory": "hardhat run deployment/vault/deploy.ts --network monadTestnet",
     "deploy:implementation": "hardhat run deployment/vault/deployImplementation.ts --network monadTestnet",
+    "upgrade:vault": "hardhat run deployment/vault/upgrade.ts --network monadTestnet",
     
     "deploy:guard:ERC20Guard": "hardhat run deployment/guards/ERC20Guard.ts --network monadTestnet",
     "deploy:guard:ETHGuard": "hardhat run deployment/guards/ETHGuard.ts --network monadTestnet",
     "deploy:guard:KyberswapGuard": "hardhat run deployment/guards/KyberswapGuard.ts --network monadTestnet",
     "deploy:guard:AmbientGuard": "hardhat run deployment/guards/AmbientGuard.ts --network monadTestnet",
-    
+    "deploy:guard:upgrade": "hardhat run deployment/guards/upgrade.ts --network monadTestnet",
+
     "config:assets": "hardhat run deployment/oracles/setting.ts --network monadTestnet",
     "config:vault": "hardhat run deployment/vault/setting.ts --network monadTestnet",
     "config:governance": "hardhat run deployment/governance/setting.ts --network monadTestnet",
     
-    "query:ambient": "hardhat run scripts/queryAmbientData.ts --network monadTestnet",
-    "query:ambient:localhost": "hardhat run scripts/queryAmbientData.ts --network localhost",
     
     "deploy:localhost": "npm run deploy:all -- --network localhost",
     "deploy:sonic-testnet": "npm run deploy:all -- --network sonicBlazeTestnet",
     "deploy:sonic-mainnet": "npm run deploy:all -- --network sonicMainnet",
     "deploy:monad-testnet": "npm run deploy:all -- --network monadTestnet",
     "check:vault": "hardhat run scripts/checkVaultInfo.ts --network monadTestnet",
-    "check:platforms": "hardhat run scripts/checkVaultPlatforms.ts --network monadTestnet"
+    "check:vault:details": "hardhat run scripts/checkVaultDetails.ts --network monadTestnet",
+    "check:platforms": "hardhat run scripts/checkVaultPlatforms.ts --network monadTestnet",
+    "check:prices": "hardhat run scripts/checkAssetHandlerPrices.ts --network monadTestnet",
+    "check:price": "hardhat run scripts/checkAssetHandlerPrices.ts --network monadTestnet"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
