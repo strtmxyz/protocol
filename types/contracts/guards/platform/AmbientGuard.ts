@@ -28,6 +28,8 @@ export interface AmbientGuardInterface extends Interface {
     nameOrSignature:
       | "FLAT_LP_PROXY_IDX"
       | "KNOCKOUT_LP_V2_PROXY_IDX"
+      | "NATIVE_TOKEN_ADDRESS"
+      | "NATIVE_TOKEN_ID"
       | "SWAP_PROXY_IDX"
       | "convert32toAddress"
       | "getArrayIndex"
@@ -63,6 +65,14 @@ export interface AmbientGuardInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "KNOCKOUT_LP_V2_PROXY_IDX",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "NATIVE_TOKEN_ADDRESS",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "NATIVE_TOKEN_ID",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -132,6 +142,14 @@ export interface AmbientGuardInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "KNOCKOUT_LP_V2_PROXY_IDX",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "NATIVE_TOKEN_ADDRESS",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "NATIVE_TOKEN_ID",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -394,6 +412,10 @@ export interface AmbientGuard extends BaseContract {
 
   KNOCKOUT_LP_V2_PROXY_IDX: TypedContractMethod<[], [bigint], "view">;
 
+  NATIVE_TOKEN_ADDRESS: TypedContractMethod<[], [string], "view">;
+
+  NATIVE_TOKEN_ID: TypedContractMethod<[], [bigint], "view">;
+
   SWAP_PROXY_IDX: TypedContractMethod<[], [bigint], "view">;
 
   convert32toAddress: TypedContractMethod<[data: BytesLike], [string], "view">;
@@ -474,6 +496,12 @@ export interface AmbientGuard extends BaseContract {
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "KNOCKOUT_LP_V2_PROXY_IDX"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "NATIVE_TOKEN_ADDRESS"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "NATIVE_TOKEN_ID"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "SWAP_PROXY_IDX"
